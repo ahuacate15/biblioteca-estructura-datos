@@ -51,9 +51,9 @@ int main() {
     sedeThree->nombre = "Biblioteca emilio coreas";
     appendSede(lista, sedeThree);
 
-    printf("primer registro: %s\n", lista->primero->nombre);
-    printf("segundo registro: %s\n", lista->primero->siguiente->nombre);
-    printf("tercer registro: %s\n", lista->primero->siguiente->siguiente->nombre);
+    printf("[%d] primer registro: %s\n", lista->primero->id, lista->primero->nombre);
+    printf("[%d] segundo registro: %s\n", lista->primero->siguiente->id, lista->primero->siguiente->nombre);
+    printf("[%d] tercer registro: %s\n", lista->primero->siguiente->siguiente->id, lista->primero->siguiente->siguiente->nombre);
     return 0;
 }
 
