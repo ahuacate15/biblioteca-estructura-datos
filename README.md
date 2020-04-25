@@ -6,7 +6,7 @@ Al crear un nuevo archivo, tienes que agregarlo desde la siguiente opción
 ![Incluir archivo](images/info_02.png)
 
 # Estructura de archivos
-Los fuente se componen un archivo **file.h** el cual contiene las definiciones de los métodos y un **archivo.c** que posee el fuente principal
+Los fuente se componen de un archivo **file.h** el cual contiene las definiciones de los métodos y un **archivo.c** que posee el fuente principal
 
 # Error al compilar la aplicación
 Es probable que **dev c++** te muestre el error de la imagen, cuando intentes compilar la aplicación por primera vez
