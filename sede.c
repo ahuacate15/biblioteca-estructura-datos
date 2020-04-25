@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 #define TRUE 1
 #define FALSE 0
 
@@ -12,6 +14,7 @@ typedef struct sede {
     char *correo;
     char *direccion;
     struct sede *siguiente;
+    struct sede *anterior;
 } Sede;
 
 typedef struct listaSede {
@@ -20,41 +23,55 @@ typedef struct listaSede {
     Sede *ultimo;
 } ListaSede;
 
-/*-----------prototipos de funciones----------*/
-ListaSede *initListSede();
+/*--------prototipo de funciones para interfaz --------*/
+void printListSedes(ListaSede *lista);
+
+/*-----------prototipos de funciones estandar----------*/
+ListaSede *initListSede(); 
 Sede *initSede();
-void appendSede(ListaSede *lista, Sede *sede);
-void addSede(ListaSede *lista, Sede *sede, int element);
-void isEmptyListSede(ListaSede lista);
-Sede *getSede(ListaSede *lista, int index);
-int containtSede(ListaSede *lista, int id);
-void *removeSede(ListaSede *lista, int index);
+void appendSede(ListaSede *lista, Sede *sede); //agregar una sede al final de la lista
+int isEmptyListSede(ListaSede *lista); //compruebo si la lista se encuentra vacia
+Sede *getSede(ListaSede *lista, int id); //obtengo la sede segun el id
+int removeSede(ListaSede *lista, int id); //elimino una sede segun el id
 
 /*-----------definicion de funciones----------*/
 int main() {
     ListaSede *lista = initListSede();
 
-    Sede *sede = initSede();
-    sede->nombre = "Biblioteca estudiantil la esperanza";
-    sede->departamento = "San saltador";
-    sede->telefono = "7709-0910";
-    sede->correo = "biblioteca.ss@itca.edu.sv";
-    sede->direccion = "Avenida las gardenias, pasaje #1";
+    for(int i=0; i<10; i++) {
+        Sede *sede = initSede();
+        sede->nombre = "Biblioteca estudiantil ";
+        sede->departamento = "San salvador";
+        appendSede(lista, sede);
+    }
 
-    appendSede(lista, sede);
+    printListSedes(lista);
 
-    Sede *sedeTwo = initSede();
-    sedeTwo->nombre = "Biblioteca estudiantes la joya";
-    appendSede(lista, sedeTwo);
-   
-    Sede *sedeThree = initSede();
-    sedeThree->nombre = "Biblioteca emilio coreas";
-    appendSede(lista, sedeThree);
+    removeSede(lista, 1);
+    removeSede(lista, 10);
+    removeSede(lista, 7);
+    removeSede(lista, 3);
 
-    printf("[%d] primer registro: %s\n", lista->primero->id, lista->primero->nombre);
-    printf("[%d] segundo registro: %s\n", lista->primero->siguiente->id, lista->primero->siguiente->nombre);
-    printf("[%d] tercer registro: %s\n", lista->primero->siguiente->siguiente->id, lista->primero->siguiente->siguiente->nombre);
+
+
     return 0;
+}
+
+void printListSedes(ListaSede *lista) {
+    Sede *sede = lista->primero;
+
+    printf("\nTotal de registros: %d\n", lista->total);
+    while(sede != NULL) {
+        printf("*id: %d\n", sede->id);
+        printf("nombre: %s\n", sede->nombre);
+        printf("departamento: %s\n", sede->departamento);
+        printf("telefono: %s\n", sede->telefono);
+        printf("correo: %s\n", sede->correo);
+        printf("direccion: %s\n", sede->direccion);
+        printf("\n");
+
+        sede = sede->siguiente;
+    }
 }
 
 ListaSede *initListSede() {
@@ -67,12 +84,13 @@ ListaSede *initListSede() {
 
 Sede *initSede() {
     Sede *sede = malloc(sizeof(Sede));
-    sede->nombre = "";
-    sede->departamento = "";
-    sede->telefono = "";
-    sede->correo = "";
-    sede->direccion = "";
+    sede->nombre = NULL;
+    sede->departamento = NULL;
+    sede->telefono = NULL;
+    sede->correo = NULL;
+    sede->direccion = NULL;
     sede->siguiente = NULL;
+    sede->anterior = NULL;
     return sede;
 }
 
@@ -87,9 +105,77 @@ void appendSede(ListaSede *lista, Sede *sede) {
     } else {
         aux = lista->ultimo;
         aux->siguiente = sede;
+        sede->anterior = aux;
         lista->ultimo = sede;
         lista->total++;
     }
 }
 
-//acero, engranaje, muelle
+int isEmptyListSede(ListaSede *lista) {
+    if(lista == NULL || lista->total == 0)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+Sede *getSede(ListaSede *lista, int id) {
+    Sede *primero, *resultado = NULL;
+    int cont = 1;
+    
+    primero = lista->primero;
+    while(primero != NULL) {
+        if(cont == id) {
+            resultado = primero;
+            break;
+        }
+
+        primero = primero->siguiente;
+        cont++;
+    }
+}
+
+int removeSede(ListaSede *lista, int id) {
+    Sede *sede = NULL;
+    int cont = 0, encontrado = FALSE;
+
+    if(lista == NULL)
+        return FALSE;
+
+    sede = lista->primero;
+    
+    if(lista->total == 1) { //eliminar el unico elemento de la lista
+        free(lista->primero);
+        lista = initListSede();
+    } else {  //la lista contiene mas de un elemento
+
+        sede = lista->primero;
+        for(int i=0; i<lista->total; i++) {
+            if(sede->id == id) { //busco un elemento por ID
+                encontrado = TRUE;
+                break;
+            } 
+            sede = sede->siguiente;
+        }
+
+        if(!encontrado)
+            return FALSE;
+        
+        if(sede->id == lista->primero->id) { //primer elemento de la lista
+            lista->primero = sede->siguiente;
+            lista->total--;
+            free(sede);
+        } else if(sede->id == lista->ultimo->id) { //ultimo elemento de la lista
+            sede->anterior->siguiente = NULL;
+            lista->ultimo = sede->anterior;
+            lista->total--;
+            free(sede);
+        } else { //elementos que no se ubican en los extremos
+            sede->anterior->siguiente = sede->siguiente;
+            lista->total--;
+            free(sede);
+        }
+
+        return TRUE;
+    }
+    
+}
