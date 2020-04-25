@@ -44,6 +44,7 @@ Sede *initSede() {
     return sede;
 }
 
+//agregar una sede al final de la lista, retorna el nodo creado
 Sede *appendSede(ListaSede *lista, Sede *sede) {
     Sede *aux;
     sede->id = lista->total + 1; //asigno ID autoincrementable
@@ -63,6 +64,7 @@ Sede *appendSede(ListaSede *lista, Sede *sede) {
     return sede;
 }
 
+//compruebo si la lista se encuentra vacia
 int isEmptyListSede(ListaSede *lista) {
     if(lista == NULL || lista->total == 0)
         return TRUE;
@@ -70,6 +72,7 @@ int isEmptyListSede(ListaSede *lista) {
         return FALSE;
 }
 
+//obtengo la sede segun el id
 Sede *getSede(ListaSede *lista, int id) {
     Sede *primero, *resultado = NULL;
     int cont = 1;
@@ -86,6 +89,7 @@ Sede *getSede(ListaSede *lista, int id) {
     }
 }
 
+//elimino una sede segun el id
 int removeSede(ListaSede *lista, int id) {
     Sede *sede = NULL;
     int cont = 0, encontrado = FALSE;
@@ -132,6 +136,7 @@ int removeSede(ListaSede *lista, int id) {
     
 }
 
+//solicito los datos de una sede y la agrego a la lista
 void requestNewSede(ListaSede *lista) {
     Sede *sede = initSede();
     printf("\ningresa los datos de la sede\n");
