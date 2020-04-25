@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "texto.h"
+
 #define TRUE 1
 #define FALSE 0
 
-/*-----------definicion de estructuras----------*/
 typedef struct sede { 
     int id;
     char *nombre;
@@ -23,57 +24,6 @@ typedef struct listaSede {
     Sede *ultimo;
 } ListaSede;
 
-/*--------prototipo de funciones para interfaz --------*/
-void printListSedes(ListaSede *lista);
-
-/*-----------prototipos de funciones estandar----------*/
-ListaSede *initListSede(); 
-Sede *initSede();
-void appendSede(ListaSede *lista, Sede *sede); //agregar una sede al final de la lista
-int isEmptyListSede(ListaSede *lista); //compruebo si la lista se encuentra vacia
-Sede *getSede(ListaSede *lista, int id); //obtengo la sede segun el id
-int removeSede(ListaSede *lista, int id); //elimino una sede segun el id
-
-/*-----------definicion de funciones----------*/
-int main() {
-    ListaSede *lista = initListSede();
-
-    for(int i=0; i<10; i++) {
-        Sede *sede = initSede();
-        sede->nombre = "Biblioteca estudiantil ";
-        sede->departamento = "San salvador";
-        appendSede(lista, sede);
-    }
-
-    printListSedes(lista);
-
-    removeSede(lista, 1);
-    removeSede(lista, 10);
-    removeSede(lista, 7);
-    removeSede(lista, 3);
-
-
-
-    return 0;
-}
-
-void printListSedes(ListaSede *lista) {
-    Sede *sede = lista->primero;
-
-    printf("\nTotal de registros: %d\n", lista->total);
-    while(sede != NULL) {
-        printf("*id: %d\n", sede->id);
-        printf("nombre: %s\n", sede->nombre);
-        printf("departamento: %s\n", sede->departamento);
-        printf("telefono: %s\n", sede->telefono);
-        printf("correo: %s\n", sede->correo);
-        printf("direccion: %s\n", sede->direccion);
-        printf("\n");
-
-        sede = sede->siguiente;
-    }
-}
-
 ListaSede *initListSede() {
     ListaSede *lista = malloc(sizeof(ListaSede));
     lista->total = 0;
@@ -84,17 +34,17 @@ ListaSede *initListSede() {
 
 Sede *initSede() {
     Sede *sede = malloc(sizeof(Sede));
-    sede->nombre = NULL;
-    sede->departamento = NULL;
-    sede->telefono = NULL;
-    sede->correo = NULL;
-    sede->direccion = NULL;
+    sede->nombre = malloc(sizeof(char) * 60); //maximo 60 caracteres
+    sede->departamento = malloc(sizeof(char) * 30); //maximo 30 caracteres
+    sede->telefono = malloc(sizeof(char) * 10); //maximo 10 caracteres
+    sede->correo = malloc(sizeof(char) * 60); //maximo 60 caracteres
+    sede->direccion = malloc(sizeof(char) * 254); //maximo 254 caracteres
     sede->siguiente = NULL;
     sede->anterior = NULL;
     return sede;
 }
 
-void appendSede(ListaSede *lista, Sede *sede) {
+Sede *appendSede(ListaSede *lista, Sede *sede) {
     Sede *aux;
     sede->id = lista->total + 1; //asigno ID autoincrementable
 
@@ -109,6 +59,8 @@ void appendSede(ListaSede *lista, Sede *sede) {
         lista->ultimo = sede;
         lista->total++;
     }
+
+    return sede;
 }
 
 int isEmptyListSede(ListaSede *lista) {
@@ -178,4 +130,54 @@ int removeSede(ListaSede *lista, int id) {
         return TRUE;
     }
     
+}
+
+void requestNewSede(ListaSede *lista) {
+    Sede *sede = initSede();
+    printf("\ningresa los datos de la sede\n");
+
+    printf("nombre: ");
+    sede->nombre = getLine(60);
+
+    printf("departamento: ");
+    sede->departamento = getLine(30);
+
+    printf("telefono: ");
+    sede->telefono = getLine(10);
+
+    printf("correo electronico: ");
+    sede->correo = getLine(60);
+
+    printf("direccion: ");
+    sede->direccion = getLine(254);
+
+    printf("Elemento guardado con el ID: %d\n", appendSede(lista, sede)->id);
+}
+
+void printListSedes(ListaSede *lista) {
+    Sede *sede = lista->primero;
+
+    printf("\nTotal de registros: %d\n", lista->total);
+    while(sede != NULL) {
+        printf("id: %d\n", sede->id);
+        printf("nombre: %s\n", sede->nombre);
+        printf("departamento: %s\n", sede->departamento);
+        printf("telefono: %s\n", sede->telefono);
+        printf("correo: %s\n", sede->correo);
+        printf("direccion: %s\n", sede->direccion);
+        printf("\n");
+
+        sede = sede->siguiente;
+    }
+}
+
+/*-----------definicion de funciones----------*/
+int main() {
+    ListaSede *lista = initListSede();
+
+    requestNewSede(lista);
+    //requestNewSede(lista);
+    printListSedes(lista);
+
+    return 0;
 }
