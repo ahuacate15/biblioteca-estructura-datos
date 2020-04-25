@@ -4,7 +4,7 @@
 #include <string.h>
 #define TRUE 1
 #define FALSE 0
-Prueba
+
 /*-----------definicion de estructuras----------*/
 typedef struct sede { 
     int id;
