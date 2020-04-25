@@ -172,6 +172,7 @@ void printListSedes(ListaSede *lista) {
 }
 
 /*-----------definicion de funciones----------*/
+/*
 int main() {
     ListaSede *lista = initListSede();
 
@@ -181,3 +182,4 @@ int main() {
 
     return 0;
 }
+*/
