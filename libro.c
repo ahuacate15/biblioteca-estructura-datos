@@ -69,17 +69,13 @@ void eliminarLibro(Nodo **nodo, Nodo *padre);
 Arbol *cargarRegistrosDefecto(Arbol *arbol);
 
 /*-----------prototitpos de funciones para interfaz--------*/
-/* imprime un unico libro */
-void printLibro(Libro *libro);
-/* formatea e imprime en pantalla una lista de tipo listLibro */
-void printListLibros(ListLibro *listLibro);
+void printLibro(Libro *libro); //imprime un unico libro
+void printListLibros(ListLibro *listLibro); //formatea e imprime en pantalla una lista de tipo listLibro
 void addLibroMenu(Arbol *arbol);
 void findLibrosMENU(Arbol *arbol);
 Nodo *findLibroByClaveMenu(Arbol *arbol);
-/* obtiene todos los libros del arbol, y los imprimie en pantalla */
-void printLibrosMenu(Arbol *arbol);
-/* muestra la informacion de un info en pantalla, asi como la solicitud de datos para su edicion */
-void editLibroMenu(Arbol *arbol);
+void printLibrosMenu(Arbol *arbol); //obtiene todos los libros del arbol, y los imprimie en pantalla
+void editLibroMenu(Arbol *arbol); //muestra la informacion de un info en pantalla, asi como la solicitud de datos para su edicion
 
 Arbol *initializeArbol() {
 	Arbol *arbol = malloc(sizeof(Arbol));

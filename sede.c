@@ -188,15 +188,4 @@ void printListSedes(ListaSede *lista) {
     }
 }
 
-/*-----------definicion de funciones----------*/
-/*
-int main() {
-    ListaSede *lista = initListSede();
 
-    requestNewSede(lista);
-    //requestNewSede(lista);
-    printListSedes(lista);
-
-    return 0;
-}
-*/
