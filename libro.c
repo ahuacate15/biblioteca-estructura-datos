@@ -24,6 +24,7 @@ typedef struct libro {
 typedef struct nodo {
 	char *clave;
 	Libro *libro;
+	int activo;
 	struct nodo *padre;
 	struct nodo *izquierda;
 	struct nodo *derecha;
@@ -61,13 +62,24 @@ ListLibro *buscarLibro(Nodo *nodo, ListLibro *list, char *clave, int campo);
 */
 Nodo *buscarLibroPorClave(Nodo *nodo, char *clave);
 Libro *addLibroToList(ListLibro *list, Libro *libro);
-void eliminarLibro(Nodo **nodo);
+void eliminarLibro(Nodo **nodo, Nodo *padre);
+/*
+* @description : carga 10 libros a la memoria
+*/
+Arbol *cargarRegistrosDefecto(Arbol *arbol);
 
 /*-----------prototitpos de funciones para interfaz--------*/
-void requestNewLibro(Arbol *arbol);
-void findLibroMENU(Arbol *arbol);
-void findLibroByClaveMenu(Arbol *arbol);
+/* imprime un unico libro */
 void printLibro(Libro *libro);
+/* formatea e imprime en pantalla una lista de tipo listLibro */
+void printListLibros(ListLibro *listLibro);
+void addLibroMenu(Arbol *arbol);
+void findLibrosMENU(Arbol *arbol);
+Nodo *findLibroByClaveMenu(Arbol *arbol);
+/* obtiene todos los libros del arbol, y los imprimie en pantalla */
+void printLibrosMenu(Arbol *arbol);
+/* muestra la informacion de un info en pantalla, asi como la solicitud de datos para su edicion */
+void editLibroMenu(Arbol *arbol);
 
 Arbol *initializeArbol() {
 	Arbol *arbol = malloc(sizeof(Arbol));
@@ -94,139 +106,6 @@ Libro *initializeLibro() {
 	return libro;
 }
 
-void requestNewLibro(Arbol *arbol) {
-	Libro *libro = initializeLibro();
-
-	printf("\ningresa los datos del libro\n");
-	printf("titulo: ");
-	libro->titulo = getLine(256);
-
-	printf("autor: ");
-	libro->autor = getLine(128);
-
-	printf("isbn: ");
-	libro->isbn = getLine(20);
-
-	printf("genero: ");
-	libro->genero = getLine(64);
-
-	printf("a%co de edicion: ", 164); //agrego el caracter ï¿½
-	scanf("%d", &libro->year);
-	fflush(stdin);
-
-	//ordeno estructura segun el titulo del libro
-	if(arbol->raiz == NULL)
-		arbol->raiz = insertarNodo(arbol, NULL, NULL, libro, TITULO);
-	else
-		insertarNodo(arbol, arbol->raiz, NULL, libro, TITULO);
-
-	//ordeno estructura segun el ISBN del libro
-	if(arbol->raizISBN == NULL)
-		arbol->raizISBN = insertarNodo(arbol, NULL, NULL, libro, ISBN);
-	else
-		insertarNodo(arbol, arbol->raizISBN, NULL, libro, ISBN);
-}
-
-void findLibroMENU(Arbol *arbol) {
-	ListLibro *list = malloc(sizeof(ListLibro));
-	Nodo *raiz = NULL;
-	int campo = 0;
-	list->primero = NULL;
-	list->ultimo = NULL;
-	list->total = 0;
-
-	char *filtro = malloc(sizeof(char) * 256); //maxima longitud para el titulo de un libro
-	printf("\nbusqueda de libros\n");
-
-	while(TRUE) {
-		printf("por cual campo deseas realizar la busqueda? \n");
-		printf("1- titulo\n");
-		printf("2- ISBN\n");
-		scanf("%d", &campo);
-
-		if(campo >= 1 && campo <= 2) //valido el campo seleccionado
-			break;
-		else
-			printf("la opcion ingresada es incorrecta\n\n");
-	}
-
-	fflush(stdin);
-	switch (campo) {
-		case TITULO:
-			printf("ingresa el titulo del libro: ");
-			filtro = getLine(256);
-			raiz = arbol->raiz;
-			break;
-		case ISBN:
-			printf("ingresa el ISBN del libro: ");
-			filtro = getLine(20);
-			raiz = arbol->raizISBN;
-			break;
-	}
-
-	buscarLibro(raiz, list, filtro, campo);
-
-	Libro *libro = list->primero;
-
-	if(libro == NULL)
-		printf("no se encontraron resultados\n");
-	else {
-		printf("---Total de resultados: %d---\n", list->total);
-		while(libro != NULL) {
-			printf("libro: %s\n", libro->titulo);
-			libro = libro->siguiente;
-		}
-	}
-
-}
-
-void findLibroByClaveMenu(Arbol *arbol) {
-	char *filtro = malloc(sizeof(char) * 256);
-	Nodo *raiz = NULL;
-	int campo = 0;
-	
-	printf("\nbusqueda especifica de libro\n");
-	while(TRUE) {
-		printf("por cual campo deseas realizar la busqueda? \n");
-		printf("1- titulo\n");
-		printf("2- ISBN\n");
-		scanf("%d", &campo);
-
-		if(campo >= 1 && campo <= 2) //valido el campo seleccionado
-			break;
-		else
-			printf("la opcion ingresada es incorrecta\n\n");
-	}
-
-	fflush(stdin);
-	switch (campo) {
-		case TITULO:
-			printf("ingresa el titulo del libro: ");
-			filtro = getLine(256);
-			raiz = arbol->raiz;
-			break;
-		case ISBN:
-			printf("ingresa el ISBN del libro: ");
-			filtro = getLine(20);
-			raiz = arbol->raizISBN;
-			break;
-	}
-	
-	Nodo *nodo = buscarLibroPorClave(raiz, filtro);
-	if(nodo == NULL) 
-		printf("no se encontraron resultados\n");
-	else
-		printLibro(nodo->libro);
-}
-
-void printLibro(Libro *libro) {
-	printf("ISBN: %s\n", libro->isbn);
-	printf("Titulo: %s\n", libro->titulo);
-	printf("Autor: %s\n", libro->autor);
-	printf("Año: %d\n", libro->year);
-	printf("Genero: %s\n", libro->genero);
-}
-
 Nodo *insertarNodo(Arbol *arbol, Nodo *nodo, Nodo *padre, Libro *libro, int campo) {
 	char *clave = NULL;
 
@@ -247,6 +126,7 @@ Nodo *insertarNodo(Arbol *arbol, Nodo *nodo, Nodo *padre, Libro *libro, int camp
 		nodo->izquierda = NULL;
 		nodo->derecha = NULL;
 		nodo->padre = padre;
+		nodo->activo = TRUE;
 
 		//la clave unica del nodo puede variar
 		switch(campo) {
@@ -265,7 +145,7 @@ Nodo *insertarNodo(Arbol *arbol, Nodo *nodo, Nodo *padre, Libro *libro, int camp
 		arbol->total++;
 		return nodo;
 	} else {
-		
+
 		//cuando se inserta un nodo por segunda vez, su padre es la raiz
 		//cuando es un nodo mas profundo, su padre en el elemento
 		nodo->padre = padre == NULL ? arbol->raiz : padre;
@@ -303,16 +183,17 @@ ListLibro *buscarLibro(Nodo *nodo, ListLibro *list, char *clave, int campo) {
 Nodo *buscarLibroPorClave(Nodo *nodo, char *clave) {
 	if(nodo == NULL)
 		return NULL;
-		
+
 	int comparacion = strcmp(clave, nodo->clave);
-	if(comparacion == 0)
+	if(comparacion == 0 && nodo->activo)
 		return nodo;
 	else if(comparacion < 0)
 		buscarLibroPorClave(nodo->izquierda, clave);
-	else	
+	else
 		buscarLibroPorClave(nodo->derecha, clave);
-	
+
 }
+
 
 Libro *addLibroToList(ListLibro *list, Libro *libro) {
 	Libro *tmp = NULL;
@@ -331,13 +212,8 @@ Libro *addLibroToList(ListLibro *list, Libro *libro) {
 	return libro;
 }
 
-void eliminarLibro(Nodo **nodo) {
-	printf("*****nodo eliminado: %p, %p\n", (*nodo), nodo);
-	free(*nodo);
-	*nodo = NULL;
-	
-	
-	
+void eliminarLibro(Nodo **nodo, Nodo *padre) {
+	(*nodo)->clave = "TEST";
 	/*
 	//elimino una hoja
 	if((*nodo)->izquierda == NULL && (*nodo)->derecha == NULL) {
@@ -348,19 +224,16 @@ void eliminarLibro(Nodo **nodo) {
 			*nodo = NULL;
 		} else {
 			if((*nodo)->padre->izquierda != NULL && strcmp((*nodo)->clave, (*nodo)->padre->izquierda->clave) == 0) {
-				free((*nodo)->padre->izquierda);
 				free(*nodo);
-				(*nodo)->padre->izquierda == NULL;
 				*nodo = NULL;
-				printf("izquierda eliminada\n");
+
+				padre->izquierda = NULL;
 			} else if((*nodo)->padre->derecha != NULL && strcmp((*nodo)->clave, (*nodo)->padre->derecha->clave) == 0) {
-			
-				free((*nodo)->padre->derecha);
 				free(*nodo);
-				(*nodo)->padre->derecha = NULL;
-				printf("derecha eliminada\n");
+				*nodo = NULL;
+				padre->derecha = NULL;
 			} else {
-				printf("nada ha sido eliminado");
+				printf("nada ha sido eliminado\n");
 			}
 		}
 	}
@@ -371,17 +244,308 @@ void deletePointer(void **ptr) {
 	free(*ptr);
 	*ptr = NULL;
 }
+
 void test() {
 
-	
+
 	Arbol *arbol = initializeArbol();
-	requestNewLibro(arbol);
-	requestNewLibro(arbol);
-	//requestNewLibro(arbol);
-	
+	addLibroMenu(arbol);
+	addLibroMenu(arbol);
+	addLibroMenu(arbol);
+
 	Nodo *nodoISBN = buscarLibroPorClave(arbol->raizISBN, "15");
-	printf("053315: %p\n", nodoISBN);
-	eliminarLibro(&nodoISBN);
-	printf("053315: %p\n", nodoISBN);
+	Nodo *nodoTitulo = buscarLibroPorClave(arbol->raiz, "15");
+
+	printf("isbn: %p %p\n", nodoISBN, arbol->raizISBN->izquierda);
+//	printf("titulo: %p %p\n", nodoISBN, arbol->raizISBN->izquierda);
+
+	//eliminarLibroPorClave(arbol->raizISBN, "15");
+	eliminarLibro(&nodoISBN, nodoISBN->padre);
+	//eliminarLibro(&nodoTitulo, nodoTitulo->padre);
+
+
+	printf("isbn: %s\n", nodoISBN->clave);
+//	printf("titulo: %p %p\n", nodoISBN, arbol->raizISBN->izquierda);
+	//printf("titulo: %p\n", nodoTitulo);
 	printf("finalizado\n");
+}
+
+Arbol *cargarRegistrosDefecto(Arbol *arbol) {
+	//Nodo *insertarNodo(Arbol *arbol, Nodo *nodo, Nodo *padre, Libro *libro, int campo);
+
+	Libro *libro1 = initializeLibro();
+	libro1->titulo = "kafka en la orilla";
+	libro1->isbn = "053315";
+	libro1->autor = "haruki murakami";
+	libro1->copias = 0;
+	libro1->year = 1990;
+
+	Libro *libro2 = initializeLibro();
+	libro2->titulo = "rebelion en la granja";
+	libro2->isbn = "053316";
+	libro2->autor = "george orwell";
+	libro2->copias = 0;
+	libro2->year = 1991;
+
+	Libro *libro3 = initializeLibro();
+	libro3->titulo = "1984";
+	libro3->isbn = "053317";
+	libro3->autor = "george orwell";
+	libro3->copias = 0;
+	libro3->year = 1990;
+
+	Libro *libro4 = initializeLibro();
+	libro4->titulo = "el manifiesto comunista";
+	libro4->isbn = "053318";
+	libro4->autor = "karl marx";
+	libro4->copias = 0;
+	libro4->year = 2001;
+
+    Libro *libro5 = initializeLibro();
+    libro5->titulo = "el anarquista loco";
+    libro5->isbn = "053319";
+    libro5->autor = "joseph mora";
+    libro5->copias = 0;
+    libro5->year = 1990;
+
+
+	insertarNodo(arbol, arbol->raiz, NULL, libro1, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro1, ISBN);
+	insertarNodo(arbol, arbol->raiz, NULL, libro2, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro2, ISBN);
+	insertarNodo(arbol, arbol->raiz, NULL, libro3, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro3, ISBN);
+	insertarNodo(arbol, arbol->raiz, NULL, libro4, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro4, ISBN);
+	insertarNodo(arbol, arbol->raiz, NULL, libro5, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro5, ISBN);
+
+	return arbol;
+
+}
+
+void printLibro(Libro *libro) {
+	printf("ISBN: %s\n", libro->isbn);
+	printf("Titulo: %s\n", libro->titulo);
+	printf("Autor: %s\n", libro->autor);
+	printf("Aï¿½o: %d\n", libro->year);
+	printf("Genero: %s\n", libro->genero);
+}
+
+void printListLibros(ListLibro *listLibro) {
+	Libro *libro = listLibro->primero;
+
+	if(libro == NULL)
+		printf("\n***no se encontraron resultados\n\n");
+	else {
+		printf("Total de resultados: %d\n", listLibro->total);
+		while(libro != NULL) {
+			printf("----------------------------\n");
+			printf("titulo: %s\n", libro->titulo);
+			printf("isbn: %s\n", libro->isbn);
+			printf("autor: %s\n", libro->autor);
+			printf("genero: %s\n", libro->genero);
+			printf("aï¿½o: %d\n", libro->year);
+			printf("\n");
+			libro = libro->siguiente;
+		}
+	}
+}
+
+void addLibroMenu(Arbol *arbol) {
+	Libro *libro = initializeLibro();
+
+	printf(" ----------------------------------------------------------- \n");
+	printf("|                     LIBROS->agregar                       |\n");
+	printf(" ----------------------------------------------------------- \n\n");
+	fflush(stdin);
+
+	stateTitulo:;
+	printf("titulo: ");
+	libro->titulo = getLine(256);
+	//libros con titulo duplicado
+	if(buscarLibroPorClave(arbol->raiz, libro->titulo) != NULL) {
+		printf("El titulo ya existe\n");
+		goto stateTitulo;
+	}
+
+	stateIsbn:;
+	printf("isbn: ");
+	libro->isbn = getLine(20);
+	//libros con isbn duplicado
+	if(buscarLibroPorClave(arbol->raizISBN, libro->isbn) != NULL) {
+		printf("El ISBN ya existe\n");
+		goto stateIsbn;
+	}
+
+	printf("autor: ");
+	libro->autor = getLine(128);
+
+	printf("genero: ");
+	libro->genero = getLine(64);
+
+	printf("a%co de edicion: ", 164); //agrego el caracter ï¿½
+	scanf("%d", &libro->year);
+	fflush(stdin);
+
+	//ordeno estructura segun el titulo del libro
+	if(arbol->raiz == NULL)
+		arbol->raiz = insertarNodo(arbol, NULL, NULL, libro, TITULO);
+	else
+		insertarNodo(arbol, arbol->raiz, NULL, libro, TITULO);
+
+	//ordeno estructura segun el ISBN del libro
+	if(arbol->raizISBN == NULL)
+		arbol->raizISBN = insertarNodo(arbol, NULL, NULL, libro, ISBN);
+	else
+		insertarNodo(arbol, arbol->raizISBN, NULL, libro, ISBN);
+
+	printf("\n***libro registrado***\n\n");
+}
+
+void findLibrosMENU(Arbol *arbol) {
+	ListLibro *list = malloc(sizeof(ListLibro));
+	Nodo *raiz = NULL;
+	int campo = 0;
+	list->primero = NULL;
+	list->ultimo = NULL;
+	list->total = 0;
+
+	char *filtro = malloc(sizeof(char) * 256); //maxima longitud para el titulo de un libro
+	printf("\nbusqueda de libros\n");
+
+	while(TRUE) {
+		printf("por cual campo deseas realizar la busqueda? \n");
+		printf("1- titulo\n");
+		printf("2- ISBN\n");
+		scanf("%d", &campo);
+
+		if(campo >= 1 && campo <= 2) //valido el campo seleccionado
+			break;
+		else
+			printf("la opcion ingresada es incorrecta\n\n");
+	}
+
+	fflush(stdin);
+	switch (campo) {
+		case TITULO:
+			printf("ingresa el titulo del libro: ");
+			filtro = getLine(256);
+			raiz = arbol->raiz;
+			break;
+		case ISBN:
+			printf("ingresa el ISBN del libro: ");
+			filtro = getLine(20);
+			raiz = arbol->raizISBN;
+			break;
+	}
+
+	buscarLibro(raiz, list, filtro, campo);
+	printListLibros(list);
+}
+
+Nodo *findLibroByClaveMenu(Arbol *arbol) {
+	char *filtro = malloc(sizeof(char) * 256);
+	Nodo *raiz = NULL;
+	int campo = 0;
+
+	printf("\nbusqueda especifica de libro\n");
+	while(TRUE) {
+		printf("por cual campo deseas realizar la busqueda? \n");
+		printf("1- titulo\n");
+		printf("2- ISBN\n");
+		scanf("%d", &campo);
+
+		if(campo >= 1 && campo <= 2) //valido el campo seleccionado
+			break;
+		else
+			printf("la opcion ingresada es incorrecta\n\n");
+	}
+
+	fflush(stdin);
+	switch (campo) {
+		case TITULO:
+			printf("ingresa el titulo del libro: ");
+			filtro = getLine(256);
+			raiz = arbol->raiz;
+			break;
+		case ISBN:
+			printf("ingresa el ISBN del libro: ");
+			filtro = getLine(20);
+			raiz = arbol->raizISBN;
+			break;
+	}
+
+	Nodo *nodo = buscarLibroPorClave(raiz, filtro);
+	if(nodo == NULL) {
+		printf("***no se encontraron resultados***\n");
+		return NULL;
+	}
+	else {
+		printLibro(nodo->libro);
+		return nodo;
+	}
+
+}
+
+void printLibrosMenu(Arbol *arbol) {
+	ListLibro *list = malloc(sizeof(ListLibro));
+	list->primero = NULL;
+	list->ultimo = NULL;
+	list->total = 0;
+
+	printf(" ----------------------------------------------------------- \n");
+	printf("|                     LIBROS->mostrar                       |\n");
+	printf(" ----------------------------------------------------------- \n\n");
+
+
+	buscarLibro(arbol->raizISBN, list, "", ISBN);
+	printListLibros(list);
+}
+
+void editLibroMenu(Arbol *arbol) {
+	printf(" ----------------------------------------------------------- \n");
+	printf("|                     LIBROS->editar                        |\n");
+	printf(" ----------------------------------------------------------- \n\n");
+	Nodo *busqueda = findLibroByClaveMenu(arbol);
+	char *titulo = malloc(sizeof(256));
+	char *isbn = malloc(sizeof(20));
+
+	if(busqueda != NULL) {
+		stateTitulo:;
+		printf("\nIngresa los nuevos datos\n");
+		printf("titulo: ");
+		titulo = getLine(256);
+
+		//libros con titulo duplicado
+		if(strcmp(titulo, busqueda->libro->titulo) != 0 && buscarLibroPorClave(arbol->raiz, titulo) != NULL) {
+			printf("El titulo ya existe\n");
+			goto stateTitulo;
+		}
+
+		busqueda->libro->titulo = titulo;
+
+		stateIsbn:;
+		printf("isbn: ");
+		isbn = getLine(20);
+
+		//libros con isbn duplicado
+		if(strcmp(isbn, busqueda->libro->isbn) != 0 && buscarLibroPorClave(arbol->raizISBN, isbn) != NULL) {
+			printf("El ISBN ya existe\n");
+			goto stateIsbn;
+		}
+		busqueda->libro->isbn = isbn;
+
+		printf("autor: ");
+		busqueda->libro->autor = getLine(128);
+
+		printf("genero: ");
+		busqueda->libro->genero = getLine(64);
+
+		printf("a%co de edicion: ", 164); //agrego el caracter ï¿½
+		scanf("%d", &busqueda->libro->year);
+		fflush(stdin);
+
+		printf("\n***libro modificado***\n\n");
+	}
 }
