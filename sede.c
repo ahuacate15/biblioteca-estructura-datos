@@ -37,6 +37,7 @@ void requestNewSede(ListaSede *lista); //solicito los datos de una sede y la agr
 void printListSedes(ListaSede *lista);
 void printListSedesMinuature(ListaSede *lista);
 ListaSede *cargarSedesDefecto(ListaSede *lista);
+void editSedeMenu(ListaSede *lista);
 
 ListaSede *initListSede() {
     ListaSede *lista = malloc(sizeof(ListaSede));
@@ -225,4 +226,55 @@ ListaSede *cargarSedesDefecto(ListaSede *lista) {
     appendSede(lista, sede3);
 
     return lista;
+}
+
+void editSedeMenu(ListaSede *lista) {
+    int id = 0;
+    printf(" ----------------------------------------------------------- \n");
+    printf("|                       SEDES->editar                        |\n");
+    printf(" ----------------------------------------------------------- \n\n");
+
+    while(TRUE) {
+        printf("ingresa el ID de la sede: ");
+        if(scanf("%d", &id) == 0) {
+            printf("la opcion ingresada es incorrecta\n\n");
+            continue;
+        }
+
+        Sede *sede = getSede(lista, id);
+        if(sede == NULL) {
+            printf("***no se encontraron resultados***\n");
+            return;
+        } else {
+            printf("\n");
+            printf("id: %d\n", sede->id);
+            printf("nombre: %s\n", sede->nombre);
+            printf("departamento: %s\n", sede->departamento);
+            printf("telefono: %s\n", sede->telefono);
+            printf("correo: %s\n", sede->correo);
+            printf("direccion: %s\n", sede->direccion);
+            fflush(stdin);
+            
+            printf("\nIngresa los nuevos datos\n");
+            printf("nombre: ");
+            sede->nombre = getLine(60);
+
+            printf("departamento: ");
+            sede->departamento = getLine(30);
+
+            printf("telefono: ");
+            sede->telefono = getLine(10);
+
+            printf("correo electronico: ");
+            sede->correo = getLine(60);
+
+            printf("direccion: ");
+            sede->direccion = getLine(254);
+
+            printf("\n***sede modificada***\n\n");
+            return;
+        }
+    }
+
+
 }

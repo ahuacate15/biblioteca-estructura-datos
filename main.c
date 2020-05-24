@@ -10,6 +10,7 @@
 #define TRASLADOS 3
 #define LIBROS 4
 #define ALUMNOS 5
+#define SEDES 6
 #define ERROR -1
 #define FINALIZAR 7
 #define TRUE 1
@@ -22,8 +23,13 @@
 #define MODIFICARLIBRO 4
 #define MOSTRARLIBROS 5
 
+//constantes para acciones del menu
+#define MOSTRAR 1
+#define EDITAR 2
+
 int printMainMenu();
 int printMenuLibros();
+int printMenuSedes();
 
 int main() {
 	Arbol *arbolLibros = initializeArbol();
@@ -57,10 +63,26 @@ int main() {
 							goto inicio;
 							break;
 						default:
-							printf("La opcion ingresada en incorrecta\n\n");
+							printf("La opcion ingresada es incorrecta\n\n");
 					}
 				}
 				break;
+			case SEDES:
+				while(TRUE) {
+					switch (printMenuSedes()) {
+						case MOSTRAR:
+							printListSedes(listSede);
+							break;
+						case EDITAR:
+							editSedeMenu(listSede);
+							break;
+						case 3:
+							goto inicio;
+							break;
+						default:
+							printf("La opcion ingresada es incorrecta\n");
+					}
+				}
 			case FINALIZAR:
 				return;
 			default:
@@ -102,7 +124,25 @@ int printMenuLibros() {
 		printf("1)Agregar\t 2)Buscar\t 3)Buscar por id\n");
 		printf("4)Modificar\t 5)Mostrar\t 6)Atras\n\n");
 
-		printf(">> ");
+		printf("libros >> ");
+		if(scanf("%d", &opcion) == 0) {
+			printf("La opcion ingresada es incorrecta\n\n");
+			fflush(stdin);
+			continue;
+		}
+		return opcion;
+	}
+}
+
+int printMenuSedes() {
+	int opcion = 0;
+	while(TRUE) {
+		printf(" ----------------------------------------------------------- \n");
+		printf("|                          SEDES                            |\n");
+		printf(" ----------------------------------------------------------- \n\n");
+		printf("1)Mostrar\t 2)Editar \t3)Atras\n\n");
+
+		printf("sedes >> ");
 		if(scanf("%d", &opcion) == 0) {
 			printf("La opcion ingresada es incorrecta\n\n");
 			fflush(stdin);

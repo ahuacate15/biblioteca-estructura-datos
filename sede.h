@@ -28,3 +28,4 @@ void requestNewSede(ListaSede *lista); //solicito los datos de una sede y la agr
 void printListSedes(ListaSede *lista);
 void printListSedesMinuature(ListaSede *lista); //imprimime el ID y el nombre de la sede (unicamente)
 ListaSede *cargarSedesDefecto(ListaSede *lista);
+void editSedeMenu(ListaSede *lista);
