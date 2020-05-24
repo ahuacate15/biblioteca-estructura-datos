@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include "libro.h"
+#include "sede.h";
 
 //contantes para menu principal
 #define PRESTAMOS 1
@@ -25,8 +26,10 @@ int printMainMenu();
 int printMenuLibros();
 
 int main() {
-	Arbol *arbol = initializeArbol();
-	arbol = cargarRegistrosDefecto(arbol);
+	Arbol *arbolLibros = initializeArbol();
+	arbolLibros = cargarRegistrosDefecto(arbolLibros);
+	ListaSede *listSede = initListSede();
+	listSede = cargarSedesDefecto(listSede);
 	setlocale(LC_ALL,"spanish");
 
 	inicio:;
@@ -36,19 +39,19 @@ int main() {
 				while(TRUE) {
 					switch(printMenuLibros()) {
 						case AGREGARLIBRO:
-							addLibroMenu(arbol);
+							addLibroMenu(arbolLibros, listSede);
 							break;
 						case BUSCARLIBRO:
-							findLibrosMENU(arbol);
+							findLibrosMENU(arbolLibros);
 							break;
 						case BUSCARLIBROPORID:
-							findLibroByClaveMenu(arbol);
+							findLibroByClaveMenu(arbolLibros);
 							break;
 						case MODIFICARLIBRO:
-							editLibroMenu(arbol);
+							editLibroMenu(arbolLibros);
 							break;
 						case MOSTRARLIBROS:
-							printLibrosMenu(arbol);
+							printLibrosMenu(arbolLibros);
 							break;
 						case 6: //atras
 							goto inicio;
@@ -74,10 +77,10 @@ int printMainMenu() {
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                  SISTEMA BIBLIOTECARIO                    |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		
+
 		printf("1)prestamos\t 2)devoluciones\t 3)traslados\t 4)libros\n");
 		printf("5)alumnos\t 6)sedes\t 7)finalizar\n\n");
-		
+
 		printf(">> ");
 
 		if(scanf("%d", &opcion) == 0) {
@@ -98,7 +101,7 @@ int printMenuLibros() {
 		printf(" ----------------------------------------------------------- \n\n");
 		printf("1)Agregar\t 2)Buscar\t 3)Buscar por id\n");
 		printf("4)Modificar\t 5)Mostrar\t 6)Atras\n\n");
-	
+
 		printf(">> ");
 		if(scanf("%d", &opcion) == 0) {
 			printf("La opcion ingresada es incorrecta\n\n");

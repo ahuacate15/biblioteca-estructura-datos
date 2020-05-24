@@ -2,12 +2,19 @@
 #include <string.h>
 #include <time.h>
 #include "texto.h"
+#include "sede.h";
 
 #define TRUE 1
 #define FALSE 0
 
 #define TITULO 1
 #define ISBN 2
+
+typedef struct libroSede {
+	Sede *sede;
+	int copias;
+	struct sede *siguiente;
+} LibroSede;
 
 typedef struct libro {
 	int id;
@@ -17,6 +24,7 @@ typedef struct libro {
 	int year;
 	int copias;
 	char *genero;
+	LibroSede *libroSede;
 	struct Libro *siguiente;
 } Libro;
 
@@ -63,6 +71,7 @@ ListLibro *buscarLibro(Nodo *nodo, ListLibro *list, char *clave, int campo);
 Nodo *buscarLibroPorClave(Nodo *nodo, char *clave);
 Libro *addLibroToList(ListLibro *list, Libro *libro);
 void eliminarLibro(Nodo **nodo, Nodo *padre);
+void addLibroSedeItem(Libro *libro, Sede *sede, int copias);
 /*
 * @description : carga 10 libros a la memoria
 */
@@ -71,7 +80,7 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol);
 /*-----------prototitpos de funciones para interfaz--------*/
 void printLibro(Libro *libro); //imprime un unico libro
 void printListLibros(ListLibro *listLibro); //formatea e imprime en pantalla una lista de tipo listLibro
-void addLibroMenu(Arbol *arbol);
+void addLibroMenu(Arbol *arbol, ListaSede *listaSede);
 void findLibrosMENU(Arbol *arbol);
 Nodo *findLibroByClaveMenu(Arbol *arbol);
 void printLibrosMenu(Arbol *arbol); //obtiene todos los libros del arbol, y los imprimie en pantalla
@@ -245,9 +254,9 @@ void test() {
 
 
 	Arbol *arbol = initializeArbol();
-	addLibroMenu(arbol);
-	addLibroMenu(arbol);
-	addLibroMenu(arbol);
+	addLibroMenu(arbol, NULL);
+	addLibroMenu(arbol, NULL);
+	addLibroMenu(arbol, NULL);
 
 	Nodo *nodoISBN = buscarLibroPorClave(arbol->raizISBN, "15");
 	Nodo *nodoTitulo = buscarLibroPorClave(arbol->raiz, "15");
@@ -266,6 +275,34 @@ void test() {
 	printf("finalizado\n");
 }
 
+void addLibroSedeItem(Libro *libro, Sede *sede, int copias) {
+	LibroSede *libroSede = malloc(sizeof(LibroSede));
+	libroSede->sede = sede;
+	libroSede->copias = copias;
+	libroSede->siguiente = NULL;
+
+	//no hay existencias en ninguna sede
+	if(libro->libroSede == NULL) {
+		libro->libroSede = libroSede;
+	} else {
+		LibroSede *tmp = libro->libroSede;
+
+		//si la sede se encuentra vinculada, aumento el numero de copias
+		while(tmp->siguiente != NULL) {
+			if(tmp->sede->id == sede->id) {
+				tmp->copias += copias;
+				goto stateEnd; //no agrego la sede a la cola
+			}
+			tmp = tmp->siguiente;
+		}
+		while(tmp->siguiente != NULL)
+			tmp = tmp->siguiente;
+
+		tmp->siguiente = libroSede;
+		stateEnd:;
+	}
+}
+
 Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	//Nodo *insertarNodo(Arbol *arbol, Nodo *nodo, Nodo *padre, Libro *libro, int campo);
 
@@ -273,6 +310,7 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro1->titulo = "kafka en la orilla";
 	libro1->isbn = "053315";
 	libro1->autor = "haruki murakami";
+	libro1->genero = "novela";
 	libro1->copias = 0;
 	libro1->year = 1990;
 
@@ -280,6 +318,7 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro2->titulo = "rebelion en la granja";
 	libro2->isbn = "053316";
 	libro2->autor = "george orwell";
+	libro2->genero = "distopia";
 	libro2->copias = 0;
 	libro2->year = 1991;
 
@@ -287,6 +326,7 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro3->titulo = "1984";
 	libro3->isbn = "053317";
 	libro3->autor = "george orwell";
+	libro3->genero = "distopia";
 	libro3->copias = 0;
 	libro3->year = 1990;
 
@@ -294,6 +334,7 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro4->titulo = "el manifiesto comunista";
 	libro4->isbn = "053318";
 	libro4->autor = "karl marx";
+	libro4->genero = "politica";
 	libro4->copias = 0;
 	libro4->year = 2001;
 
@@ -301,6 +342,7 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
     libro5->titulo = "el anarquista loco";
     libro5->isbn = "053319";
     libro5->autor = "joseph mora";
+    libro5->genero = "politica";
     libro5->copias = 0;
     libro5->year = 1990;
 
@@ -348,9 +390,9 @@ void printListLibros(ListLibro *listLibro) {
 	}
 }
 
-void addLibroMenu(Arbol *arbol) {
+void addLibroMenu(Arbol *arbol, ListaSede *listaSede) {
 	Libro *libro = initializeLibro();
-
+	int idSede = 0, copias = 0;
 	printf(" ----------------------------------------------------------- \n");
 	printf("|                     LIBROS->agregar                       |\n");
 	printf(" ----------------------------------------------------------- \n\n");
@@ -382,6 +424,42 @@ void addLibroMenu(Arbol *arbol) {
 
 	printf("a%co de edicion: ", 164); //agrego el caracter �
 	scanf("%d", &libro->year);
+
+	//agrega el registro a cada sede con 0 existencias
+	Sede *tmp = listaSede->primero;
+	while(tmp->siguiente != NULL) {
+		addLibroSedeItem(libro, tmp, copias);
+		tmp = tmp->siguiente;
+	}
+
+	//solicito las existencias por sede
+	while(TRUE) {
+		printf("\nexistencias por sede, elige una (-1 para finalizar): \n");
+		printListSedesMinuature(listaSede);
+
+		if(scanf("%d", &idSede) == 0) {
+			printf("la opcion ingresada es incorrecta\n");
+			fflush(stdin);
+			continue;
+		}
+
+		if(idSede == -1)
+			break;
+
+		Sede *sede = getSede(listaSede, idSede);
+		if(sede == NULL) {
+			printf("la sede seleccionada no existe\n");
+			continue;
+		} else {
+			printf("ingresa el numero de copias: ");
+			if(scanf("%d", &copias) == 0) {
+				printf("la opcion ingresada es incorrecta\n");
+				fflush(stdin);
+				continue;
+			}
+			addLibroSedeItem(libro, sede, copias);
+		}
+	}
 	fflush(stdin);
 
 	//ordeno estructura segun el titulo del libro

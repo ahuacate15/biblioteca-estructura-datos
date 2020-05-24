@@ -7,7 +7,7 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct sede { 
+typedef struct sede {
     int id;
     char *nombre;
     char *departamento;
@@ -25,7 +25,7 @@ typedef struct listaSede {
 } ListaSede;
 
 /*-----------prototipos de funciones estandar----------*/
-ListaSede *initListSede(); 
+ListaSede *initListSede();
 Sede *initSede();
 Sede *appendSede(ListaSede *lista, Sede *sede); //agregar una sede al final de la lista, retorna el nodo creado
 int isEmptyListSede(ListaSede *lista); //compruebo si la lista se encuentra vacia
@@ -34,7 +34,9 @@ int removeSede(ListaSede *lista, int id); //elimino una sede segun el id
 
 /*--------prototipo de funciones para interfaz --------*/
 void requestNewSede(ListaSede *lista); //solicito los datos de una sede y la agrego a la lista
-void printListSedes(ListaSede *lista); 
+void printListSedes(ListaSede *lista);
+void printListSedesMinuature(ListaSede *lista);
+ListaSede *cargarSedesDefecto(ListaSede *lista);
 
 ListaSede *initListSede() {
     ListaSede *lista = malloc(sizeof(ListaSede));
@@ -88,7 +90,7 @@ int isEmptyListSede(ListaSede *lista) {
 Sede *getSede(ListaSede *lista, int id) {
     Sede *primero, *resultado = NULL;
     int cont = 1;
-    
+
     primero = lista->primero;
     while(primero != NULL) {
         if(cont == id) {
@@ -110,7 +112,7 @@ int removeSede(ListaSede *lista, int id) {
         return FALSE;
 
     sede = lista->primero;
-    
+
     if(lista->total == 1) { //eliminar el unico elemento de la lista
         free(lista->primero);
         lista = initListSede();
@@ -121,13 +123,13 @@ int removeSede(ListaSede *lista, int id) {
             if(sede->id == id) { //busco un elemento por ID
                 encontrado = TRUE;
                 break;
-            } 
+            }
             sede = sede->siguiente;
         }
 
         if(!encontrado)
             return FALSE;
-        
+
         if(sede->id == lista->primero->id) { //primer elemento de la lista
             lista->primero = sede->siguiente;
             lista->total--;
@@ -145,7 +147,7 @@ int removeSede(ListaSede *lista, int id) {
 
         return TRUE;
     }
-    
+
 }
 
 //solicito los datos de una sede y la agrego a la lista
@@ -188,4 +190,39 @@ void printListSedes(ListaSede *lista) {
     }
 }
 
+void printListSedesMinuature(ListaSede *lista) {
+    Sede *sede = lista->primero;
 
+    while(sede != NULL) {
+        printf("%d- %s\n", sede->id, sede->nombre);
+        sede = sede->siguiente;
+    }
+}
+
+ListaSede *cargarSedesDefecto(ListaSede *lista) {
+    Sede *sede1 = initSede();
+    sede1->nombre = "ITCA santa tecla";
+    sede1->departamento = "La libertad";
+    sede1->telefono = "2132-7400";
+    sede1->correo = "biblioteca.santatecla@itca.edu.sv";
+    sede1->direccion = "Carretera a Santa Tecla km. 11, La Libertad, El Salvador";
+    appendSede(lista, sede1);
+
+    Sede *sede2 = initSede();
+    sede2->nombre = "ITCA santa ana";
+    sede2->departamento = "Santa ana";
+    sede2->telefono = "2440-4348";
+    sede2->correo = "biblioteca.santaana@itca.edu.sv";
+    sede2->direccion = "Cuadra y media al sur del Estadio Óscar Quiteño";
+    appendSede(lista, sede2);
+
+    Sede *sede3 = initSede();
+    sede3->nombre = "ITCA san miguel";
+    sede3->departamento = "San miguel";
+    sede3->telefono = "2669-2298";
+    sede3->correo = "biblioteca.sanmiguel@itca.edu.sv";
+    sede3->direccion = "Km. 140 Carretera a Santa Rosa de Lima";
+    appendSede(lista, sede3);
+
+    return lista;
+}
