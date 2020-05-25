@@ -13,7 +13,7 @@
 typedef struct libroSede {
 	Sede *sede;
 	int copias;
-	struct sede *siguiente;
+	struct LibroSede *siguiente;
 } LibroSede;
 
 typedef struct libro {
@@ -75,7 +75,7 @@ void addLibroSedeItem(Libro *libro, Sede *sede, int copias);
 /*
 * @description : carga 10 libros a la memoria
 */
-Arbol *cargarRegistrosDefecto(Arbol *arbol);
+Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede);
 
 /*-----------prototitpos de funciones para interfaz--------*/
 void printLibro(Libro *libro); //imprime un unico libro
@@ -85,6 +85,7 @@ void findLibrosMENU(Arbol *arbol);
 Nodo *findLibroByClaveMenu(Arbol *arbol);
 void printLibrosMenu(Arbol *arbol); //obtiene todos los libros del arbol, y los imprimie en pantalla
 void editLibroMenu(Arbol *arbol); //muestra la informacion de un info en pantalla, asi como la solicitud de datos para su edicion
+void printCopiasPorSede(Libro *libro); //imprime la cantidad de copias del libro en cada una de las sedes
 
 Arbol *initializeArbol() {
 	Arbol *arbol = malloc(sizeof(Arbol));
@@ -100,6 +101,7 @@ Libro *initializeLibro() {
 	libro->autor = malloc(sizeof(char) * 128);
 	libro->isbn = malloc(sizeof(char) * 20);
 	libro->genero = malloc(sizeof(char) * 64);
+	libro->libroSede = NULL;
 	libro->copias = 0;
 	libro->siguiente = NULL;
 
@@ -190,7 +192,7 @@ Nodo *buscarLibroPorClave(Nodo *nodo, char *clave) {
 		return NULL;
 
 	int comparacion = strcmp(clave, nodo->clave);
-	if(comparacion == 0 && nodo->activo)
+	if(comparacion == 0)
 		return nodo;
 	else if(comparacion < 0)
 		buscarLibroPorClave(nodo->izquierda, clave);
@@ -303,8 +305,7 @@ void addLibroSedeItem(Libro *libro, Sede *sede, int copias) {
 	}
 }
 
-Arbol *cargarRegistrosDefecto(Arbol *arbol) {
-	//Nodo *insertarNodo(Arbol *arbol, Nodo *nodo, Nodo *padre, Libro *libro, int campo);
+Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede) {
 
 	Libro *libro1 = initializeLibro();
 	libro1->titulo = "kafka en la orilla";
@@ -313,6 +314,8 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro1->genero = "novela";
 	libro1->copias = 0;
 	libro1->year = 1990;
+	insertarNodo(arbol, arbol->raiz, NULL, libro1, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro1, ISBN);
 
 	Libro *libro2 = initializeLibro();
 	libro2->titulo = "rebelion en la granja";
@@ -321,6 +324,8 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro2->genero = "distopia";
 	libro2->copias = 0;
 	libro2->year = 1991;
+	insertarNodo(arbol, arbol->raiz, NULL, libro2, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro2, ISBN);
 
 	Libro *libro3 = initializeLibro();
 	libro3->titulo = "1984";
@@ -329,6 +334,8 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro3->genero = "distopia";
 	libro3->copias = 0;
 	libro3->year = 1990;
+	insertarNodo(arbol, arbol->raiz, NULL, libro3, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro3, ISBN);
 
 	Libro *libro4 = initializeLibro();
 	libro4->titulo = "el manifiesto comunista";
@@ -337,6 +344,8 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
 	libro4->genero = "politica";
 	libro4->copias = 0;
 	libro4->year = 2001;
+	insertarNodo(arbol, arbol->raiz, NULL, libro4, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro4, ISBN);
 
     Libro *libro5 = initializeLibro();
     libro5->titulo = "el anarquista loco";
@@ -345,18 +354,20 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol) {
     libro5->genero = "politica";
     libro5->copias = 0;
     libro5->year = 1990;
-
-
-	insertarNodo(arbol, arbol->raiz, NULL, libro1, TITULO);
-	insertarNodo(arbol, arbol->raizISBN, NULL, libro1, ISBN);
-	insertarNodo(arbol, arbol->raiz, NULL, libro2, TITULO);
-	insertarNodo(arbol, arbol->raizISBN, NULL, libro2, ISBN);
-	insertarNodo(arbol, arbol->raiz, NULL, libro3, TITULO);
-	insertarNodo(arbol, arbol->raizISBN, NULL, libro3, ISBN);
-	insertarNodo(arbol, arbol->raiz, NULL, libro4, TITULO);
-	insertarNodo(arbol, arbol->raizISBN, NULL, libro4, ISBN);
 	insertarNodo(arbol, arbol->raiz, NULL, libro5, TITULO);
 	insertarNodo(arbol, arbol->raizISBN, NULL, libro5, ISBN);
+
+	//agrego existencias por defecto en las sedes
+	Sede *tmp = listaSede->primero;
+	int copias[] = {5,1,3,5,6};
+	while(tmp != NULL) {
+		addLibroSedeItem(libro1, tmp, copias[0]++);
+		addLibroSedeItem(libro2, tmp, copias[1]++);
+		addLibroSedeItem(libro3, tmp, copias[2]++);
+		addLibroSedeItem(libro4, tmp, copias[3]++);
+		addLibroSedeItem(libro5, tmp, copias[4]++);
+		tmp = tmp->siguiente;
+	}
 
 	return arbol;
 
@@ -621,5 +632,28 @@ void editLibroMenu(Arbol *arbol) {
 		fflush(stdin);
 
 		printf("\n***libro modificado***\n\n");
+	}
+}
+
+void printCopiasPorSede(Libro *libro) {
+	if(libro == NULL)
+		return;
+
+	printf("\n");
+	printf("Titulo: %s\n", libro->titulo);
+	printf("ISBN: %s\n", libro->isbn);
+
+
+	if(libro->libroSede == NULL) {
+		printf("***No existen unidades en ninguna sede***\n");
+		return;
+	}
+
+	LibroSede *tmp = libro->libroSede;
+
+	printf("\nCopias por sede\n");
+	while(tmp != NULL) {
+		printf("%d- %s (%d copias)\n", tmp->sede->id, tmp->sede->nombre, tmp->copias);
+		tmp = tmp->siguiente;
 	}
 }

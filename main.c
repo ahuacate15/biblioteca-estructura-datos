@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <locale.h>
 #include "libro.h"
-#include "sede.h";
+#include "sede.h"
+#include "traslado.h"
 
 //contantes para menu principal
 #define PRESTAMOS 1
@@ -32,15 +33,20 @@ int printMenuLibros();
 int printMenuSedes();
 
 int main() {
-	Arbol *arbolLibros = initializeArbol();
-	arbolLibros = cargarRegistrosDefecto(arbolLibros);
 	ListaSede *listSede = initListSede();
 	listSede = cargarSedesDefecto(listSede);
+
+	Arbol *arbolLibros = initializeArbol();
+	arbolLibros = cargarRegistrosDefecto(arbolLibros, listSede);
+
 	setlocale(LC_ALL,"spanish");
 
 	inicio:;
 	while(TRUE) {
 		switch(printMainMenu()) {
+			case TRASLADOS:
+				realizarTrastadoMenu(arbolLibros, listSede);
+				break;
 			case LIBROS:
 				while(TRUE) {
 					switch(printMenuLibros()) {
