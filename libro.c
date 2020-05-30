@@ -381,7 +381,7 @@ void printLibro(Libro *libro) {
 	printf("ISBN: %s\n", libro->isbn);
 	printf("Titulo: %s\n", libro->titulo);
 	printf("Autor: %s\n", libro->autor);
-	printf("Aï¿½o: %d\n", libro->year);
+	printf("Año: %d\n", libro->year);
 	printf("Genero: %s\n", libro->genero);
 
 	//imprimo el stock por sede
@@ -401,7 +401,7 @@ void printListLibros(ListLibro *listLibro) {
 			printf("isbn: %s\n", libro->isbn);
 			printf("autor: %s\n", libro->autor);
 			printf("genero: %s\n", libro->genero);
-			printf("aï¿½o: %d\n", libro->year);
+			printf("año: %d\n", libro->year);
 
 			//imprimo el stock por sede
 			printCopiasPorSede(libro);
@@ -443,7 +443,7 @@ void addLibroMenu(Arbol *arbol, ListaSede *listaSede) {
 	printf("genero: ");
 	libro->genero = getLine(64);
 
-	printf("a%co de edicion: ", 164); //agrego el caracter ï¿½
+	printf("año de edicion: ");
 	scanf("%d", &libro->year);
 
 	//agrega el registro a cada sede con 0 existencias
@@ -457,7 +457,7 @@ void addLibroMenu(Arbol *arbol, ListaSede *listaSede) {
 	while(TRUE) {
 		printf("\nexistencias por sede, elige una (-1 para finalizar): \n");
 		printListSedesMinuature(listaSede);
-
+		printf("\nsede >> ");
 		if(scanf("%d", &idSede) == 0) {
 			printf("la opcion ingresada es incorrecta\n");
 			fflush(stdin);
@@ -639,7 +639,7 @@ void editLibroMenu(Arbol *arbol) {
 		printf("genero: ");
 		busqueda->libro->genero = getLine(64);
 
-		printf("a%co de edicion: ", 164); //agrego el caracter ï¿½
+		printf("año de edicion: ");
 		scanf("%d", &busqueda->libro->year);
 		fflush(stdin);
 

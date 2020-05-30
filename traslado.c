@@ -34,19 +34,25 @@ void realizarTrastadoMenu(Arbol *arbol, ListaSede *lista) {
     int idSedeOrigen = 0, idSedeDestino = 0, copias = 0, campoBusqueda = 0;
     Nodo *raiz = NULL;
     char *filtro = malloc(sizeof(char) * 256);
+    char respuesta = NULL;
 
     printf(" ----------------------------------------------------------- \n");
 	printf("|                           TRASLADOS                       |\n");
 	printf(" ----------------------------------------------------------- \n\n");
 
     stateBusquedaLibro:;
-    printf("elige el campo de busqueda para el libro: \n");
+    printf("elige el campo de busqueda para el libro (-1 para cancelar): \n");
     printf("1)titulo \t2)ISBN\n");
     printf("\n>> ");
     if(scanf("%d", &campoBusqueda) == 0) {
         printf("la opcion ingresada es incorrecta\n");
         fflush(stdin);
         goto stateBusquedaLibro;
+    }
+
+    if(campoBusqueda == -1) {
+        printf("\n***operacion cancelada***\n\n");
+        return;
     }
 
     if(campoBusqueda != 1 && campoBusqueda != 2) {
@@ -129,6 +135,21 @@ void realizarTrastadoMenu(Arbol *arbol, ListaSede *lista) {
         printf("la sede '%s' no cuenta con suficientes copias para realizar el traslado\n\n", origen->nombre);
         goto stateExistencias;
     }
+
+    stateConfirm:;
+    printf("\nTrasladar %d copias desde '%s' hasta '%s'. Los datos son correctos? (s/n)\n", copias, origen->nombre, destino->nombre);
+    fflush(stdin);
+    printf("\nrespuesta >> ");
+    scanf("%c", &respuesta);
+
+    if(respuesta != 's' && respuesta != 'n') {
+        printf("la opcion ingresada es incorrecta\n\n");
+        goto stateConfirm;
+    }
+
+    //solicito nuevamente los datos del traslado (el usuario se ha equivocado)
+    if(respuesta == 'n')
+        goto stateSedeOrigen;
 
     //saco las copias de la sede origen
     addLibroSedeItem(nodo->libro, origen, copias * -1);
