@@ -288,19 +288,22 @@ void addLibroSedeItem(Libro *libro, Sede *sede, int copias) {
 		libro->libroSede = libroSede;
 	} else {
 		LibroSede *tmp = libro->libroSede;
+		LibroSede *aux = libro->libroSede;
 
 		//si la sede se encuentra vinculada, aumento el numero de copias
-		while(tmp->siguiente != NULL) {
+		while(tmp != NULL) {
 			if(tmp->sede->id == sede->id) {
 				tmp->copias += copias;
 				goto stateEnd; //no agrego la sede a la cola
 			}
 			tmp = tmp->siguiente;
 		}
-		while(tmp->siguiente != NULL)
-			tmp = tmp->siguiente;
 
-		tmp->siguiente = libroSede;
+		//sede no vinculada al numero de copias, la agrego al final de la lista
+		while(aux->siguiente != NULL)
+			aux = aux->siguiente;
+
+		aux->siguiente = libroSede;
 		stateEnd:;
 	}
 }
@@ -374,11 +377,15 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede) {
 }
 
 void printLibro(Libro *libro) {
+	printf("\n");
 	printf("ISBN: %s\n", libro->isbn);
 	printf("Titulo: %s\n", libro->titulo);
 	printf("Autor: %s\n", libro->autor);
 	printf("A�o: %d\n", libro->year);
 	printf("Genero: %s\n", libro->genero);
+
+	//imprimo el stock por sede
+	printCopiasPorSede(libro);
 }
 
 void printListLibros(ListLibro *listLibro) {
@@ -387,7 +394,7 @@ void printListLibros(ListLibro *listLibro) {
 	if(libro == NULL)
 		printf("\n***no se encontraron resultados\n\n");
 	else {
-		printf("Total de resultados: %d\n", listLibro->total);
+		printf("\nTotal de resultados: %d\n", listLibro->total);
 		while(libro != NULL) {
 			printf("----------------------------\n");
 			printf("titulo: %s\n", libro->titulo);
@@ -395,6 +402,9 @@ void printListLibros(ListLibro *listLibro) {
 			printf("autor: %s\n", libro->autor);
 			printf("genero: %s\n", libro->genero);
 			printf("a�o: %d\n", libro->year);
+
+			//imprimo el stock por sede
+			printCopiasPorSede(libro);
 			printf("\n");
 			libro = libro->siguiente;
 		}
@@ -497,12 +507,13 @@ void findLibrosMENU(Arbol *arbol) {
 	list->total = 0;
 
 	char *filtro = malloc(sizeof(char) * 256); //maxima longitud para el titulo de un libro
-	printf("\nbusqueda de libros\n");
+	printf("\nbusqueda de libros (inicio del titulo o del ISBN)\n");
 
 	while(TRUE) {
 		printf("por cual campo deseas realizar la busqueda? \n");
 		printf("1- titulo\n");
 		printf("2- ISBN\n");
+		printf("\ncampo >> ");
 		scanf("%d", &campo);
 
 		if(campo >= 1 && campo <= 2) //valido el campo seleccionado
@@ -539,6 +550,7 @@ Nodo *findLibroByClaveMenu(Arbol *arbol) {
 		printf("por cual campo deseas realizar la busqueda? \n");
 		printf("1- titulo\n");
 		printf("2- ISBN\n");
+		printf("\ncampos >> ");
 		scanf("%d", &campo);
 
 		if(campo >= 1 && campo <= 2) //valido el campo seleccionado
@@ -638,11 +650,6 @@ void editLibroMenu(Arbol *arbol) {
 void printCopiasPorSede(Libro *libro) {
 	if(libro == NULL)
 		return;
-
-	printf("\n");
-	printf("Titulo: %s\n", libro->titulo);
-	printf("ISBN: %s\n", libro->isbn);
-
 
 	if(libro->libroSede == NULL) {
 		printf("***No existen unidades en ninguna sede***\n");

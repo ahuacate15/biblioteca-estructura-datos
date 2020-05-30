@@ -16,12 +16,13 @@ int verificarExistenciasLibro(Libro *libro, Sede *sede) {
     if(libro->libroSede == NULL)
         return -1;
 
-    Sede *tmp = libro->libroSede->sede;
+    LibroSede *tmp = libro->libroSede;
 
     //busco la sede en la lista de sedes relacionadas al libro
     while(tmp != NULL) {
-        if(tmp->id == sede->id)
-            return libro->libroSede->copias;
+        if(tmp->sede->id == sede->id)
+            return tmp->copias;
+
         tmp = tmp->siguiente;
     }
 
@@ -71,6 +72,9 @@ void realizarTrastadoMenu(Arbol *arbol, ListaSede *lista) {
         printf("\n***no se encontraron resultados\n\n");
         return;
     } else {
+        printf("\n");
+        printf("Titulo: %s\n", nodo->libro->titulo);
+        printf("ISBN: %s\n", nodo->libro->isbn);
         printCopiasPorSede(nodo->libro);
     }
 
@@ -116,14 +120,19 @@ void realizarTrastadoMenu(Arbol *arbol, ListaSede *lista) {
         goto stateExistencias;
     }
 
+    if(copias <= 0) {
+        printf("el numero de copias a trasladar debe ser mayor a 0\n\n");
+        goto stateExistencias;
+    }
+
     if(copias > verificarExistenciasLibro(nodo->libro, origen)) {
-            printf("la sede '%s' no cuenta con suficientes copias para realizar el traslado\n\n", origen->nombre);
-            goto stateExistencias;
+        printf("la sede '%s' no cuenta con suficientes copias para realizar el traslado\n\n", origen->nombre);
+        goto stateExistencias;
     }
 
     //saco las copias de la sede origen
     addLibroSedeItem(nodo->libro, origen, copias * -1);
     //recibo las copias en la sede destino
     addLibroSedeItem(nodo->libro, destino, copias);
-    printf("\n***traslado completao con exito***\n\n");
+    printf("\n***traslado completado con exito***\n\n");
 }
