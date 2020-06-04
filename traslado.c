@@ -36,6 +36,7 @@ void realizarTrastadoMenu(Arbol *arbol, ListaSede *lista) {
     char *filtro = malloc(sizeof(char) * 256);
     char respuesta = NULL;
 
+    system("cls");
     printf(" ----------------------------------------------------------- \n");
 	printf("|                           TRASLADOS                       |\n");
 	printf(" ----------------------------------------------------------- \n\n");
@@ -76,6 +77,7 @@ void realizarTrastadoMenu(Arbol *arbol, ListaSede *lista) {
     Nodo *nodo = buscarLibroPorClave(raiz, filtro);
     if(nodo == NULL) {
         printf("\n***no se encontraron resultados\n\n");
+        system("pause");
         return;
     } else {
         printf("\n");
@@ -156,4 +158,5 @@ void realizarTrastadoMenu(Arbol *arbol, ListaSede *lista) {
     //recibo las copias en la sede destino
     addLibroSedeItem(nodo->libro, destino, copias);
     printf("\n***traslado completado con exito***\n\n");
+    system("pause");
 }

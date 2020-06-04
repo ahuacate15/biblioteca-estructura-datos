@@ -381,7 +381,7 @@ void printLibro(Libro *libro) {
 	printf("ISBN: %s\n", libro->isbn);
 	printf("Titulo: %s\n", libro->titulo);
 	printf("Autor: %s\n", libro->autor);
-	printf("Año: %d\n", libro->year);
+	printf("Aï¿½o: %d\n", libro->year);
 	printf("Genero: %s\n", libro->genero);
 
 	//imprimo el stock por sede
@@ -401,7 +401,7 @@ void printListLibros(ListLibro *listLibro) {
 			printf("isbn: %s\n", libro->isbn);
 			printf("autor: %s\n", libro->autor);
 			printf("genero: %s\n", libro->genero);
-			printf("año: %d\n", libro->year);
+			printf("aï¿½o: %d\n", libro->year);
 
 			//imprimo el stock por sede
 			printCopiasPorSede(libro);
@@ -414,6 +414,7 @@ void printListLibros(ListLibro *listLibro) {
 void addLibroMenu(Arbol *arbol, ListaSede *listaSede) {
 	Libro *libro = initializeLibro();
 	int idSede = 0, copias = 0;
+	system("cls");
 	printf(" ----------------------------------------------------------- \n");
 	printf("|                     LIBROS->agregar                       |\n");
 	printf(" ----------------------------------------------------------- \n\n");
@@ -443,7 +444,7 @@ void addLibroMenu(Arbol *arbol, ListaSede *listaSede) {
 	printf("genero: ");
 	libro->genero = getLine(64);
 
-	printf("año de edicion: ");
+	printf("aï¿½o de edicion: ");
 	scanf("%d", &libro->year);
 
 	//agrega el registro a cada sede con 0 existencias
@@ -452,7 +453,7 @@ void addLibroMenu(Arbol *arbol, ListaSede *listaSede) {
 		addLibroSedeItem(libro, tmp, copias);
 		tmp = tmp->siguiente;
 	}
-
+ 
 	//solicito las existencias por sede
 	while(TRUE) {
 		printf("\nexistencias por sede, elige una (-1 para finalizar): \n");
@@ -496,6 +497,7 @@ void addLibroMenu(Arbol *arbol, ListaSede *listaSede) {
 		insertarNodo(arbol, arbol->raizISBN, NULL, libro, ISBN);
 
 	printf("\n***libro registrado***\n\n");
+	system("pause");
 }
 
 void findLibrosMENU(Arbol *arbol) {
@@ -538,6 +540,7 @@ void findLibrosMENU(Arbol *arbol) {
 
 	buscarLibro(raiz, list, filtro, campo);
 	printListLibros(list);
+	system("pause");
 }
 
 Nodo *findLibroByClaveMenu(Arbol *arbol) {
@@ -580,6 +583,7 @@ Nodo *findLibroByClaveMenu(Arbol *arbol) {
 	}
 	else {
 		printLibro(nodo->libro);
+		system("pause");
 		return nodo;
 	}
 
@@ -591,6 +595,7 @@ void printLibrosMenu(Arbol *arbol) {
 	list->ultimo = NULL;
 	list->total = 0;
 
+	system("cls");
 	printf(" ----------------------------------------------------------- \n");
 	printf("|                     LIBROS->mostrar                       |\n");
 	printf(" ----------------------------------------------------------- \n\n");
@@ -598,9 +603,11 @@ void printLibrosMenu(Arbol *arbol) {
 
 	buscarLibro(arbol->raizISBN, list, "", ISBN);
 	printListLibros(list);
+	system("pause");
 }
 
 void editLibroMenu(Arbol *arbol) {
+	system("cls");
 	printf(" ----------------------------------------------------------- \n");
 	printf("|                     LIBROS->editar                        |\n");
 	printf(" ----------------------------------------------------------- \n\n");
@@ -639,12 +646,14 @@ void editLibroMenu(Arbol *arbol) {
 		printf("genero: ");
 		busqueda->libro->genero = getLine(64);
 
-		printf("año de edicion: ");
+		printf("aï¿½o de edicion: ");
 		scanf("%d", &busqueda->libro->year);
 		fflush(stdin);
 
 		printf("\n***libro modificado***\n\n");
 	}
+
+	system("pause");
 }
 
 void printCopiasPorSede(Libro *libro) {

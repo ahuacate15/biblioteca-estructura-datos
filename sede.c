@@ -172,6 +172,7 @@ void requestNewSede(ListaSede *lista) {
     sede->direccion = getLine(254);
 
     printf("Elemento guardado con el ID: %d\n", appendSede(lista, sede)->id);
+    system("pause");
 }
 
 void printListSedes(ListaSede *lista) {
@@ -189,6 +190,7 @@ void printListSedes(ListaSede *lista) {
 
         sede = sede->siguiente;
     }
+    system("pause");
 }
 
 void printListSedesMinuature(ListaSede *lista) {
@@ -230,6 +232,7 @@ ListaSede *cargarSedesDefecto(ListaSede *lista) {
 
 void editSedeMenu(ListaSede *lista) {
     int id = 0;
+    system("cls");
     printf(" ----------------------------------------------------------- \n");
     printf("|                       SEDES->editar                        |\n");
     printf(" ----------------------------------------------------------- \n\n");
@@ -272,9 +275,10 @@ void editSedeMenu(ListaSede *lista) {
             sede->direccion = getLine(254);
 
             printf("\n***sede modificada***\n\n");
+            system("pause");
             return;
         }
     }
-
+    system("pause");
 
 }

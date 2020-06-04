@@ -4,6 +4,7 @@
 #include "libro.h"
 #include "sede.h"
 #include "traslado.h"
+#include "alumno.h"
 
 //contantes para menu principal
 #define PRESTAMOS 1
@@ -24,6 +25,13 @@
 #define MODIFICARLIBRO 4
 #define MOSTRARLIBROS 5
 
+//constantes para submenu alumnos
+#define AGREGAR_ALUMNO 1
+#define BUSCAR_ALUMNO 2
+#define MODIFICAR_ALUMNO 3
+#define ELIMINAR_ALUMNO 4
+#define MOSTRAR_ALUMNOS 5
+
 //constantes para acciones del menu
 #define MOSTRAR 1
 #define EDITAR 2
@@ -31,6 +39,7 @@
 int printMainMenu();
 int printMenuLibros();
 int printMenuSedes();
+int printMenuAlumnos();
 
 int main() {
 	ListaSede *listSede = initListSede();
@@ -39,10 +48,13 @@ int main() {
 	Arbol *arbolLibros = initializeArbol();
 	arbolLibros = cargarRegistrosDefecto(arbolLibros, listSede);
 
+	ListaAlumno *listaAlumno = initListaAlumno();
+
 	setlocale(LC_ALL,"spanish");
 
 	inicio:;
 	while(TRUE) {
+		system("cls");
 		switch(printMainMenu()) {
 			case TRASLADOS:
 				realizarTrastadoMenu(arbolLibros, listSede);
@@ -70,6 +82,7 @@ int main() {
 							break;
 						default:
 							printf("La opcion ingresada es incorrecta\n\n");
+							system("pause");
 					}
 				}
 				break;
@@ -87,12 +100,39 @@ int main() {
 							break;
 						default:
 							printf("La opcion ingresada es incorrecta\n");
+							system("pause");
+					}
+				}
+			case ALUMNOS:
+				while(TRUE) {
+					switch(printMenuAlumnos()) {
+						case AGREGAR_ALUMNO:
+							insertarAlumno(listaAlumno);
+							break;
+						case BUSCAR_ALUMNO:
+							BusquedaAlumno(listaAlumno);
+							break;
+						case MODIFICAR_ALUMNO:
+							modificarAlumno(listaAlumno);
+							break;
+						case ELIMINAR_ALUMNO:
+							eliminarAlumno(listaAlumno);
+							break;
+						case MOSTRAR_ALUMNOS:
+							mostrarAlumnos(listaAlumno);
+							break;
+						case 6:
+							goto inicio;
+						default:
+							printf("La opcion ingresada es incorrecta\n");
+							system("pause");
 					}
 				}
 			case FINALIZAR:
 				return;
 			default:
 				printf("La opcion ingresada en incorrecta\n\n");
+				system("pause");
 		}
 	}
 	return 0;
@@ -102,6 +142,7 @@ int printMainMenu() {
 	int opcion = NULL;
 
 	while(TRUE) {
+		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                  SISTEMA BIBLIOTECARIO                    |\n");
 		printf(" ----------------------------------------------------------- \n\n");
@@ -124,6 +165,7 @@ int printMainMenu() {
 int printMenuLibros() {
 	int opcion = 0;
 	while(TRUE) {
+		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                          LIBROS                           |\n");
 		printf(" ----------------------------------------------------------- \n\n");
@@ -143,12 +185,33 @@ int printMenuLibros() {
 int printMenuSedes() {
 	int opcion = 0;
 	while(TRUE) {
+		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                          SEDES                            |\n");
 		printf(" ----------------------------------------------------------- \n\n");
 		printf("1)Mostrar\t 2)Editar \t3)Atras\n\n");
 
 		printf("sedes >> ");
+		if(scanf("%d", &opcion) == 0) {
+			printf("La opcion ingresada es incorrecta\n\n");
+			fflush(stdin);
+			continue;
+		}
+		return opcion;
+	}
+}
+
+int printMenuAlumnos() {
+	int opcion = 0;
+	while(TRUE) {
+		system("cls");
+		printf(" ----------------------------------------------------------- \n");
+		printf("|                         ALUMNOS                           |\n");
+		printf(" ----------------------------------------------------------- \n\n");
+		printf("1)Agregar\t 2)Buscar\t 3)Modificar\n");
+		printf("4)Eliminar\t 5)Mostrar\t 6)Atras\n\n");
+
+		printf("alumnos >> ");
 		if(scanf("%d", &opcion) == 0) {
 			printf("La opcion ingresada es incorrecta\n\n");
 			fflush(stdin);
