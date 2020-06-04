@@ -49,6 +49,7 @@ int main() {
 	arbolLibros = cargarRegistrosDefecto(arbolLibros, listSede);
 
 	ListaAlumno *listaAlumno = initListaAlumno();
+	cargaInicialAlumnos(listaAlumno);
 
 	setlocale(LC_ALL,"spanish");
 

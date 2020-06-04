@@ -31,432 +31,6 @@ Alumno *ultimo = NULL;*/
 Alumno *initAlumno();
 ListaAlumno *initListaAlumno();
 ListaAlumno *cargarAlumnoDefecto(ListaAlumno *lista);
-
-//Declaracion de variables globales
-int h;
-
-ListaAlumno *initListaAlumno() {
-    ListaAlumno *lista = malloc(sizeof(ListaAlumno));
-    lista->total = 0;
-    lista->primero = NULL;
-    lista->ultimo = NULL;
-    return lista;
-}
-
-Alumno *initAlumno() {
-    Alumno *alumno = malloc(sizeof(Alumno));
-    
-    
-    alumno->siguiente = NULL;
-    return alumno;
-}
-
-
-//Carga inicial de registros de Alumnos
-void cargaInicialAlumnos(ListaAlumno *listaAlumno)
-{
-	//Ingreso de Alumno 1
-	Alumno *alumno1 = malloc(sizeof(Alumno));
-    alumno1->carnet=1;
-    strcpy(alumno1->nombreAlumno,"Carlos Daniel");
-    strcpy(alumno1->apellidoAlumno,"Quintanilla");
-    strcpy(alumno1->carrera,"Quimica y Farmacia");
-    strcpy(alumno1->telefono,"77984632");
-    strcpy(alumno1->correo,"cquintanilla@gmail.com");
-    alumno1->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno1;
-		listaAlumno->ultimo = alumno1;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno1;
-		listaAlumno->ultimo = alumno1;
-	}
-	
-	//Ingreso de Alumno 2
-	Alumno *alumno2 = malloc(sizeof(Alumno));
-    alumno2->carnet=2;
-    strcpy(alumno2->nombreAlumno,"Francisco David");
-    strcpy(alumno2->apellidoAlumno,"Navas Borja");
-    strcpy(alumno2->carrera,"Gastronomia");
-    strcpy(alumno2->telefono,"78493651");
-    strcpy(alumno2->correo,"fnavas@gmail.com");
-    alumno2->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno2;
-		listaAlumno->ultimo = alumno2;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno2;
-		listaAlumno->ultimo = alumno2;
-	}
-	
-	//Ingreso de Alumno 3
-	Alumno *alumno3 = malloc(sizeof(Alumno));
-    alumno3->carnet=3;
-    strcpy(alumno3->nombreAlumno,"Lola Raquel");
-    strcpy(alumno3->apellidoAlumno,"Espinosa Fuentes");
-    strcpy(alumno3->carrera,"Arquitectura");
-    strcpy(alumno3->telefono,"68475832");
-    strcpy(alumno3->correo,"lespinosa@gmail.com");
-    alumno3->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno3;
-		listaAlumno->ultimo = alumno3;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno3;
-		listaAlumno->ultimo = alumno3;
-	}
-	
-	//Ingreso de Alumno 4
-	Alumno *alumno4 = malloc(sizeof(Alumno));
-    alumno4->carnet=4;
-    strcpy(alumno4->nombreAlumno,"Roman Rufino");
-    strcpy(alumno4->apellidoAlumno,"Llorente Sanmartin");
-    strcpy(alumno4->carrera,"Mecanica");
-    strcpy(alumno4->telefono,"74927521");
-    strcpy(alumno4->correo,"rllorente@gmail.com");
-    alumno4->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno4;
-		listaAlumno->ultimo = alumno4;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno4;
-		listaAlumno->ultimo = alumno4;
-	}
-	
-	//Ingreso de Alumno 5
-	Alumno *alumno5 = malloc(sizeof(Alumno));
-    alumno5->carnet=5;
-    strcpy(alumno5->nombreAlumno,"Jesus Miguel");
-    strcpy(alumno5->apellidoAlumno,"LaTorre Funes");
-    strcpy(alumno5->carrera,"Redes");
-    strcpy(alumno5->telefono,"71953235");
-    strcpy(alumno5->correo,"jlatorre@gmail.com");
-    alumno5->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno5;
-		listaAlumno->ultimo = alumno5;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno5;
-		listaAlumno->ultimo = alumno5;
-	}
-	
-	//Ingreso de Alumno 6
-	Alumno *alumno6 = malloc(sizeof(Alumno));
-    alumno6->carnet=6;
-    strcpy(alumno6->nombreAlumno,"Maria Adelina");
-    strcpy(alumno6->apellidoAlumno,"Concepcion Bermudez");
-    strcpy(alumno6->carrera,"Literatura");
-    strcpy(alumno6->telefono,"69471533");
-    strcpy(alumno6->correo,"mconcepcion@gmail.com");
-    alumno6->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno6;
-		listaAlumno->ultimo = alumno6;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno6;
-		listaAlumno->ultimo = alumno6;
-	}
-	
-	//Ingreso de Alumno 7
-	Alumno *alumno7 = malloc(sizeof(Alumno));
-    alumno6->carnet=7;
-    strcpy(alumno7->nombreAlumno,"Laura Maria");
-    strcpy(alumno7->apellidoAlumno,"Benito Tobar");
-    strcpy(alumno7->carrera,"Sistemas");
-    strcpy(alumno7->telefono,"70913464");
-    strcpy(alumno7->correo,"lbenito@gmail.com");
-    alumno7->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno7;
-		listaAlumno->ultimo = alumno7;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno7;
-		listaAlumno->ultimo = alumno7;
-	}
-	
-	//Ingreso de Alumno 8
-	Alumno *alumno8 = malloc(sizeof(Alumno));
-    alumno8->carnet=8;
-    strcpy(alumno8->nombreAlumno,"Angel Manuel");
-    strcpy(alumno8->apellidoAlumno,"Mayor");
-    strcpy(alumno8->carrera,"Mecanica");
-    strcpy(alumno8->telefono,"75038134");
-    strcpy(alumno8->correo,"amayor@gmail.com");
-    alumno8->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno8;
-		listaAlumno->ultimo = alumno8;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno8;
-		listaAlumno->ultimo = alumno8;
-	}
-	
-	//Ingreso de Alumno 9
-	Alumno *alumno9 = malloc(sizeof(Alumno));
-    alumno9->carnet=9;
-    strcpy(alumno9->nombreAlumno,"Mauricio Vldimir");
-    strcpy(alumno9->apellidoAlumno,"Otero");
-    strcpy(alumno9->carrera,"Administracion de Empresas");
-    strcpy(alumno9->telefono,"76500234");
-    strcpy(alumno9->correo,"motero@gmail.com");
-    alumno9->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno9;
-		listaAlumno->ultimo = alumno9;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno9;
-		listaAlumno->ultimo = alumno9;
-	}
-	
-	//Ingreso de Alumno 10
-	Alumno *alumno10 = malloc(sizeof(Alumno));
-    alumno10->carnet=10;
-    strcpy(alumno10->nombreAlumno,"Jana Mercedes");
-    strcpy(alumno10->apellidoAlumno,"Gallego Andrade");
-    strcpy(alumno10->carrera,"Quimica y Farmacia");
-    strcpy(alumno10->telefono,"79125639");
-    strcpy(alumno10->correo,"jgallego@gmail.com");
-    alumno10->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno10;
-		listaAlumno->ultimo = alumno10;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno10;
-		listaAlumno->ultimo = alumno10;
-	}
-	
-	//Ingreso de Alumno 11
-	Alumno *alumno11 = malloc(sizeof(Alumno));
-    alumno11->carnet=11;
-    strcpy(alumno11->nombreAlumno,"Noemi Emma");
-    strcpy(alumno11->apellidoAlumno,"Moreno Carmona");
-    strcpy(alumno11->carrera,"Mercadeo");
-    strcpy(alumno11->telefono,"79475581");
-    strcpy(alumno11->correo,"nmoreno@gmail.com");
-    alumno11->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno11;
-		listaAlumno->ultimo = alumno11;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno11;
-		listaAlumno->ultimo = alumno11;
-	}
-	
-	//Ingreso de Alumno 12
-	Alumno *alumno12 = malloc(sizeof(Alumno));
-    alumno12->carnet=12;
-    strcpy(alumno12->nombreAlumno,"Ramona Paloma");
-    strcpy(alumno12->apellidoAlumno,"Matos Alcalde");
-    strcpy(alumno12->carrera,"Enfermeria");
-    strcpy(alumno12->telefono,"65893954");
-    strcpy(alumno12->correo,"rmatos@gmail.com");
-    alumno12->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno12;
-		listaAlumno->ultimo = alumno12;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno12;
-		listaAlumno->ultimo = alumno12;
-	}
-	
-	//Ingreso de Alumno 13
-	Alumno *alumno13 = malloc(sizeof(Alumno));
-    alumno13->carnet=13;
-    strcpy(alumno13->nombreAlumno,"Marti Marcelo");
-    strcpy(alumno13->apellidoAlumno,"Agullo Novoa");
-    strcpy(alumno13->carrera,"Psicologia");
-    strcpy(alumno13->telefono,"74119430");
-    strcpy(alumno13->correo,"magullo@gmail.com");
-    alumno13->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno13;
-		listaAlumno->ultimo = alumno13;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno13;
-		listaAlumno->ultimo = alumno13;
-	}
-	
-	//Ingreso de Alumno 14
-	Alumno *alumno14 = malloc(sizeof(Alumno));
-    alumno14->carnet=14;
-    strcpy(alumno14->nombreAlumno,"Armando Gerardo");
-    strcpy(alumno14->apellidoAlumno,"Zamora Salas");
-    strcpy(alumno14->carrera,"Comunicaciones");
-    strcpy(alumno14->telefono,"66847284");
-    strcpy(alumno14->correo,"azamora@gmail.com");
-    alumno14->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno14;
-		listaAlumno->ultimo = alumno14;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno14;
-		listaAlumno->ultimo = alumno14;
-	}
-	
-	//Ingreso de Alumno 15
-	Alumno *alumno15 = malloc(sizeof(Alumno));
-    alumno15->carnet=15;
-    strcpy(alumno15->nombreAlumno,"Rafael Domingo");
-    strcpy(alumno15->apellidoAlumno,"Quiles Mejia");
-    strcpy(alumno15->carrera,"Relaciones Internacionales");
-    strcpy(alumno15->telefono,"66847284");
-    strcpy(alumno15->correo,"rquiles@gmail.com");
-    alumno15->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno15;
-		listaAlumno->ultimo = alumno15;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno15;
-		listaAlumno->ultimo = alumno15;
-	}
-	
-	//Ingreso de Alumno 16
-	Alumno *alumno16 = malloc(sizeof(Alumno));
-    alumno16->carnet=16;
-    strcpy(alumno16->nombreAlumno,"Vanessa Liliana");
-    strcpy(alumno16->apellidoAlumno,"Bastida Bellino");
-    strcpy(alumno16->carrera,"Negocios");
-    strcpy(alumno16->telefono,"76849321");
-    strcpy(alumno16->correo,"vbastida@gmail.com");
-    alumno16->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno16;
-		listaAlumno->ultimo = alumno16;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno16;
-		listaAlumno->ultimo = alumno16;
-	}
-	
-	//Ingreso de Alumno 17
-	Alumno *alumno17 = malloc(sizeof(Alumno));
-    alumno17->carnet=17;
-    strcpy(alumno17->nombreAlumno,"Carmen Andrea");
-    strcpy(alumno17->apellidoAlumno,"Cabezas Gaspar");
-    strcpy(alumno17->carrera,"Telecomunicaciones");
-    strcpy(alumno17->telefono,"76300134");
-    strcpy(alumno17->correo,"ccabezas@gmail.com");
-    alumno17->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno17;
-		listaAlumno->ultimo = alumno17;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno17;
-		listaAlumno->ultimo = alumno17;
-	}
-	
-	//Ingreso de Alumno 18
-	Alumno *alumno18 = malloc(sizeof(Alumno));
-    alumno18->carnet=18;
-    strcpy(alumno18->nombreAlumno,"Jamal Jacinto");
-    strcpy(alumno18->apellidoAlumno,"Garca Campos");
-    strcpy(alumno18->carrera,"Sistemas");
-    strcpy(alumno18->telefono,"79375611");
-    strcpy(alumno18->correo,"jgarca@gmail.com");
-    alumno18->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno18;
-		listaAlumno->ultimo = alumno18;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno18;
-		listaAlumno->ultimo = alumno18;
-	}
-	
-	//Ingreso de Alumno 19
-	Alumno *alumno19 = malloc(sizeof(Alumno));
-    alumno19->carnet=19;
-    strcpy(alumno19->nombreAlumno,"Florencio Sergi");
-    strcpy(alumno19->apellidoAlumno,"Bravo Roman");
-    strcpy(alumno19->carrera,"Redes");
-    strcpy(alumno19->telefono,"71133579");
-    strcpy(alumno19->correo,"fbravo@gmail.com");
-    alumno19->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno19;
-		listaAlumno->ultimo = alumno19;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno19;
-		listaAlumno->ultimo = alumno19;
-	}
-	
-	//Ingreso de Alumno 20
-	Alumno *alumno20 = malloc(sizeof(Alumno));
-    alumno20->carnet=20;
-    strcpy(alumno20->nombreAlumno,"Marcela Rosa");
-    strcpy(alumno20->apellidoAlumno,"Guevara Sobrino");
-    strcpy(alumno20->carrera,"Gastronomia");
-    strcpy(alumno20->telefono,"77992656");
-    strcpy(alumno20->correo,"mguevara@gmail.com");
-    alumno20->siguiente=NULL;
-    if(listaAlumno->primero == NULL)
-	{
-		listaAlumno->primero = alumno20;
-		listaAlumno->ultimo = alumno20;
-	}
-	else
-	{
-		listaAlumno->ultimo->siguiente = alumno20;
-		listaAlumno->ultimo = alumno20;
-	}
-}
-
-
 void insertarAlumno(ListaAlumno *listaAlumno);
 int existeAlumno(ListaAlumno *listaAlumno, int carnet);
 void mostrarAlumnos(ListaAlumno *listaAlumno);
@@ -470,10 +44,18 @@ void busquedaCarnet(ListaAlumno *listaAlumno);
 void eliminarAlumno(ListaAlumno *listaAlumno);
 void modificarAlumno(ListaAlumno *listaAlumno);
 int validadCorreo(char mail[]);
-
+void cargaInicialAlumnos(ListaAlumno *listaAlumno);
 
 //Declaracion de variables globales
 int h;
+
+ListaAlumno *initListaAlumno() {
+    ListaAlumno *lista = malloc(sizeof(ListaAlumno));
+    lista->total = 0;
+    lista->primero = NULL;
+    lista->ultimo = NULL;
+    return lista;
+}
 
 Alumno *initAlumno() {
     Alumno *alumno = malloc(sizeof(Alumno));
@@ -486,13 +68,8 @@ Alumno *initAlumno() {
     return alumno;
 }
 
-ListaAlumno *initListaAlumno() {
-    ListaAlumno *lista = malloc(sizeof(ListaAlumno));
-    lista->total = 0;
-    lista->primero = NULL;
-    lista->ultimo = NULL;
-    return lista;
-}
+//Declaracion de variables globales
+int h;
 
 //Funcion para agregar elementos a la lista
 void insertarAlumno(ListaAlumno *listaAlumno){
@@ -501,8 +78,8 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 	Alumno *alumno = malloc(sizeof(Alumno));
 	//Declaracion de variable
 
-	int numCarnet=0,exit=0;
-	char verificarCorreo[25], email[60];
+	int numCarnet=0,exit=0, exitTelefono = 0;
+	char verificarCorreo[25], email[60], verificarTelefono[25];
 
 	//Limpieza de pantalla	
 	system("cls");
@@ -524,45 +101,12 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 		}
 	}
 
-	if(existeAlumno(numCarnet,listaAlumno)==0 && numCarnet>=0 && numCarnet<=99999999)
+	if(existeAlumno(listaAlumno, numCarnet)==0 && numCarnet>=0 && numCarnet<=99999999)
 
 	{
 		fflush(stdin);
 		alumno->carnet=numCarnet;
-		printf("Ingrese nombres del alumno: ");
-		scanf("%s",&alumno->nombreAlumno);
-		printf("Ingrese apellidos del alumno: ");
-		scanf("%s",&alumno->apellidoAlumno);
-		printf("Ingrese carrera del alumno: ");
-		scanf("%s",&alumno->carrera);
-		//printf("Ingrese telefono del alumno: ");
-		//scanf("%s",&verificarTelefono);
-		//Validar estructura de telefono
-		while(exitTelefono==0)
-		{
-			printf("Ingrese telefono del alumno(sin guiones): ");
-			scanf("%s",&verificarTelefono);
-			int respuesta=0,i=0;
-	
-			for(i=0;i<strlen(verificarTelefono);i++)
-			{
-				if((isdigit(verificarTelefono[i])))
-				{
-					respuesta=respuesta;
-				}
-				else
-				{
-					respuesta=respuesta+1;
-				}
-			}
-			
-			if(respuesta==0)
-			{
-				strcpy(alumno->telefono,verificarTelefono);
-				exitTelefono=1;
-			}
-		}
-
+		
 		printf("nombres: ");
 		alumno->nombreAlumno = getLine(30);
 
@@ -1346,3 +890,408 @@ int validadCorreo(char mail[])
 	}
 	return correoValido;
 }
+
+//Carga inicial de registros de Alumnos
+void cargaInicialAlumnos(ListaAlumno *listaAlumno)
+{
+	//Ingreso de Alumno 1
+	Alumno *alumno1 = initAlumno();
+    alumno1->carnet=1;
+    strcpy(alumno1->nombreAlumno,"Carlos Daniel");
+    strcpy(alumno1->apellidoAlumno,"Quintanilla");
+    strcpy(alumno1->carrera,"Quimica y Farmacia");
+    strcpy(alumno1->telefono,"77984632");
+    strcpy(alumno1->correo,"cquintanilla@gmail.com");
+    alumno1->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno1;
+		listaAlumno->ultimo = alumno1;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno1;
+		listaAlumno->ultimo = alumno1;
+	}
+	
+	//Ingreso de Alumno 2
+	Alumno *alumno2 = initAlumno();
+    alumno2->carnet=2;
+    strcpy(alumno2->nombreAlumno,"Francisco David");
+    strcpy(alumno2->apellidoAlumno,"Navas Borja");
+    strcpy(alumno2->carrera,"Gastronomia");
+    strcpy(alumno2->telefono,"78493651");
+    strcpy(alumno2->correo,"fnavas@gmail.com");
+    alumno2->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno2;
+		listaAlumno->ultimo = alumno2;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno2;
+		listaAlumno->ultimo = alumno2;
+	}
+	
+	//Ingreso de Alumno 3
+	Alumno *alumno3 = initAlumno();
+    alumno3->carnet=3;
+    strcpy(alumno3->nombreAlumno,"Lola Raquel");
+    strcpy(alumno3->apellidoAlumno,"Espinosa Fuentes");
+    strcpy(alumno3->carrera,"Arquitectura");
+    strcpy(alumno3->telefono,"68475832");
+    strcpy(alumno3->correo,"lespinosa@gmail.com");
+    alumno3->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno3;
+		listaAlumno->ultimo = alumno3;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno3;
+		listaAlumno->ultimo = alumno3;
+	}
+	
+	//Ingreso de Alumno 4
+	Alumno *alumno4 = initAlumno();
+    alumno4->carnet=4;
+    strcpy(alumno4->nombreAlumno,"Roman Rufino");
+    strcpy(alumno4->apellidoAlumno,"Llorente Sanmartin");
+    strcpy(alumno4->carrera,"Mecanica");
+    strcpy(alumno4->telefono,"74927521");
+    strcpy(alumno4->correo,"rllorente@gmail.com");
+    alumno4->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno4;
+		listaAlumno->ultimo = alumno4;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno4;
+		listaAlumno->ultimo = alumno4;
+	}
+	
+	//Ingreso de Alumno 5
+	Alumno *alumno5 = initAlumno();
+    alumno5->carnet=5;
+    strcpy(alumno5->nombreAlumno,"Jesus Miguel");
+    strcpy(alumno5->apellidoAlumno,"LaTorre Funes");
+    strcpy(alumno5->carrera,"Redes");
+    strcpy(alumno5->telefono,"71953235");
+    strcpy(alumno5->correo,"jlatorre@gmail.com");
+    alumno5->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno5;
+		listaAlumno->ultimo = alumno5;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno5;
+		listaAlumno->ultimo = alumno5;
+	}
+	
+	//Ingreso de Alumno 6
+	Alumno *alumno6 = initAlumno();
+    alumno6->carnet=6;
+    strcpy(alumno6->nombreAlumno,"Maria Adelina");
+    strcpy(alumno6->apellidoAlumno,"Concepcion Bermudez");
+    strcpy(alumno6->carrera,"Literatura");
+    strcpy(alumno6->telefono,"69471533");
+    strcpy(alumno6->correo,"mconcepcion@gmail.com");
+    alumno6->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno6;
+		listaAlumno->ultimo = alumno6;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno6;
+		listaAlumno->ultimo = alumno6;
+	}
+	
+	//Ingreso de Alumno 7
+	Alumno *alumno7 = initAlumno();
+    alumno6->carnet=7;
+    strcpy(alumno7->nombreAlumno,"Laura Maria");
+    strcpy(alumno7->apellidoAlumno,"Benito Tobar");
+    strcpy(alumno7->carrera,"Sistemas");
+    strcpy(alumno7->telefono,"70913464");
+    strcpy(alumno7->correo,"lbenito@gmail.com");
+    alumno7->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno7;
+		listaAlumno->ultimo = alumno7;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno7;
+		listaAlumno->ultimo = alumno7;
+	}
+	
+	//Ingreso de Alumno 8
+	Alumno *alumno8 = initAlumno();
+    alumno8->carnet=8;
+    strcpy(alumno8->nombreAlumno,"Angel Manuel");
+    strcpy(alumno8->apellidoAlumno,"Mayor");
+    strcpy(alumno8->carrera,"Mecanica");
+    strcpy(alumno8->telefono,"75038134");
+    strcpy(alumno8->correo,"amayor@gmail.com");
+    alumno8->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno8;
+		listaAlumno->ultimo = alumno8;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno8;
+		listaAlumno->ultimo = alumno8;
+	}
+	
+	//Ingreso de Alumno 9
+	Alumno *alumno9 = initAlumno();
+    alumno9->carnet=9;
+    strcpy(alumno9->nombreAlumno,"Mauricio Vldimir");
+    strcpy(alumno9->apellidoAlumno,"Otero");
+    strcpy(alumno9->carrera,"Administracion de Empresas");
+    strcpy(alumno9->telefono,"76500234");
+    strcpy(alumno9->correo,"motero@gmail.com");
+    alumno9->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno9;
+		listaAlumno->ultimo = alumno9;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno9;
+		listaAlumno->ultimo = alumno9;
+	}
+	
+	//Ingreso de Alumno 10
+	Alumno *alumno10 = initAlumno();
+    alumno10->carnet=10;
+    strcpy(alumno10->nombreAlumno,"Jana Mercedes");
+    strcpy(alumno10->apellidoAlumno,"Gallego Andrade");
+    strcpy(alumno10->carrera,"Quimica y Farmacia");
+    strcpy(alumno10->telefono,"79125639");
+    strcpy(alumno10->correo,"jgallego@gmail.com");
+    alumno10->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno10;
+		listaAlumno->ultimo = alumno10;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno10;
+		listaAlumno->ultimo = alumno10;
+	}
+	
+	//Ingreso de Alumno 11
+	Alumno *alumno11 = initAlumno();
+    alumno11->carnet=11;
+    strcpy(alumno11->nombreAlumno,"Noemi Emma");
+    strcpy(alumno11->apellidoAlumno,"Moreno Carmona");
+    strcpy(alumno11->carrera,"Mercadeo");
+    strcpy(alumno11->telefono,"79475581");
+    strcpy(alumno11->correo,"nmoreno@gmail.com");
+    alumno11->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno11;
+		listaAlumno->ultimo = alumno11;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno11;
+		listaAlumno->ultimo = alumno11;
+	}
+	
+	//Ingreso de Alumno 12
+	Alumno *alumno12 = initAlumno();
+    alumno12->carnet=12;
+    strcpy(alumno12->nombreAlumno,"Ramona Paloma");
+    strcpy(alumno12->apellidoAlumno,"Matos Alcalde");
+    strcpy(alumno12->carrera,"Enfermeria");
+    strcpy(alumno12->telefono,"65893954");
+    strcpy(alumno12->correo,"rmatos@gmail.com");
+    alumno12->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno12;
+		listaAlumno->ultimo = alumno12;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno12;
+		listaAlumno->ultimo = alumno12;
+	}
+	
+	//Ingreso de Alumno 13
+	Alumno *alumno13 = initAlumno();
+    alumno13->carnet=13;
+    strcpy(alumno13->nombreAlumno,"Marti Marcelo");
+    strcpy(alumno13->apellidoAlumno,"Agullo Novoa");
+    strcpy(alumno13->carrera,"Psicologia");
+    strcpy(alumno13->telefono,"74119430");
+    strcpy(alumno13->correo,"magullo@gmail.com");
+    alumno13->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno13;
+		listaAlumno->ultimo = alumno13;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno13;
+		listaAlumno->ultimo = alumno13;
+	}
+	
+	//Ingreso de Alumno 14
+	Alumno *alumno14 = initAlumno();
+    alumno14->carnet=14;
+    strcpy(alumno14->nombreAlumno,"Armando Gerardo");
+    strcpy(alumno14->apellidoAlumno,"Zamora Salas");
+    strcpy(alumno14->carrera,"Comunicaciones");
+    strcpy(alumno14->telefono,"66847284");
+    strcpy(alumno14->correo,"azamora@gmail.com");
+    alumno14->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno14;
+		listaAlumno->ultimo = alumno14;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno14;
+		listaAlumno->ultimo = alumno14;
+	}
+	
+	//Ingreso de Alumno 15
+	Alumno *alumno15 = initAlumno();
+    alumno15->carnet=15;
+    strcpy(alumno15->nombreAlumno,"Rafael Domingo");
+    strcpy(alumno15->apellidoAlumno,"Quiles Mejia");
+    strcpy(alumno15->carrera,"Relaciones Internacionales");
+    strcpy(alumno15->telefono,"66847284");
+    strcpy(alumno15->correo,"rquiles@gmail.com");
+    alumno15->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno15;
+		listaAlumno->ultimo = alumno15;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno15;
+		listaAlumno->ultimo = alumno15;
+	}
+	
+	//Ingreso de Alumno 16
+	Alumno *alumno16 = initAlumno();
+    alumno16->carnet=16;
+    strcpy(alumno16->nombreAlumno,"Vanessa Liliana");
+    strcpy(alumno16->apellidoAlumno,"Bastida Bellino");
+    strcpy(alumno16->carrera,"Negocios");
+    strcpy(alumno16->telefono,"76849321");
+    strcpy(alumno16->correo,"vbastida@gmail.com");
+    alumno16->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno16;
+		listaAlumno->ultimo = alumno16;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno16;
+		listaAlumno->ultimo = alumno16;
+	}
+	
+	//Ingreso de Alumno 17
+	Alumno *alumno17 = initAlumno();
+    alumno17->carnet=17;
+    strcpy(alumno17->nombreAlumno,"Carmen Andrea");
+    strcpy(alumno17->apellidoAlumno,"Cabezas Gaspar");
+    strcpy(alumno17->carrera,"Telecomunicaciones");
+    strcpy(alumno17->telefono,"76300134");
+    strcpy(alumno17->correo,"ccabezas@gmail.com");
+    alumno17->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno17;
+		listaAlumno->ultimo = alumno17;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno17;
+		listaAlumno->ultimo = alumno17;
+	}
+	
+	//Ingreso de Alumno 18
+	Alumno *alumno18 = initAlumno();
+    alumno18->carnet=18;
+    strcpy(alumno18->nombreAlumno,"Jamal Jacinto");
+    strcpy(alumno18->apellidoAlumno,"Garca Campos");
+    strcpy(alumno18->carrera,"Sistemas");
+    strcpy(alumno18->telefono,"79375611");
+    strcpy(alumno18->correo,"jgarca@gmail.com");
+    alumno18->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno18;
+		listaAlumno->ultimo = alumno18;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno18;
+		listaAlumno->ultimo = alumno18;
+	}
+	
+	//Ingreso de Alumno 19
+	Alumno *alumno19 = initAlumno();
+    alumno19->carnet=19;
+    strcpy(alumno19->nombreAlumno,"Florencio Sergi");
+    strcpy(alumno19->apellidoAlumno,"Bravo Roman");
+    strcpy(alumno19->carrera,"Redes");
+    strcpy(alumno19->telefono,"71133579");
+    strcpy(alumno19->correo,"fbravo@gmail.com");
+    alumno19->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno19;
+		listaAlumno->ultimo = alumno19;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno19;
+		listaAlumno->ultimo = alumno19;
+	}
+	
+	//Ingreso de Alumno 20
+	Alumno *alumno20 = initAlumno();
+    alumno20->carnet=20;
+    strcpy(alumno20->nombreAlumno,"Marcela Rosa");
+    strcpy(alumno20->apellidoAlumno,"Guevara Sobrino");
+    strcpy(alumno20->carrera,"Gastronomia");
+    strcpy(alumno20->telefono,"77992656");
+    strcpy(alumno20->correo,"mguevara@gmail.com");
+    alumno20->siguiente=NULL;
+    if(listaAlumno->primero == NULL)
+	{
+		listaAlumno->primero = alumno20;
+		listaAlumno->ultimo = alumno20;
+	}
+	else
+	{
+		listaAlumno->ultimo->siguiente = alumno20;
+		listaAlumno->ultimo = alumno20;
+	}
+}
+
