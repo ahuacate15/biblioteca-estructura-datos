@@ -2,15 +2,17 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "texto.h"
 
 //Definiendo estructura Alumno
 typedef struct {
     int carnet;
-    char nombreAlumno[50];
-    char apellidoAlumno[50];
-    char carrera[50];
-    char telefono[10];
-    char correo[30];
+    //estas son las linesa originales de tu archivo
+    char *nombreAlumno;
+    char *apellidoAlumno;
+    char *carrera;
+    char *telefono;
+    char *correo;
     struct Alumno *siguiente;
 } Alumno;
 
@@ -26,6 +28,7 @@ typedef struct listaAlumno {
 Alumno *ultimo = NULL;*/
 
 //prototipos de funciones
+Alumno *initAlumno();
 ListaAlumno *initListaAlumno();
 ListaAlumno *cargarAlumnoDefecto(ListaAlumno *lista);
 
@@ -453,75 +456,78 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 	}
 }
 
-//Funcion para mostrar men? sobre las opciones
-int main()
-{
-    ListaAlumno *listaAlumno = initListaAlumno();
-    cargaInicialAlumnos(listaAlumno);
-    
-	int salir=0;
-	while(salir==0)
-	{
-		int opcion=0;
-		printf("\n----------MENU-----------\n");
-		printf("OPCION 1: Mostrar Alumnos\n");
-		printf("OPCION 2: Ingresar Datos del Alumno\n");
-		printf("OPCION 3: Buscar Alumno\n");
-		printf("OPCION 4: Modificar Datos del Alumno\n");
-		printf("OPCION 5: Eliminar Alumno\n");
-		printf("OPCION 6: Salir\n");
-		printf("Ingrese opcion: ");
-		scanf("%d",&opcion);
-		switch(opcion)
-		{
-			case 1:
-				mostrarAlumnos(listaAlumno);
-				break;
-			case 2:
-				insertarAlumno(listaAlumno);
-				break;
-			case 3:
-				BusquedaAlumno(listaAlumno);
-				break;
-			case 4:
-				modificarAlumno(listaAlumno);
-				break;
-			case 5:
-				eliminarAlumno(listaAlumno);
-				break;
-			case 6:
-				salir=1;
-				break;
-		    default:
-		    	printf("Opcion no valida");
-		    	break;
-		}
-	}
+
+void insertarAlumno(ListaAlumno *listaAlumno);
+int existeAlumno(ListaAlumno *listaAlumno, int carnet);
+void mostrarAlumnos(ListaAlumno *listaAlumno);
+void BusquedaAlumno(ListaAlumno *listaAlumno);
+void busquedaNombre(ListaAlumno *listaAlumno);
+void busquedaApellido(ListaAlumno *listaAlumno);
+void busquedaCarrera(ListaAlumno *listaAlumno);
+void busquedaTelefono(ListaAlumno *listaAlumno);
+void busquedaCorreo(ListaAlumno *listaAlumno);
+void busquedaCarnet(ListaAlumno *listaAlumno);
+void eliminarAlumno(ListaAlumno *listaAlumno);
+void modificarAlumno(ListaAlumno *listaAlumno);
+int validadCorreo(char mail[]);
+
+
+//Declaracion de variables globales
+int h;
+
+Alumno *initAlumno() {
+    Alumno *alumno = malloc(sizeof(Alumno));
+	alumno->nombreAlumno = malloc(sizeof(char) * 30);
+	alumno->apellidoAlumno = malloc(sizeof(char) * 30);
+	alumno->carrera = malloc(sizeof(char) * 50);
+	alumno->telefono = malloc(sizeof(char) * 10);
+	alumno->correo = malloc(sizeof(char) * 25);
+    alumno->siguiente = NULL;
+    return alumno;
+}
+
+ListaAlumno *initListaAlumno() {
+    ListaAlumno *lista = malloc(sizeof(ListaAlumno));
+    lista->total = 0;
+    lista->primero = NULL;
+    lista->ultimo = NULL;
+    return lista;
 }
 
 //Funcion para agregar elementos a la lista
 void insertarAlumno(ListaAlumno *listaAlumno){
+	
 	//Reservar en memoria el nuevo nodo
 	Alumno *alumno = malloc(sizeof(Alumno));
 	//Declaracion de variable
-	int numCarnet=0,exit=0,exitTelefono=0;
-	char verificarCorreo[25],email[25],verificarTelefono[10];
-	//Limpieza de pantalla
+
+	int numCarnet=0,exit=0;
+	char verificarCorreo[25], email[60];
+
+	//Limpieza de pantalla	
 	system("cls");
-	printf("\nIngrese datos del Alumno\n");
+	printf(" ----------------------------------------------------------- \n");
+	printf("|                     ALUMNOS->agregar                      |\n");
+	printf(" ----------------------------------------------------------- \n\n");
+	fflush(stdin);
+	
 	//Peticion y almacenamiento de datos
 	for(h=0;h<1;h++)
 	{
 		//Peticion de nuevo elemento y validacion de entero
-		printf("Ingrese carnet: ");
+		printf("carnet: ");
 		if(scanf("%d",&numCarnet)==0)
 		{
+			printf("error: el carnet acepta unicamente numeros***\n\n");
 			fflush(stdin);
 			h--;
 		}
 	}
+
 	if(existeAlumno(numCarnet,listaAlumno)==0 && numCarnet>=0 && numCarnet<=99999999)
+
 	{
+		fflush(stdin);
 		alumno->carnet=numCarnet;
 		printf("Ingrese nombres del alumno: ");
 		scanf("%s",&alumno->nombreAlumno);
@@ -556,19 +562,36 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 				exitTelefono=1;
 			}
 		}
+
+		printf("nombres: ");
+		alumno->nombreAlumno = getLine(30);
+
+		printf("apellidos: ");
+		alumno->apellidoAlumno = getLine(30);
+
+		printf("carrera: ");
+		alumno->carrera = getLine(50);
+
+		printf("telefono: ");
+		alumno->telefono = getLine(10);
+
         //Validar estructura de correo
 		while(exit==0)
 		{
-			printf("Ingrese correo del alumno: ");
-			scanf("%s",&email);
-			if(strchr(email, '@') != NULL && strchr(email, '.') != NULL)
+			printf("correo institucional: ");
+			alumno->correo = getLine(30);
+
+			if(strchr(alumno->correo, '@') != NULL && strchr(alumno->correo, '.') != NULL)
 			{
-				strcpy(alumno->correo,email);
 			    exit = 1;
+			} else {
+				printf("error: el correo ingresado es invalido***\n\n");
 			}
+
 		}
 
 		alumno->siguiente = NULL;
+		listaAlumno->total++;
 		//Verificacion si la lista est? vacia o no
 		if(listaAlumno->primero == NULL)
 		{
@@ -585,18 +608,24 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 	{
 		printf("El alumno existe o no es valido\n");
 	}
+	printf("\n***alumno registrado***\n\n");
+	system("pause");
 }
 
 //Verificando si el alumno ya existe mediante la busqueda del carnet
-int existeAlumno(int carnet, ListaAlumno *listaAlumno)
+
+int existeAlumno(ListaAlumno *listaAlumno, int carnet)
 {
 	//Rserva de memoria
-	Alumno* actual=malloc(sizeof(Alumno));
+	Alumno* actual = malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la lista
-	actual=listaAlumno->primero;
+	actual= listaAlumno->primero;
+
 	//Nodo que identifica al nodo anterior
 	Alumno* anterior=malloc(sizeof(Alumno));
 	anterior=NULL;
+
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0;
 	
@@ -634,14 +663,18 @@ int existeAlumno(int carnet, ListaAlumno *listaAlumno)
 }
 
 //Impresion de todos los alumnos dentro de la lista
-void mostrarAlumnos(ListaAlumno *listaAlumno){
+void mostrarAlumnos(ListaAlumno *listaAlumno) {
 	//Limpieza pantalla
 	system("cls");
+	printf(" ----------------------------------------------------------- \n");
+	printf("|                     ALUMNOS->mostrar                      |\n");
+	printf(" ----------------------------------------------------------- \n\n");
+
 	//Crear puntero para el recorrido de la lista
 	Alumno *i = listaAlumno->primero;
 	//Preguntar si la lista esta vacia
 	if(i != NULL){
-		printf("\nAlumnos\n");
+		printf("Total de registros: %d\n", listaAlumno->total);
 		//Mientras existan valores dentro de la lista seguir? mostrando
 		while(i != NULL){
 			printf("\nCarnet: %d",i->carnet);
@@ -650,7 +683,7 @@ void mostrarAlumnos(ListaAlumno *listaAlumno){
 			printf("\nCarrera: %s",i->carrera);
 			printf("\nTelefono: %s",i->telefono);
 			printf("\nCorreo: %s",i->correo);
-			printf("\n-------------------------------------\n");
+			printf("\n");
 			//Apuntar al siguiente nodo del actual
 			i = i->siguiente;
 		}//Fin de while
@@ -658,7 +691,7 @@ void mostrarAlumnos(ListaAlumno *listaAlumno){
 	//Si la lista est? vacia
 	else
 	{
-		printf("\n\n<<NO HAY ELEMENTOS PARA MOSTRAR>>\n");
+		printf("\n***no se encontraron resultados\n\n");
 	}
 	system("pause");
 }
@@ -670,15 +703,14 @@ void BusquedaAlumno(ListaAlumno *listaAlumno)
 	while(salirBusquedaAlumno==0)
 	{
 		int opcion=0;
-		printf("\n----------BUSQUEDA DE ALUMNO-----------\n");
-		printf("OPCION 1: Busqueda por Carnet\n");
-		printf("OPCION 2: Busqueda por Nombre\n");
-		printf("OPCION 3: Busqueda por Apellidos\n");
-		printf("OPCION 4: Busqueda por Carrera\n");
-		printf("OPCION 5: Busqueda por Telefono\n");
-		printf("OPCION 6: Busqueda por Correo\n");
-		printf("OPCION 7: Salir\n");
-		printf("Ingrese opcion: ");
+		system("cls");
+		printf(" ----------------------------------------------------------- \n");
+		printf("|                     ALUMNOS->buscar                       |\n");
+		printf(" ----------------------------------------------------------- \n\n");
+		printf("\ningresa el campo de busqueda\n");
+		printf("1)carnet \t2)nombre \t3)apellido \t4)carrera\n");
+		printf("5)telefono \t6)correo \t7)salir\n\n");
+		printf(">> ");
 		scanf("%d",&opcion);
 		switch(opcion)
 		{
@@ -705,28 +737,34 @@ void BusquedaAlumno(ListaAlumno *listaAlumno)
 				break;
 		    default:
 		    	printf("Opcion no valida");
+				system("pause");
 		    	break;
 		}
+		
 	}
 }
 
 //Funcion para buscar un elemento en la lista mientras sea nombre
 void busquedaNombre(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("BUSCAR ALUMNO\n");
+
 	//Rserva de memoria
 	Alumno* actual=malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la lista
 	actual=listaAlumno->primero;
+
 	//Nodo que identifica al nodo anterior
 	Alumno* anterior=malloc(sizeof(Alumno));
 	anterior=NULL;
+
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0;
-	char nodoBuscar[50];
-	printf("Ingrese nombre a buscar: ");
-	scanf(" %s",nodoBuscar);
+	char *nodoBuscar = malloc(sizeof(char) * 100);
+	fflush(stdin);
+	printf("ingresa el nombre a: ");
+	nodoBuscar = getLine(100);
+
 	//Si la lista tiene elementos
 	if(listaAlumno->primero!=NULL)
 	{
@@ -758,13 +796,13 @@ void busquedaNombre(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun nodo coincide con la busqueda
-			printf("No se encontro el alumno\n");
+			printf("\n***no se encontraron resultados\n\n");
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\n***La lista no contiene elementos\n");
 	}
 	system("pause");
 }
@@ -772,20 +810,24 @@ void busquedaNombre(ListaAlumno *listaAlumno)
 //Funcion para buscar un elemento en la lista mientras sea apellido
 void busquedaApellido(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("BUSCAR ALUMNO\n");
+
 	//Rserva de memoria
 	Alumno* actual=malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la lista
 	actual=listaAlumno->primero;
+
 	//Nodo que identifica al nodo anterior
 	Alumno* anterior=malloc(sizeof(Alumno));
 	anterior=NULL;
+
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0;
-	char nodoBuscar[100];
-	printf("Ingrese apellido a buscar: ");
-	scanf(" %s",nodoBuscar);
+	char *nodoBuscar = malloc(sizeof(char) * 100);
+	fflush(stdin);
+	printf("Ingresa apellido: ");
+	nodoBuscar = getLine(100);
+
 	//Si la lista tiene elementos
 	if(listaAlumno->primero!=NULL)
 	{
@@ -817,13 +859,13 @@ void busquedaApellido(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun nodo coincide con la busqueda
-			printf("No se encontro el alumno\n");
+			printf("\n***no se encontraron resultados\n\n");
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\n***La lista no contiene elementos\n");
 	}
 	system("pause");
 }
@@ -831,20 +873,23 @@ void busquedaApellido(ListaAlumno *listaAlumno)
 //Funcion para buscar un elemento en la lista mientras sea carrera
 void busquedaCarrera(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("BUSCAR ALUMNO\n");
 	//Rserva de memoria
 	Alumno* actual=malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la lista
 	actual=listaAlumno->primero;
+
 	//Nodo que identifica al nodo anterior
 	Alumno* anterior=malloc(sizeof(Alumno));
 	anterior=NULL;
+
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0;
-	char nodoBuscar[100];
-	printf("Ingrese carrera a buscar: ");
-	scanf(" %s",nodoBuscar);
+	char *nodoBuscar = malloc(sizeof(char) * 100);
+	fflush(stdin);
+	printf("Ingresa carrera: ");
+	nodoBuscar = getLine(100);
+
 	//Si la lista tiene elementos
 	if(listaAlumno->primero!=NULL)
 	{
@@ -876,13 +921,13 @@ void busquedaCarrera(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun nodo coincide con la busqueda
-			printf("No se encontro el alumno\n");
+			printf("\n***no se encontraron resultados\n\n");
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\n***La lista no contiene elementos\n\n");
 	}
 	system("pause");
 }
@@ -890,8 +935,7 @@ void busquedaCarrera(ListaAlumno *listaAlumno)
 //Funcion para buscar un elemento en la lista mientras sea telefono
 void busquedaTelefono(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("BUSCAR ALUMNO\n");
+
 	//Rserva de memoria
 	Alumno* actual=malloc(sizeof(Alumno));
 	//Establecer el primer valor de la lista
@@ -901,9 +945,11 @@ void busquedaTelefono(ListaAlumno *listaAlumno)
 	anterior=NULL;
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0;
-	char nodoBuscar[100];
-	printf("Ingrese telefono a buscar: ");
-	scanf(" %s",nodoBuscar);
+	char *nodoBuscar = malloc(sizeof(char) * 100);
+	fflush(stdin);
+	printf("Ingresa telefono: ");
+	nodoBuscar = getLine(100);
+
 	//Si la lista tiene elementos
 	if(listaAlumno->primero!=NULL)
 	{
@@ -935,13 +981,13 @@ void busquedaTelefono(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun nodo coincide con la busqueda
-			printf("No se encontro el alumno\n");
+			printf("\n***no se encontraron resultados\n\n");
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\n**La lista no contiene elementos\n");
 	}
 	system("pause");
 }
@@ -949,20 +995,24 @@ void busquedaTelefono(ListaAlumno *listaAlumno)
 //Funcion para buscar un elemento en la lista mientras sea correo
 void busquedaCorreo(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("BUSCAR ALUMNO\n");
+
 	//Rserva de memoria
 	Alumno* actual=malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la lista
 	actual=listaAlumno->primero;
+
 	//Nodo que identifica al nodo anterior
 	Alumno* anterior=malloc(sizeof(Alumno));
 	anterior=NULL;
+
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0;
-	char nodoBuscar[100];
+	char *nodoBuscar = malloc(sizeof(char) * 100);
+	fflush(stdin);
 	printf("Ingrese correo a buscar: ");
-	scanf(" %s",nodoBuscar);
+	nodoBuscar = getLine(100);
+
 	//Si la lista tiene elementos
 	if(listaAlumno->primero!=NULL)
 	{
@@ -994,13 +1044,13 @@ void busquedaCorreo(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun nodo coincide con la busqueda
-			printf("No se encontro el alumno\n");
+			printf("\n***no se encontraron resultados\n\n");
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\n***La lista no contiene elementos\n");
 	}
 	system("pause");
 }
@@ -1008,23 +1058,26 @@ void busquedaCorreo(ListaAlumno *listaAlumno)
 //Funcion para buscar un elemento en la lista
 void busquedaCarnet(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("BUSCAR ALUMNO\n");
+
 	//Rserva de memoria
 	Alumno* actual=malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la lista
 	actual=listaAlumno->primero;
+
 	//Nodo que identifica al nodo anterior
 	Alumno* anterior=malloc(sizeof(Alumno));
 	anterior=NULL;
+
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0,alumnoBuscar=0;
-
+	fflush(stdin);
+	
 	//Peticion y almacenamiento de datos
 	for(h=0;h<1;h++)
 	{
 		//Peticion de carnet de alumno y validacion de entero
-		printf("Ingrese carnet de Alumno: ");
+		printf("Ingresa carnet: ");
 		if(scanf("%d",&alumnoBuscar)==0)
 		{
 			fflush(stdin);
@@ -1041,7 +1094,7 @@ void busquedaCarnet(ListaAlumno *listaAlumno)
 			if(actual->carnet==alumnoBuscar)
 			{
 				//Impresi?n de que el nodo ya se encontr?
-				printf("ALUMNO ENCONTRADO\n");
+				printf("alumno encontrado\n");
 				//printf("\nNombre: %s",actual->nombre);
 				printf("\nCarnet: %d",actual->carnet);
 				printf("\nNombres: %s",actual->nombreAlumno);
@@ -1049,6 +1102,7 @@ void busquedaCarnet(ListaAlumno *listaAlumno)
 				printf("\nCarrera: %s",actual->carrera);
 				printf("\nTelefono: %s",actual->telefono);
 				printf("\nCorreo: %s",actual->correo);
+				printf("\n");
 				encontrado=1;
 			}
 			//Se guarda el nodo actual al nodo anterior
@@ -1060,30 +1114,34 @@ void busquedaCarnet(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun nodo coincide con la busqueda
-			printf("No se encontro el alumno\n");
+			printf("\n***no se encontraron resultados\n\n");
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\nLa lista no contiene elementos\n");
 	}
+	system("pause");
 }
 
 //Funcion para eliminar alumno de la lista
 void eliminarAlumno(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("ELIMINAR ALUMNO\n");
+
 	//Rserva de memoria
 	Alumno* actual=malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la lista
 	actual=listaAlumno->primero;
+
 	//Nodo que identifica al nodo anterior
 	Alumno* anterior=malloc(sizeof(Alumno));
 	anterior=NULL;
+
 	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
 	int encontrado=0,alumnoEliminar=0;
+
 	//Peticion y almacenamiento de datos
 	for(h=0;h<1;h++)
 	{
@@ -1105,7 +1163,7 @@ void eliminarAlumno(ListaAlumno *listaAlumno)
 			if(actual->carnet==alumnoEliminar)
 			{
 				//Impresi?n de que el nodo ya se encontr?
-				printf("ALUMNO ENCONTRADO\n");
+				printf("alumno encontrado\n");
 				//Si el nodo a eliminar es el primero de la lista entonces el primer pasar? a estar despues
 				if(actual==listaAlumno->primero)
 				{
@@ -1117,7 +1175,7 @@ void eliminarAlumno(ListaAlumno *listaAlumno)
 					anterior->siguiente=actual->siguiente;
 				}
 				//Impresi?n de que ya se modific? el valor del nodo
-				printf("ALUMNO ELIMINADO\n");
+				printf("\n**alumno eliminado\n");
 				//Bandera para indicar que ya se encontr? el nodo
 				encontrado=1;
 			}
@@ -1130,28 +1188,31 @@ void eliminarAlumno(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun nodo coincide con la busqueda
-			printf("No se encontro el carnet del alumno\n");
+			printf("\n***no se encontraron resultados\n\n");
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\nLa lista no contiene elementos\n");
 	}
+	system("pause");
 }
 
 //Funcion para modificar alumno de la lista
 void modificarAlumno(ListaAlumno *listaAlumno)
 {
-	system("cls");
-	printf("MODIFICAR ALUMNO\n");
+
 	//Nodo para recorrer la lista
 	Alumno* actual=malloc(sizeof(Alumno));
+
 	//Establecer el primer valor de la pila
 	actual=listaAlumno->primero;
+
 	//Declaracion de variables para determinar qu? alumno se est? buscando y si el alumno se encontr?
 	int encontrado=0,alumnoBuscar=0,datoModificar=0,opcionModificarAlumno=0,exit=0;
 	char email[25],verificarTelef[25];
+
 	//printf("Ingrese nodo a modificar: ");
 	for(h=0;h<1;h++)
 	{
@@ -1174,31 +1235,29 @@ void modificarAlumno(ListaAlumno *listaAlumno)
 			if(actual->carnet==alumnoBuscar)
 			{
 				//Impresi?n de que el alumno ya se encontr?
-				printf("ALUMNO ENCONTRADO\n");
-				printf("?Que dato quiere modificar?\n");
-				printf("OPCION 1: Nombre\n");
-				printf("OPCION 2: Apellidos\n");
-				printf("OPCION 3: Carrera\n");
-				printf("OPCION 4: Telefono\n");
-				printf("OPCION 5: Correo\n");
-				printf("Ingrese opcion: ");
+				printf("\nalumno encontrado\n");
+				printf("elige el dato que deseas modificar\n");
+				printf("1)nombre \t2)apellido \t3)carrera\n");
+				printf("4)telefono \t5)correo \n");
+				printf("\n>> ");
+
 				scanf("%d",&opcionModificarAlumno);
 				switch(opcionModificarAlumno)
 				{
 					case 1:
 						printf("Ingrese nombres del alumno: ");
 						scanf("%s",&actual->nombreAlumno);
-						printf("DATO MODIFICADO\n");
+						printf("***dato modificado\n");
 						break;
 					case 2:
 						printf("Ingrese apellidos del alumno: ");
 						scanf("%s",&actual->apellidoAlumno);
-						printf("DATO MODIFICADO\n");
+						printf("***dato modificado\n");
 						break;
 					case 3:
 						printf("Ingrese carrera del alumno: ");
 						scanf("%s",&actual->carrera);
-						printf("DATO MODIFICADO\n");
+						printf("***dato modificado\n");
 						break;
 					case 4:
 						/*printf("Ingrese telefono del alumno: ");
@@ -1232,8 +1291,6 @@ void modificarAlumno(ListaAlumno *listaAlumno)
 						
 						break;
 					case 5:
-						/*printf("Ingrese correo del alumno: ");
-						scanf("%s",&actual->correo);*/
 						while(exit==0)
 						{
 							printf("Ingrese correo del alumno: ");
@@ -1244,14 +1301,15 @@ void modificarAlumno(ListaAlumno *listaAlumno)
 							    exit = 1;
 							}
 						}
-						printf("DATO MODIFICADO\n");
+						printf("***dato modificado\n");
 						break;
 				    default:
-				    	printf("Opcion no valida");
+				    	printf("***Opcion no valida\n");
 				    	break;
 				}
 				//Bandera para indicar que ya se encontr? el alumno
 				encontrado=1;
+				printf("\n***alumno modificado***\n\n");
 			}
 			//El nodo actual apuntar? al alumno siguiente
 			actual=actual->siguiente;
@@ -1260,14 +1318,17 @@ void modificarAlumno(ListaAlumno *listaAlumno)
 		if(encontrado==0)
 		{
 			//Impresion de que ningun alumno coincide con la busqueda
-			printf("No se encontro el nodo\n");
+			printf("\n***No se encontro el nodo\n");
+
 		}
 	}
 	//Si no hay elementos en la lista
 	else
 	{
-		printf("La lista no contiene elementos\n");
+		printf("\n***La lista no contiene elementos\n");
 	}
+
+	system("pause");
 }
 
 //Validar estructura de correo
