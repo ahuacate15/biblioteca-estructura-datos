@@ -913,6 +913,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno1;
 		listaAlumno->ultimo = alumno1;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 2
 	Alumno *alumno2 = initAlumno();
@@ -933,10 +934,11 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno2;
 		listaAlumno->ultimo = alumno2;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 3
 	Alumno *alumno3 = initAlumno();
-    alumno3->carnet=058418;
+    alumno3->carnet= 58418;
     strcpy(alumno3->nombreAlumno,"Lola Raquel");
     strcpy(alumno3->apellidoAlumno,"Espinosa Fuentes");
     strcpy(alumno3->carrera,"Arquitectura");
@@ -953,10 +955,11 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno3;
 		listaAlumno->ultimo = alumno3;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 4
 	Alumno *alumno4 = initAlumno();
-    alumno4->carnet=058520;
+    alumno4->carnet= 58520;
     strcpy(alumno4->nombreAlumno,"Roman Rufino");
     strcpy(alumno4->apellidoAlumno,"Llorente Sanmartin");
     strcpy(alumno4->carrera,"Mecanica");
@@ -973,6 +976,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno4;
 		listaAlumno->ultimo = alumno4;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 5
 	Alumno *alumno5 = initAlumno();
@@ -993,10 +997,11 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno5;
 		listaAlumno->ultimo = alumno5;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 6
 	Alumno *alumno6 = initAlumno();
-    alumno6->carnet=048219;
+    alumno6->carnet=48219;
     strcpy(alumno6->nombreAlumno,"Maria Adelina");
     strcpy(alumno6->apellidoAlumno,"Concepcion Bermudez");
     strcpy(alumno6->carrera,"Literatura");
@@ -1013,6 +1018,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno6;
 		listaAlumno->ultimo = alumno6;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 7
 	Alumno *alumno7 = initAlumno();
@@ -1033,6 +1039,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno7;
 		listaAlumno->ultimo = alumno7;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 8
 	Alumno *alumno8 = initAlumno();
@@ -1053,10 +1060,11 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno8;
 		listaAlumno->ultimo = alumno8;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 9
 	Alumno *alumno9 = initAlumno();
-    alumno9->carnet=023915;
+    alumno9->carnet=23915;
     strcpy(alumno9->nombreAlumno,"Mauricio Vldimir");
     strcpy(alumno9->apellidoAlumno,"Otero");
     strcpy(alumno9->carrera,"Administracion de Empresas");
@@ -1073,6 +1081,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno9;
 		listaAlumno->ultimo = alumno9;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 10
 	Alumno *alumno10 = initAlumno();
@@ -1093,6 +1102,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno10;
 		listaAlumno->ultimo = alumno10;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 11
 	Alumno *alumno11 = initAlumno();
@@ -1113,6 +1123,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno11;
 		listaAlumno->ultimo = alumno11;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 12
 	Alumno *alumno12 = initAlumno();
@@ -1133,6 +1144,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno12;
 		listaAlumno->ultimo = alumno12;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 13
 	Alumno *alumno13 = initAlumno();
@@ -1153,10 +1165,11 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno13;
 		listaAlumno->ultimo = alumno13;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 14
 	Alumno *alumno14 = initAlumno();
-    alumno14->carnet=098314;
+    alumno14->carnet=98314;
     strcpy(alumno14->nombreAlumno,"Armando Gerardo");
     strcpy(alumno14->apellidoAlumno,"Zamora Salas");
     strcpy(alumno14->carrera,"Comunicaciones");
@@ -1173,10 +1186,11 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno14;
 		listaAlumno->ultimo = alumno14;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 15
 	Alumno *alumno15 = initAlumno();
-    alumno15->carnet=029620;
+    alumno15->carnet=29620;
     strcpy(alumno15->nombreAlumno,"Rafael Domingo");
     strcpy(alumno15->apellidoAlumno,"Quiles Mejia");
     strcpy(alumno15->carrera,"Relaciones Internacionales");
@@ -1193,6 +1207,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno15;
 		listaAlumno->ultimo = alumno15;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 16
 	Alumno *alumno16 = initAlumno();
@@ -1213,6 +1228,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno16;
 		listaAlumno->ultimo = alumno16;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 17
 	Alumno *alumno17 = initAlumno();
@@ -1233,6 +1249,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno17;
 		listaAlumno->ultimo = alumno17;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 18
 	Alumno *alumno18 = initAlumno();
@@ -1253,6 +1270,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno18;
 		listaAlumno->ultimo = alumno18;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 19
 	Alumno *alumno19 = initAlumno();
@@ -1273,6 +1291,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno19;
 		listaAlumno->ultimo = alumno19;
 	}
+	listaAlumno->total++;
 	
 	//Ingreso de Alumno 20
 	Alumno *alumno20 = initAlumno();
@@ -1293,5 +1312,6 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo->siguiente = alumno20;
 		listaAlumno->ultimo = alumno20;
 	}
+	listaAlumno->total++;
 }
 
