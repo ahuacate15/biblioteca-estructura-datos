@@ -1315,3 +1315,45 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 	listaAlumno->total++;
 }
 
+//Retorno estructura Alumno para el Prestamos de Libros
+Alumno *retornaAlumnoPrestamo(int carnet, ListaAlumno *listaAlumno)
+{
+	//Rserva de memoria
+	Alumno* alumno=malloc(sizeof(Alumno));
+	//Establecer el primer valor de la lista
+	alumno=listaAlumno->primero;
+	//Nodo que identifica al nodo anterior
+	Alumno* anterior=malloc(sizeof(Alumno));
+	anterior=NULL;
+	//Declaracion de variables para determinar qu? nodo se est? buscando y si el nodo se encontr?
+	int encontrado=0;
+	
+	//Si la lista tiene elementos
+	if(listaAlumno->primero!=NULL)
+	{
+		//Mientras el alumno actual sea distinto a NULL y si todavia no se ha encontrado el alumno
+		while(alumno!=NULL && encontrado==0)
+		{
+			//Si el nodo actual coincide con el nodo buscado
+			if(alumno->carnet==carnet)
+			{
+				//El alumno ya se encontr?
+				encontrado=1;
+				return alumno;
+			}
+			//Se guarda el nodo actual al nodo anterior
+			anterior=alumno;
+			//El nodo actual apuntar? al nodo siguiente
+			alumno=alumno->siguiente;
+		}
+	}
+	/*if(encontrado==1)
+	{
+		
+	}*/
+	//else
+	//{
+		return NULL;
+	//}
+}
+
