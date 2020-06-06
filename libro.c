@@ -311,20 +311,20 @@ void addLibroSedeItem(Libro *libro, Sede *sede, int copias) {
 Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede) {
 
 	Libro *libro1 = initializeLibro();
-	libro1->titulo = "kafka en la orilla";
-	libro1->isbn = "053315";
-	libro1->autor = "haruki murakami";
-	libro1->genero = "novela";
+	libro1->titulo = "Kafka en la orilla";
+	libro1->isbn = "9788483835241";
+	libro1->autor = "Haruki Murakami";
+	libro1->genero = "Literatura contemporánea";
 	libro1->copias = 0;
 	libro1->year = 1990;
 	insertarNodo(arbol, arbol->raiz, NULL, libro1, TITULO);
 	insertarNodo(arbol, arbol->raizISBN, NULL, libro1, ISBN);
 
 	Libro *libro2 = initializeLibro();
-	libro2->titulo = "rebelion en la granja";
-	libro2->isbn = "053316";
-	libro2->autor = "george orwell";
-	libro2->genero = "distopia";
+	libro2->titulo = "Rebelion en la granja";
+	libro2->isbn = "9781365425806";
+	libro2->autor = "George Orwell";
+	libro2->genero = "Distopia";
 	libro2->copias = 0;
 	libro2->year = 1991;
 	insertarNodo(arbol, arbol->raiz, NULL, libro2, TITULO);
@@ -332,34 +332,304 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede) {
 
 	Libro *libro3 = initializeLibro();
 	libro3->titulo = "1984";
-	libro3->isbn = "053317";
-	libro3->autor = "george orwell";
-	libro3->genero = "distopia";
+	libro3->isbn = "9780451524935";
+	libro3->autor = "George Orwell";
+	libro3->genero = "Distopia";
 	libro3->copias = 0;
 	libro3->year = 1990;
 	insertarNodo(arbol, arbol->raiz, NULL, libro3, TITULO);
 	insertarNodo(arbol, arbol->raizISBN, NULL, libro3, ISBN);
 
 	Libro *libro4 = initializeLibro();
-	libro4->titulo = "el manifiesto comunista";
-	libro4->isbn = "053318";
-	libro4->autor = "karl marx";
-	libro4->genero = "politica";
+	libro4->titulo = "El manifiesto comunista";
+	libro4->isbn = "1516868994";
+	libro4->autor = "Karl Marx";
+	libro4->genero = "Politica";
 	libro4->copias = 0;
 	libro4->year = 2001;
 	insertarNodo(arbol, arbol->raiz, NULL, libro4, TITULO);
 	insertarNodo(arbol, arbol->raizISBN, NULL, libro4, ISBN);
 
     Libro *libro5 = initializeLibro();
-    libro5->titulo = "el anarquista loco";
-    libro5->isbn = "053319";
-    libro5->autor = "joseph mora";
-    libro5->genero = "politica";
+    libro5->titulo = "El anarquista loco";
+    libro5->isbn = "9780142437230";
+    libro5->autor = "Joseph Mora";
+    libro5->genero = "Politica";
     libro5->copias = 0;
     libro5->year = 1990;
 	insertarNodo(arbol, arbol->raiz, NULL, libro5, TITULO);
 	insertarNodo(arbol, arbol->raizISBN, NULL, libro5, ISBN);
+	
+	Libro *libro6 = initializeLibro();
+    libro6->titulo = "Croata";
+    libro6->isbn = "9788412157796";
+    libro6->autor = "Jorge García García";
+    libro6->genero = "Novela policíaca";
+    libro6->copias = 0;
+    libro6->year = 2020;
+	insertarNodo(arbol, arbol->raiz, NULL, libro6, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro6, ISBN);
+	
+	Libro *libro7 = initializeLibro();
+    libro7->titulo = "El legado de los malditos";
+    libro7->isbn = "9788412157789";
+    libro7->autor = "Vanesa Redondo";
+    libro7->genero = "Novela histórica";
+    libro7->copias = 0;
+    libro7->year = 2020;
+	insertarNodo(arbol, arbol->raiz, NULL, libro7, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro7, ISBN);
+	
+	Libro *libro8 = initializeLibro();
+    libro8->titulo = "El silencio de la lengua";
+    libro8->isbn = "9788412157772";
+    libro8->autor = "Luis Melero Marcos";
+    libro8->genero = "Poética actual";
+    libro8->copias = 0;
+    libro8->year = 2020;
+	insertarNodo(arbol, arbol->raiz, NULL, libro8, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro8, ISBN);
+	
+	Libro *libro9 = initializeLibro();
+    libro9->titulo = "La mente dibujada";
+    libro9->isbn = "9788494994616";
+    libro9->autor = "Grace Klimt y Salvatwitts";
+    libro9->genero = "Poesía y prosa poética ilustrada";
+    libro9->copias = 0;
+    libro9->year = 2019;
+	insertarNodo(arbol, arbol->raiz, NULL, libro9, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro9, ISBN);
+	
+	Libro *libro10 = initializeLibro();
+    libro10->titulo = "Drácula";
+    libro10->isbn = "9780786181483";
+    libro10->autor = "Bram Stoker";
+    libro10->genero = "Novela gótica";
+    libro10->copias = 0;
+    libro10->year = 1897;
+	insertarNodo(arbol, arbol->raiz, NULL, libro10, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro10, ISBN);
+	
+	Libro *libro11 = initializeLibro();
+    libro11->titulo = "Diez negritos";
+    libro11->isbn = "9788467045390";
+    libro11->autor = "Agatha Christie";
+    libro11->genero = "Novela negra";
+    libro11->copias = 0;
+    libro11->year = 1939;
+	insertarNodo(arbol, arbol->raiz, NULL, libro11, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro11, ISBN);
+	
+	Libro *libro12 = initializeLibro();
+    libro12->titulo = "La carretera";
+    libro12->isbn = "9786074293258";
+    libro12->autor = "Cormac McCarthy";
+    libro12->genero = "Novela post-apocalíptica";
+    libro12->copias = 0;
+    libro12->year = 2016;
+	insertarNodo(arbol, arbol->raiz, NULL, libro12, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro12, ISBN);
+	
+	Libro *libro13 = initializeLibro();
+    libro13->titulo = "La mujer del viajero en el tiempo";
+    libro13->isbn = "9786074296730";
+    libro13->autor = "Audrey Niffenegger";
+    libro13->genero = "Novela romántica";
+    libro13->copias = 0;
+    libro13->year = 2003;
+	insertarNodo(arbol, arbol->raiz, NULL, libro13, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro13, ISBN);
+	
+	Libro *libro14 = initializeLibro();
+    libro14->titulo = "Cien años de soledad";
+    libro14->isbn = "9786070704031";
+    libro14->autor = "Gabriel García Márquez";
+    libro14->genero = "Realismo mágico";
+    libro14->copias = 0;
+    libro14->year = 1967;
+	insertarNodo(arbol, arbol->raiz, NULL, libro14, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro14, ISBN);
+	
+	Libro *libro15 = initializeLibro();
+    libro15->titulo = "La Vida Secreta De Las Abejas";
+    libro15->isbn = "9780143035794";
+    libro15->autor = "SUE MONK KIDD";
+    libro15->genero = "Novela contemporánea";
+    libro15->copias = 0;
+    libro15->year = 2002;
+	insertarNodo(arbol, arbol->raiz, NULL, libro15, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro15, ISBN);
+	
+	Libro *libro16 = initializeLibro();
+    libro16->titulo = "La letra escarlata";
+    libro16->isbn = "9781519117991";
+    libro16->autor = "Nathaniel Hawthorne";
+    libro16->genero = "Novela histórica";
+    libro16->copias = 0;
+    libro16->year = 1850;
+	insertarNodo(arbol, arbol->raiz, NULL, libro16, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro16, ISBN);
+	
+	Libro *libro17 = initializeLibro();
+    libro17->titulo = "Los Pilares de la Tierra";
+    libro17->isbn = "9780307454737";
+    libro17->autor = "Ken Follett";
+    libro17->genero = "Novela histórica";
+    libro17->copias = 0;
+    libro17->year = 1989;
+	insertarNodo(arbol, arbol->raiz, NULL, libro17, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro17, ISBN);
+	
+	Libro *libro18 = initializeLibro();
+    libro18->titulo = "Juego de tronos: Canción de Hielo y Fuego";
+    libro18->isbn = "9786073128834";
+    libro18->autor = "George R.R. Martin";
+    libro18->genero = "Fantasía heroica";
+    libro18->copias = 0;
+    libro18->year = 1996;
+	insertarNodo(arbol, arbol->raiz, NULL, libro18, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro18, ISBN);
+	
+	Libro *libro19 = initializeLibro();
+    libro19->titulo = "Las Aventuras de Sherlock Holmes";
+    libro19->isbn = "9781514339060";
+    libro19->autor = "Sir Arthur Conan Doyle";
+    libro19->genero = "Policíaco";
+    libro19->copias = 0;
+    libro19->year = 1892;
+	insertarNodo(arbol, arbol->raiz, NULL, libro19, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro19, ISBN);
+	
+	Libro *libro20 = initializeLibro();
+    libro20->titulo = "Grandes Esperanzas";
+    libro20->isbn = "9789875667334";
+    libro20->autor = "Charles Dickens";
+    libro20->genero = "Humor negro";
+    libro20->copias = 0;
+    libro20->year = 1860;
+	insertarNodo(arbol, arbol->raiz, NULL, libro20, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro20, ISBN);
+	
+	Libro *libro21 = initializeLibro();
+    libro21->titulo = "Alicia En El Pais De Las Maravillas";
+    libro21->isbn = "9786070913273";
+    libro21->autor = "Lewis Carroll";
+    libro21->genero = "Literatura fantástica";
+    libro21->copias = 0;
+    libro21->year = 1865;
+	insertarNodo(arbol, arbol->raiz, NULL, libro21, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro21, ISBN);
+	
+	Libro *libro22 = initializeLibro();
+    libro22->titulo = "A sangre fría";
+    libro22->isbn = "9786073112086";
+    libro22->autor = "Truman Capote";
+    libro22->genero = "Novela testimonio";
+    libro22->copias = 0;
+    libro22->year = 1965;
+	insertarNodo(arbol, arbol->raiz, NULL, libro22, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro22, ISBN);
+	
+	Libro *libro23 = initializeLibro();
+    libro23->titulo = "Un arbol crece en Brooklyn";
+    libro23->isbn = "9780307392473";
+    libro23->autor = "Betty Smith";
+    libro23->genero = "Semibiográfica";
+    libro23->copias = 0;
+    libro23->year = 1943;
+	insertarNodo(arbol, arbol->raiz, NULL, libro23, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro23, ISBN);
+	
+	Libro *libro24 = initializeLibro();
+    libro24->titulo = "El Color Purpura";
+    libro24->isbn = "9788422621287";
+    libro24->autor = "Alice Walker";
+    libro24->genero = "Literatura contemporánea";
+    libro24->copias = 0;
+    libro24->year = 1982;
+	insertarNodo(arbol, arbol->raiz, NULL, libro24, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro24, ISBN);
+	
+	Libro *libro25 = initializeLibro();
+	libro24->titulo = "El Conde de Monte-Cristo";
+    libro25->isbn = "9781246182378";
+    libro25->autor = "Alexandre Dumas";
+    libro25->genero = "Aventura";
+    libro25->copias = 0;
+    libro25->year = 1844;
+	insertarNodo(arbol, arbol->raiz, NULL, libro25, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro25, ISBN);
+	
+	Libro *libro26 = initializeLibro();
+	libro26->titulo = "Las Aventuras De Tom Sawyer";
+    libro26->isbn = "9789700744049";
+    libro26->autor = "Mark Twain";
+    libro26->genero = "Aventura";
+    libro26->copias = 0;
+    libro26->year = 1876;
+	insertarNodo(arbol, arbol->raiz, NULL, libro26, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro26, ISBN);
 
+	Libro *libro27 = initializeLibro();
+	libro27->titulo = "El Dador";
+    libro27->isbn = "9780613047920";
+    libro27->autor = "Lois Lowry";
+    libro27->genero = "Utopía";
+    libro27->copias = 0;
+    libro27->year = 1993;
+	insertarNodo(arbol, arbol->raiz, NULL, libro27, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro27, ISBN);
+	
+	Libro *libro28 = initializeLibro();
+	libro28->titulo = "El Principito";
+    libro28->isbn = "9780156013925";
+    libro28->autor = "Antoine de Saint-Exupéry";
+    libro28->genero = "Novela filosófica";
+    libro28->copias = 0;
+    libro28->year = 1951;
+	insertarNodo(arbol, arbol->raiz, NULL, libro28, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro28, ISBN);
+	
+	Libro *libro29 = initializeLibro();
+	libro29->titulo = "Cumbres borrascosas";
+    libro29->isbn = "9786073120982";
+    libro29->autor = "Emily Bronte";
+    libro29->genero = "Novela gótica";
+    libro29->copias = 0;
+    libro29->year = 1847;
+	insertarNodo(arbol, arbol->raiz, NULL, libro29, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro29, ISBN);
+	
+	Libro *libro30 = initializeLibro();
+	libro30->titulo = "Harry Potter y la piedra filosofal";
+    libro30->isbn = "9788498386943";
+    libro30->autor = "J. K. Rowling";
+    libro30->genero = "Literatura fantástica";
+    libro30->copias = 0;
+    libro30->year = 1997;
+	insertarNodo(arbol, arbol->raiz, NULL, libro30, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro30, ISBN);
+	
+	Libro *libro31 = initializeLibro();
+	libro31->titulo = "El Senor de los Anillos 1. La comunidad del anillo";
+    libro31->isbn = "9786070712722";
+    libro31->autor = "J.R.R. Tolkien";
+    libro31->genero = "Literatura fantástica";
+    libro31->copias = 0;
+    libro31->year = 1954;
+	insertarNodo(arbol, arbol->raiz, NULL, libro31, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro31, ISBN);
+	
+	Libro *libro32 = initializeLibro();
+	libro32->titulo = "Orgullo y prejuicio";
+    libro32->isbn = "9786073127769";
+    libro32->autor = "Jane Austen";
+    libro32->genero = "Novela romántica";
+    libro32->copias = 0;
+    libro32->year = 1813;
+	insertarNodo(arbol, arbol->raiz, NULL, libro32, TITULO);
+	insertarNodo(arbol, arbol->raizISBN, NULL, libro32, ISBN);
+	
 	//agrego existencias por defecto en las sedes
 	Sede *tmp = listaSede->primero;
 	int copias[] = {5,1,3,5,6};
