@@ -24,6 +24,7 @@ typedef struct arbolPrestamo {
 } ArbolPrestamo;
 
 ArbolPrestamo *initArbolPrestamo();
+NodoPrestamo *buscarPrestamo(NodoPrestamo *nodo, int clave);
 /*-------------prototipo de funciones para interfaces----------*/
 void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
 void buscarPrestamosMENU(ArbolPrestamo *arbol);
