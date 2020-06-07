@@ -22,3 +22,4 @@ void BusquedaAlumno(ListaAlumno *listaAlumno);
 void modificarAlumno(ListaAlumno *listaAlumno);
 void eliminarAlumno(ListaAlumno *listaAlumno);
 void cargaInicialAlumnos(ListaAlumno *listaAlumno);
+Alumno *retornaAlumnoPrestamo(int carnet, ListaAlumno *listaAlumno);

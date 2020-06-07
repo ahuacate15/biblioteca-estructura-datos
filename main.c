@@ -5,6 +5,7 @@
 #include "sede.h"
 #include "traslado.h"
 #include "alumno.h"
+#include "prestamo.h"
 
 //contantes para menu principal
 #define PRESTAMOS 1
@@ -17,6 +18,10 @@
 #define FINALIZAR 7
 #define TRUE 1
 #define RETROCEDER 0
+
+//constantes para submenu prestamos
+#define AGREGAR_PRESTAMO 1
+#define BUSCAR_PRESTAMO 2
 
 //constantes para submenu libros
 #define AGREGARLIBRO 1
@@ -36,6 +41,7 @@
 #define MOSTRAR 1
 #define EDITAR 2
 
+int printMenuPrestamos();
 int printMainMenu();
 int printMenuLibros();
 int printMenuSedes();
@@ -51,12 +57,32 @@ int main() {
 	ListaAlumno *listaAlumno = initListaAlumno();
 	cargaInicialAlumnos(listaAlumno);
 
+	ArbolPrestamo *ptrArbolPrestamo = initArbolPrestamo();
+
 	setlocale(LC_ALL,"spanish");
 
 	inicio:;
 	while(TRUE) {
 		system("cls");
 		switch(printMainMenu()) {
+			case PRESTAMOS:
+				while(TRUE) {
+					switch(printMenuPrestamos()) {
+						case AGREGAR_PRESTAMO:
+							agregarPrestamoMENU(ptrArbolPrestamo, listaAlumno, arbolLibros);
+							break;
+						case BUSCAR_PRESTAMO:
+							buscarPrestamosMENU(ptrArbolPrestamo);
+							break;
+						case 3: //atras
+							goto inicio;
+							break;
+						default:
+							printf("La opcion ingresada es incorrecta\n\n");
+							system("pause");
+					}
+				}
+				break;
 			case TRASLADOS:
 				realizarTrastadoMenu(arbolLibros, listSede);
 				break;
@@ -161,6 +187,25 @@ int printMainMenu() {
 		return opcion;
 	}
 
+}
+
+int printMenuPrestamos() {
+	int opcion = 0;
+	while(TRUE) {
+		system("cls");
+		printf(" ----------------------------------------------------------- \n");
+		printf("|                         PRESTAMOS                         |\n");
+		printf(" ----------------------------------------------------------- \n\n");
+		printf("1)Agregar\t 2)Buscar\t 3)Atras\n\n");
+
+		printf("prestamos >> ");
+		if(scanf("%d", &opcion) == 0) {
+			printf("La opcion ingresada es incorrecta\n\n");
+			fflush(stdin);
+			continue;
+		}
+		return opcion;
+	}
 }
 
 int printMenuLibros() {
