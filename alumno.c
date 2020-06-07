@@ -157,6 +157,26 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 	system("pause");
 }
 
+//Metodo para validar carnet
+int validarCarnet(char carnet[])
+{
+	int respuesta=0,i=0;
+	
+	for(i=0;i<strlen(carnet);i++)
+	{
+		if((isdigit(carnet[i])))
+		{
+			respuesta=respuesta;
+		}
+		else
+		{
+			respuesta=respuesta+1;
+		}
+	}
+	
+	return respuesta;
+}
+
 //Verificando si el alumno ya existe mediante la busqueda del carnet
 
 int existeAlumno(ListaAlumno *listaAlumno, int carnet)
@@ -755,124 +775,125 @@ void modificarAlumno(ListaAlumno *listaAlumno)
 	actual=listaAlumno->primero;
 
 	//Declaracion de variables para determinar qu? alumno se est? buscando y si el alumno se encontr?
-	int encontrado=0,alumnoBuscar=0,datoModificar=0,opcionModificarAlumno=0,exit=0;
-	char email[25],verificarTelef[25];
+	int encontrado=0,alumnoBuscar=0,datoModificar=0,opcionModificarAlumno=0,exit=0,respuesta=0;
+	char email[25],verificarTelef[25],verificarCarnet[10];
 
-	//printf("Ingrese nodo a modificar: ");
-	for(h=0;h<1;h++)
+	//Peticion y almacenamiento de datos
+	printf("\nIngrese carnet a buscar: ");			
+	scanf("%s",&verificarCarnet);
+
+	//Recibiendo un valor el que determina si la estructura del carnet es correcta
+	respuesta=validarCarnet(verificarCarnet);
+	if(respuesta==0)
 	{
-		//Petici?n del alumno a buscar
-		printf("Ingrese carnet a buscar: ");
-		//Almacenamiento de alumno a buscar y verificando que sea entero
-		if(scanf("%d",&alumnoBuscar)==0)
+		//Conviertiendo carnet
+		alumnoBuscar=atoi(verificarCarnet);
+		//Si la lista tiene elementos
+		if(listaAlumno->primero!=NULL)
 		{
-			fflush(stdin);
-			h--;
-		}
-	}
-	//Si la lista tiene elementos
-	if(listaAlumno->primero!=NULL)
-	{
-		//Mientras el alumno actual sea distinto a NULL y si todavia no se ha encontrado el alumno
-		while(actual!=NULL && encontrado==0)
-		{
-			//Si el alumno actual coincide con el alumno buscado
-			if(actual->carnet==alumnoBuscar)
+			//Mientras el alumno actual sea distinto a NULL y si todavia no se ha encontrado el alumno
+			while(actual!=NULL && encontrado==0)
 			{
-				//Impresi?n de que el alumno ya se encontr?
-				printf("\nalumno encontrado\n");
-				printf("elige el dato que deseas modificar\n");
-				printf("1)nombre \t2)apellido \t3)carrera\n");
-				printf("4)telefono \t5)correo \n");
-				printf("\n>> ");
-
-				scanf("%d",&opcionModificarAlumno);
-				switch(opcionModificarAlumno)
+				//Si el alumno actual coincide con el alumno buscado
+				if(actual->carnet==alumnoBuscar)
 				{
-					case 1:
-						printf("Ingrese nombres del alumno: ");
-						scanf("%s",&actual->nombreAlumno);
-						printf("***dato modificado\n");
-						break;
-					case 2:
-						printf("Ingrese apellidos del alumno: ");
-						scanf("%s",&actual->apellidoAlumno);
-						printf("***dato modificado\n");
-						break;
-					case 3:
-						printf("Ingrese carrera del alumno: ");
-						scanf("%s",&actual->carrera);
-						printf("***dato modificado\n");
-						break;
-					case 4:
-						/*printf("Ingrese telefono del alumno: ");
-						scanf("%s",&actual->telefono);*/
-						printf("Ingrese telefono del alumno(sin guiones): ");
-						scanf("%s",&verificarTelef);
-						int respuesta=0,i=0;
-				
-						for(i=0;i<strlen(verificarTelef);i++)
-						{
-							if((isdigit(verificarTelef[i])))
+					//Impresi?n de que el alumno ya se encontr?
+					printf("\nalumno encontrado\n");
+					printf("elige el dato que deseas modificar\n");
+					printf("1)nombre \t2)apellido \t3)carrera\n");
+					printf("4)telefono \t5)correo \n");
+					printf("\n>> ");
+	
+					scanf("%d",&opcionModificarAlumno);
+					switch(opcionModificarAlumno)
+					{
+						case 1:
+							printf("Ingrese nombres del alumno: ");
+							scanf("\n%[^\n]%*c",&actual->nombreAlumno);
+							printf("***dato modificado\n");
+							break;
+						case 2:
+							printf("Ingrese apellidos del alumno: ");
+							scanf("\n%[^\n]%*c",&actual->apellidoAlumno);
+							printf("***dato modificado\n");
+							break;
+						case 3:
+							printf("Ingrese carrera del alumno: ");
+							scanf("\n%[^\n]%*c",&actual->carrera);
+							printf("***dato modificado\n");
+							break;
+						case 4:
+							/*printf("Ingrese telefono del alumno: ");
+							scanf("%s",&actual->telefono);*/
+							printf("Ingrese telefono del alumno(sin guiones): ");
+							scanf("\n%[^\n]%*c",&verificarTelef);
+							int respuesta=0,i=0;
+					
+							for(i=0;i<strlen(verificarTelef);i++)
 							{
-								respuesta=respuesta;
+								if((isdigit(verificarTelef[i])))
+								{
+									respuesta=respuesta;
+								}
+								else
+								{
+									respuesta=respuesta+1;
+								}
+							}
+							
+							if(respuesta==0)
+							{
+								strcpy(actual->telefono,verificarTelef);
+								//exitTelefono=1;
+								printf("DATO MODIFICADO\n");
 							}
 							else
 							{
-								respuesta=respuesta+1;
+								printf("DATO NO MODIFICADO\n");
 							}
-						}
-						
-						if(respuesta==0)
-						{
-							strcpy(actual->telefono,verificarTelef);
-							//exitTelefono=1;
-							printf("DATO MODIFICADO\n");
-						}
-						else
-						{
-							printf("DATO NO MODIFICADO\n");
-						}
-						
-						break;
-					case 5:
-						while(exit==0)
-						{
-							printf("Ingrese correo del alumno: ");
-							scanf("%s",&email);
-							if(strchr(email, '@') != NULL && strchr(email, '.') != NULL)
+							
+							break;
+						case 5:
+							while(exit==0)
 							{
-								strcpy(actual->correo,email);
-							    exit = 1;
+								printf("Ingrese correo del alumno: ");
+								scanf("%s",&email);
+								if(strchr(email, '@') != NULL && strchr(email, '.') != NULL)
+								{
+									strcpy(actual->correo,email);
+								    exit = 1;
+								}
 							}
-						}
-						printf("***dato modificado\n");
-						break;
-				    default:
-				    	printf("***Opcion no valida\n");
-				    	break;
+							printf("***dato modificado\n");
+							break;
+					    default:
+					    	printf("***Opcion no valida\n");
+					    	break;
+					}
+					//Bandera para indicar que ya se encontr? el alumno
+					encontrado=1;
+					printf("\n***alumno modificado***\n\n");
 				}
-				//Bandera para indicar que ya se encontr? el alumno
-				encontrado=1;
-				printf("\n***alumno modificado***\n\n");
+				//El nodo actual apuntar? al alumno siguiente
+				actual=actual->siguiente;
 			}
-			//El nodo actual apuntar? al alumno siguiente
-			actual=actual->siguiente;
+			//Si el alumno no se encuentra
+			if(encontrado==0)
+			{
+				//Impresion de que ningun alumno coincide con la busqueda
+				printf("\n***No se encontro el nodo\n");
+			}
 		}
-		//Si el alumno no se encuentra
-		if(encontrado==0)
+		//Si no hay elementos en la lista
+		else
 		{
-			//Impresion de que ningun alumno coincide con la busqueda
-			printf("\n***No se encontro el nodo\n");
-
+			printf("\n***La lista no contiene elementos\n");
 		}
 	}
-	//Si no hay elementos en la lista
 	else
 	{
-		printf("\n***La lista no contiene elementos\n");
+		printf("\n***Carnet no valido\n");
 	}
-
 	system("pause");
 }
 
