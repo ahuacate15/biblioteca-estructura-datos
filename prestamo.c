@@ -365,7 +365,7 @@ void generarArchivo(NodoPrestamo *ptrPrestamo) {
 		{
             //un alumno realiza muchos prestamos, imprimo sus datos una vez
             //como un encabezado
-            if(ptrAnterior == NULL) {
+            if(ptrAnterior == NULL || ptrAnterior->alumno->carnet != prestamo->alumno->carnet) {
             	//Impresion de datos en el archivo(Carnet, Nombres y Apellidos de Alumno)
                 fprintf(file,"\n -------------------------------------------------\n");
                 fprintf(file,"Carnet de Alumno: %d\n",prestamo->alumno->carnet);
