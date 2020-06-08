@@ -299,6 +299,96 @@ void imprimirPrestamo(NodoPrestamo *ptrPrestamo) {
     }
 }
 
+//Buscar
+void buscarRegistrosPrestamos(ArbolPrestamo *arbol) {
+    int campoBusqueda = 1;
+    int clave = 0;
+    char *fecha = malloc(sizeof(char) * 10);
+    NodoPrestamo *raiz = NULL;
+    CustomDate *customDate = NULL;
+
+    if(arbol == NULL) {
+        printf("no hay prestamos registrado\n");
+        return;
+    }
+
+    stateSolicitudFiltro:;
+    //busqueda por fecha
+    if(campoBusqueda == 1) {
+        printf("ingresa la fecha (dd-mm-yyyy): ");
+        scanf("%s", fecha);
+
+        customDate = convertDate(fecha);
+
+        if(customDate == NULL) {
+            printf("la fecha ingresada es incorrecta\n");
+            goto stateSolicitudFiltro;
+        } 
+        clave = customDate->hash;
+        raiz = arbol->raiz; 
+    }
+
+    NodoPrestamo *ptrResultado = buscarPrestamo(raiz, clave);
+    if(ptrResultado == NULL) {
+        printf("***no se encontraron resultados***\n");
+    } else {
+        generarArchivo(ptrResultado);
+    }
+
+    system("pause");
+}
+
+//Impresion de archivo txt
+void generarArchivo(NodoPrestamo *ptrPrestamo) {
+	//Si existen prestamos
+    if(ptrPrestamo != NULL) {
+    	//Declaracion de variables para almacenar fecha y sus datos individuales
+    	char fecha[50];
+    	int dia,mes, anio, contador=0;
+    	dia=ptrPrestamo->prestamo->date->day;
+    	mes=ptrPrestamo->prestamo->date->month;
+    	anio=ptrPrestamo->prestamo->date->year;
+    	//Almacenamiento de texto junto con datos de fecha
+    	sprintf(fecha,"Prestamos %d-%d-%d.txt",dia,mes,anio);
+    	//Declaracion de archivo
+		FILE *file;
+		//Apertura de archivo con nombre
+		file = fopen(fecha, "w");
+		
+		//Titulo de archivo
+        fprintf(file,"Fecha de generacion de archivo: %s\n", ptrPrestamo->prestamo->date->naturalDate);
+        //Apuntando al prestamo siguiente
+        Prestamo *prestamo = ptrPrestamo->prestamo;
+        //Apuntando al prestamo anterior=NULL
+        Prestamo *ptrAnterior = NULL;
+        while(prestamo != NULL) 
+		{
+            //un alumno realiza muchos prestamos, imprimo sus datos una vez
+            //como un encabezado
+            if(ptrAnterior == NULL) {
+            	//Impresion de datos en el archivo(Carnet, Nombres y Apellidos de Alumno)
+                fprintf(file,"\n -------------------------------------------------\n");
+                fprintf(file,"Carnet de Alumno: %d\n",prestamo->alumno->carnet);
+                fprintf(file,"Nombres de Alumno: %s\n",prestamo->alumno->nombreAlumno);
+                fprintf(file,"Apellidos de Alumno: %s\n",prestamo->alumno->apellidoAlumno);
+            }
+            //Impresion en archivo de ISBN y Titulo de libro prestado
+            fprintf(file,"ISBN de libro prestado: %s\n",prestamo->libro->isbn);
+            fprintf(file,"Titulo de libro prestado: %s\n",prestamo->libro->titulo);
+            
+            contador=contador+1;
+            ptrAnterior = prestamo;
+            prestamo = prestamo->siguiente;
+        }
+        
+        fprintf(file,"\nTotal de prestamos: %d",contador);
+        //Cierre de archivo
+        fclose(file);
+        //Mensaje de archivo generado
+        printf("ARCHIVO GENERADO\n");
+    }
+}
+
 void testPrestamos(ListaAlumno *listaAlumno, Arbol *arbolLibro) {
     ArbolPrestamo *arbol = initArbolPrestamo();
 
