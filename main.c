@@ -74,7 +74,9 @@ int main() {
 						case BUSCAR_PRESTAMO:
 							buscarPrestamosMENU(ptrArbolPrestamo);
 							break;
-						case 3: //atras
+						case 3:
+							buscarRegistrosPrestamos(ptrArbolPrestamo);
+						case 4: //atras
 							goto inicio;
 							break;
 						default:
@@ -196,7 +198,7 @@ int printMenuPrestamos() {
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                         PRESTAMOS                         |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("1)Agregar\t 2)Buscar\t 3)Atras\n\n");
+		printf("1)Agregar\t 2)Buscar\t 3)Generar Archivo\t  4)Atras\n\n");
 
 		printf("prestamos >> ");
 		if(scanf("%d", &opcion) == 0) {
