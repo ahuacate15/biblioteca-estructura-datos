@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include "texto.h"
+#include "sede.h";
 
 //Definiendo estructura Alumno
 typedef struct {
@@ -13,6 +14,7 @@ typedef struct {
     char *carrera;
     char *telefono;
     char *correo;
+    int idSede;
     struct Alumno *siguiente;
 } Alumno;
 
@@ -79,8 +81,8 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 	Alumno *alumno = malloc(sizeof(Alumno));
 	//Declaracion de variable
 
-	int numCarnet=0,exit=0, exitTelefono = 0;
-	char verificarCorreo[25], email[60], verificarTelefono[25];
+	int numCarnet=0,exit=0, exitTelefono = 0,exitSede=0,idSede=0;
+	char verificarCorreo[25], email[60], verificarTelefono[25],sedeId[15];
 
 	//Limpieza de pantalla	
 	system("cls");
@@ -131,6 +133,28 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 			    exit = 1;
 			} else {
 				printf("error: el correo ingresado es invalido***\n\n");
+			}
+
+		}
+		
+		//Validar Sede
+		while(exitSede==0)
+		{
+			printf("SEDES VALIDAS: 1)Santa Tecla\t2)Santa Ana\t3)San Miguel");
+			printf("\nIngrese Código de Sede: ");
+			scanf("%s",&sedeId);
+
+			if(validarSedeId(sedeId)==0)
+			{
+				idSede=atoi(sedeId);
+				if(idSede==1 || idSede==2 || idSede==3)
+				{
+					alumno->idSede=idSede;
+					exitSede = 1;
+				}
+			    
+			} else {
+				printf("error: La sede que ha ingresado es invalida***\n\n");
 			}
 
 		}
@@ -227,6 +251,26 @@ int existeAlumno(ListaAlumno *listaAlumno, int carnet)
 	return encontrado;
 }
 
+//Metodo para validar sede
+int validarSedeId(char sede[])
+{
+	int respuesta=0,i=0;
+	
+	for(i=0;i<strlen(sede);i++)
+	{
+		if((isdigit(sede[i])))
+		{
+			respuesta=respuesta;
+		}
+		else
+		{
+			respuesta=respuesta+1;
+		}
+	}
+	
+	return respuesta;
+}
+
 //Impresion de todos los alumnos dentro de la lista
 void mostrarAlumnos(ListaAlumno *listaAlumno) {
 	//Limpieza pantalla
@@ -248,6 +292,7 @@ void mostrarAlumnos(ListaAlumno *listaAlumno) {
 			printf("\nCarrera: %s",i->carrera);
 			printf("\nTelefono: %s",i->telefono);
 			printf("\nCorreo: %s",i->correo);
+			printf("\nSede: %d",i->idSede);
 			printf("\n");
 			//Apuntar al siguiente nodo del actual
 			i = i->siguiente;
@@ -349,6 +394,7 @@ void busquedaNombre(ListaAlumno *listaAlumno)
 				printf("\nCarrera: %s",actual->carrera);
 				printf("\nTelefono: %s",actual->telefono);
 				printf("\nCorreo: %s",actual->correo);
+				printf("\nSede: %d",actual->idSede);
 				printf("\n------------------------\n");
 				encontrado=1;
 			}
@@ -412,6 +458,7 @@ void busquedaApellido(ListaAlumno *listaAlumno)
 				printf("\nCarrera: %s",actual->carrera);
 				printf("\nTelefono: %s",actual->telefono);
 				printf("\nCorreo: %s",actual->correo);
+				printf("\nSede: %d",actual->idSede);
 				printf("\n------------------------\n");
 				encontrado=1;
 			}
@@ -474,6 +521,7 @@ void busquedaCarrera(ListaAlumno *listaAlumno)
 				printf("\nCarrera: %s",actual->carrera);
 				printf("\nTelefono: %s",actual->telefono);
 				printf("\nCorreo: %s",actual->correo);
+				printf("\nSede: %d",actual->idSede);
 				printf("\n------------------------\n");
 				encontrado=1;
 			}
@@ -534,6 +582,7 @@ void busquedaTelefono(ListaAlumno *listaAlumno)
 				printf("\nCarrera: %s",actual->carrera);
 				printf("\nTelefono: %s",actual->telefono);
 				printf("\nCorreo: %s",actual->correo);
+				printf("\nSede: %d",actual->idSede);
 				printf("\n------------------------\n");
 				encontrado=1;
 			}
@@ -597,6 +646,7 @@ void busquedaCorreo(ListaAlumno *listaAlumno)
 				printf("\nCarrera: %s",actual->carrera);
 				printf("\nTelefono: %s",actual->telefono);
 				printf("\nCorreo: %s",actual->correo);
+				printf("\nSede: %d",actual->idSede);
 				printf("\n------------------------\n");
 				encontrado=1;
 			}
@@ -667,6 +717,7 @@ void busquedaCarnet(ListaAlumno *listaAlumno)
 				printf("\nCarrera: %s",actual->carrera);
 				printf("\nTelefono: %s",actual->telefono);
 				printf("\nCorreo: %s",actual->correo);
+				printf("\nSede: %d",actual->idSede);
 				printf("\n");
 				encontrado=1;
 			}
@@ -924,6 +975,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno1->carrera,"Quimica y Farmacia");
     strcpy(alumno1->telefono,"77984632");
     strcpy(alumno1->correo,"cquintanilla@gmail.com");
+    alumno1->idSede=1;
     alumno1->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -945,6 +997,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno2->carrera,"Gastronomia");
     strcpy(alumno2->telefono,"78493651");
     strcpy(alumno2->correo,"fnavas@gmail.com");
+    alumno2->idSede=2;
     alumno2->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -966,6 +1019,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno3->carrera,"Arquitectura");
     strcpy(alumno3->telefono,"68475832");
     strcpy(alumno3->correo,"lespinosa@gmail.com");
+    alumno3->idSede=1;
     alumno3->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -987,6 +1041,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno4->carrera,"Mecanica");
     strcpy(alumno4->telefono,"74927521");
     strcpy(alumno4->correo,"rllorente@gmail.com");
+    alumno4->idSede=2;
     alumno4->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1008,6 +1063,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno5->carrera,"Redes");
     strcpy(alumno5->telefono,"71953235");
     strcpy(alumno5->correo,"jlatorre@gmail.com");
+    alumno5->idSede=1;
     alumno5->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1029,6 +1085,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno6->carrera,"Literatura");
     strcpy(alumno6->telefono,"69471533");
     strcpy(alumno6->correo,"mconcepcion@gmail.com");
+    alumno6->idSede=2;
     alumno6->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1044,12 +1101,13 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 	
 	//Ingreso de Alumno 7
 	Alumno *alumno7 = initAlumno();
-    alumno6->carnet=195720;
+    alumno7->carnet=195720;
     strcpy(alumno7->nombreAlumno,"Laura Maria");
     strcpy(alumno7->apellidoAlumno,"Benito Tobar");
     strcpy(alumno7->carrera,"Sistemas");
     strcpy(alumno7->telefono,"70913464");
     strcpy(alumno7->correo,"lbenito@gmail.com");
+    alumno7->idSede=1;
     alumno7->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1071,6 +1129,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno8->carrera,"Mecanica");
     strcpy(alumno8->telefono,"75038134");
     strcpy(alumno8->correo,"amayor@gmail.com");
+    alumno8->idSede=2;
     alumno8->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1092,6 +1151,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno9->carrera,"Administracion de Empresas");
     strcpy(alumno9->telefono,"76500234");
     strcpy(alumno9->correo,"motero@gmail.com");
+    alumno9->idSede=1;
     alumno9->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1113,6 +1173,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno10->carrera,"Quimica y Farmacia");
     strcpy(alumno10->telefono,"79125639");
     strcpy(alumno10->correo,"jgallego@gmail.com");
+    alumno10->idSede=2;
     alumno10->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1134,6 +1195,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno11->carrera,"Mercadeo");
     strcpy(alumno11->telefono,"79475581");
     strcpy(alumno11->correo,"nmoreno@gmail.com");
+    alumno11->idSede=1;
     alumno11->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1155,6 +1217,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno12->carrera,"Enfermeria");
     strcpy(alumno12->telefono,"65893954");
     strcpy(alumno12->correo,"rmatos@gmail.com");
+    alumno12->idSede=2;
     alumno12->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1176,6 +1239,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno13->carrera,"Psicologia");
     strcpy(alumno13->telefono,"74119430");
     strcpy(alumno13->correo,"magullo@gmail.com");
+    alumno13->idSede=1;
     alumno13->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1197,6 +1261,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno14->carrera,"Comunicaciones");
     strcpy(alumno14->telefono,"66847284");
     strcpy(alumno14->correo,"azamora@gmail.com");
+    alumno14->idSede=2;
     alumno14->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1218,6 +1283,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno15->carrera,"Relaciones Internacionales");
     strcpy(alumno15->telefono,"66847284");
     strcpy(alumno15->correo,"rquiles@gmail.com");
+    alumno15->idSede=1;
     alumno15->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1239,6 +1305,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno16->carrera,"Negocios");
     strcpy(alumno16->telefono,"76849321");
     strcpy(alumno16->correo,"vbastida@gmail.com");
+    alumno16->idSede=2;
     alumno16->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1260,6 +1327,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno17->carrera,"Telecomunicaciones");
     strcpy(alumno17->telefono,"76300134");
     strcpy(alumno17->correo,"ccabezas@gmail.com");
+    alumno17->idSede=1;
     alumno17->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1281,6 +1349,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno18->carrera,"Sistemas");
     strcpy(alumno18->telefono,"79375611");
     strcpy(alumno18->correo,"jgarca@gmail.com");
+    alumno18->idSede=2;
     alumno18->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1302,6 +1371,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno19->carrera,"Redes");
     strcpy(alumno19->telefono,"71133579");
     strcpy(alumno19->correo,"fbravo@gmail.com");
+    alumno19->idSede=1;
     alumno19->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1324,6 +1394,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno20->telefono,"77992656");
     strcpy(alumno20->correo,"mguevara@gmail.com");
     alumno20->siguiente=NULL;
+    alumno20->idSede=2;
     if(listaAlumno->primero == NULL)
 	{
 		listaAlumno->primero = alumno20;
