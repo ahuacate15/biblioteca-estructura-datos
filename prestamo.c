@@ -57,6 +57,8 @@ void realizarDevolucion(ArbolPrestamo *arbol,ListaAlumno *listaAlumno,Arbol *arb
 int verificarPrestamo(NodoPrestamo *ptrPrestamo);
 void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo);
 void cambioEstadoLibro(NodoPrestamo *ptrPrestamo);
+void buscarDevoluciones(ArbolPrestamo *arbol);
+void imprimirDevoluciones(NodoPrestamo *ptrPrestamo);
 
 ArbolPrestamo *initArbolPrestamo() {
     ArbolPrestamo *arbol = malloc(sizeof(ArbolPrestamo));
@@ -526,7 +528,22 @@ void realizarDevolucion(ArbolPrestamo *arbol, ListaAlumno *listaAlumno,Arbol *ar
         }
         raiz = arbol->raizAlumno; 
     }
+    
     Alumno *alumno = listaAlumno->primero;
+    Alumno *resultadoAlumno = NULL;
+    while(alumno != NULL) {
+        if(alumno->carnet == clave) {
+            resultadoAlumno = alumno;
+            break;
+        }
+        alumno = alumno->siguiente;
+    }
+
+    if(resultadoAlumno == NULL) {
+        printf("el alumno ingresado no existe\n");
+        goto stateSolicitudFiltro;
+    }
+    printf("\n");
 
     NodoPrestamo *ptrResultado = buscarPrestamo(raiz, clave);
     if(ptrResultado == NULL) 
@@ -557,8 +574,9 @@ void realizarDevolucion(ArbolPrestamo *arbol, ListaAlumno *listaAlumno,Arbol *ar
 			    Sede *ptrSedeAlumno = NULL;			
 			    while(libroSede != NULL) 
 				{
-			        if(libroSede->sede->id == alumno->idSede) {
-			            //copias disponibles
+			        if(libroSede->sede->id == alumno->idSede) 
+					{
+			            //Añadiendo a copias
 			            libroSede->copias++;
 			            break;
 			        }
@@ -574,6 +592,7 @@ void realizarDevolucion(ArbolPrestamo *arbol, ListaAlumno *listaAlumno,Arbol *ar
     system("pause");
 }
 
+//Cambiar estado de libro (PRESTADO->DEVUELTO)
 void cambioEstadoLibro(NodoPrestamo *ptrPrestamo) {
     if(ptrPrestamo != NULL) {
     	int encontrado=0;
@@ -594,7 +613,7 @@ void cambioEstadoLibro(NodoPrestamo *ptrPrestamo) {
     }
 }
 
-
+//Verificar si el alumno tiene prestamos activos
 int verificarPrestamo(NodoPrestamo *ptrPrestamo) {
 	int contador=0;
     if(ptrPrestamo != NULL) {
@@ -609,7 +628,6 @@ int verificarPrestamo(NodoPrestamo *ptrPrestamo) {
 				{
 					contador=contador+1;
 				}
-    			
             }
             ptrAnterior = prestamo;
             prestamo = prestamo->siguiente;
@@ -618,7 +636,7 @@ int verificarPrestamo(NodoPrestamo *ptrPrestamo) {
     return contador;
 }
 
-//Imprimir 
+//Imprimir Prestamos Activos del Alumno para mayot informacion
 void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo) {
     if(ptrPrestamo != NULL) {
         //printf("fecha de prestamo: %s\n", ptrPrestamo->prestamo->date->naturalDate);
@@ -640,5 +658,115 @@ void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo) {
             ptrAnterior = prestamo;
             prestamo = prestamo->siguiente;
         }
+    }
+}
+
+//Buscar devoluciones de alumno o fecha
+void buscarDevoluciones(ArbolPrestamo *arbol) {
+    int campoBusqueda = 0;
+    int clave = 0;
+    char *fecha = malloc(sizeof(char) * 10);
+    NodoPrestamo *raiz = NULL;
+    CustomDate *customDate = NULL;
+
+    if(arbol == NULL) {
+        printf("no hay devoluciones registrado\n");
+        return;
+    }
+    stateInicio:;
+    printf("por cual campo deseas realizar la busqueda? \n");
+    printf("1)fecha \t2)alumno\n");
+    printf("\ncampo >> ");
+
+    if(scanf("%d", &campoBusqueda) == 0) {
+        printf("la opcion ingresada en incorrecta\n");
+        fflush(stdin);
+        goto stateInicio;
+    }
+
+    if(campoBusqueda < 1 || campoBusqueda > 2) {
+        printf("la opcion ignresada es incorrecta\n");
+        goto stateInicio;
+    }
+
+    stateSolicitudFiltro:;
+    //busqueda por fecha
+    if(campoBusqueda == 1) {
+        printf("ingresa la fecha (dd-mm-yyyy): ");
+        scanf("%s", fecha);
+
+        customDate = convertDate(fecha);
+
+        if(customDate == NULL) {
+            printf("la fecha ingresada es incorrecta\n");
+            goto stateSolicitudFiltro;
+        } 
+        clave = customDate->hash;
+        raiz = arbol->raiz; 
+    } 
+    //busqueda por alumno
+    else {
+        printf("ingresa el carnet del alumno: ");
+        if(scanf("%d", &clave) == 0) {
+            printf("el carnet no puede contener letras\n");
+            fflush(stdin);
+            goto stateSolicitudFiltro;
+        }
+        raiz = arbol->raizAlumno; 
+    }
+
+    NodoPrestamo *ptrResultado = buscarPrestamo(raiz, clave);
+    if(ptrResultado == NULL) {
+        printf("***no se encontraron resultados***\n");
+    } else {
+        imprimirDevoluciones(ptrResultado);
+    }
+
+    system("pause");
+}
+
+//Impresion de devoluiones por alumno o fecha
+void imprimirDevoluciones(NodoPrestamo *ptrPrestamo) {
+    if(ptrPrestamo != NULL) {
+    	int contadorDevolucion=0;
+        //printf("fecha de devolucion: %s\n", ptrPrestamo->prestamo->date->naturalDate);
+        Prestamo *prestamo = ptrPrestamo->prestamo;
+        Prestamo *ptrAnterior = NULL;
+        while(prestamo != NULL) 
+		{
+            if(ptrAnterior == NULL || ptrAnterior->alumno->carnet != prestamo->alumno->carnet) 
+			{
+            	if(prestamo->estado==0)
+            	{
+            		printf("\n -------------------------------------------------\n");
+               	 	printf
+					(
+	                    "|%d - %s %s\n", 
+	                    prestamo->alumno->carnet, 
+	                    prestamo->alumno->nombreAlumno,
+	                    prestamo->alumno->apellidoAlumno
+	                );
+                	printf(" -------------------------------------------------\n");
+
+                	printf("|Estado\t\t|ISBN\t\t|titulo\n");
+                	printf(" -------------------------------------------------\n");
+                	
+                	printf
+					(
+		                "|%s\t|%s\t|%s\n",
+		                prestamo->estado ? "Prestado" : "Devuelto",
+		                prestamo->libro->isbn,
+		                prestamo->libro->titulo
+            		);
+            		contadorDevolucion=contadorDevolucion+1;
+				}
+            }
+            ptrAnterior = prestamo;
+            prestamo = prestamo->siguiente;
+        }
+        if(contadorDevolucion==0)
+        {
+        	printf("No hay informacion disponible para filtro ingresado\n");
+		}
     }
 }
