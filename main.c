@@ -96,6 +96,8 @@ int main() {
 						case 1:
 							realizarDevolucion(ptrArbolPrestamo, listaAlumno, arbolLibros);
 							break;
+						case 2:
+							buscarDevoluciones(ptrArbolPrestamo);
 						case 3: //atras
 							goto inicio;
 							break;
