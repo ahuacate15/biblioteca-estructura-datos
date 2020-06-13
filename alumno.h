@@ -1,11 +1,12 @@
-//Definiendo estructura Alumno
 typedef struct {
     int carnet;
-    char nombreAlumno[30];
-    char apellidoAlumno[30];
-    char carrera[50];
-    char telefono[10];
-    char correo[25];
+    //estas son las linesa originales de tu archivo
+    char *nombreAlumno;
+    char *apellidoAlumno;
+    char *carrera;
+    char *telefono;
+    char *correo;
+    int idSede;
     struct Alumno *siguiente;
 } Alumno;
 

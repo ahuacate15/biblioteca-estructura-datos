@@ -1,16 +1,22 @@
 #include <stdio.h>
 #include "alumno.h"
 #include "libro.h"
+#include "sede.h"
 #include "date.h"
 #include "texto.h"
 
 #define CAMPO_FECHA 1
 #define CAMPO_ALUMNO 2
+#define PENDIENTE 1
+#define DEVUELTO 0
+#define TRUE 1
+#define FALSE 2
 
 typedef struct prestamo {
     Alumno *alumno;
     CustomDate *date;
     Libro *libro;
+    int estado;
     struct Prestamo *siguiente;
 } Prestamo;
 
@@ -54,6 +60,7 @@ Prestamo *initPrestamo() {
     prestamo->date = NULL;
     prestamo->libro = NULL;
     prestamo->siguiente = NULL;
+    prestamo->estado = PENDIENTE;
     return prestamo;
 }
 
@@ -135,15 +142,8 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
 	printf(" ----------------------------------------------------------- \n\n");
 	fflush(stdin);
 
-    stateFecha:;
-    printf("fecha de prestamo (dd-mm-yyyy): ");
-    scanf("%s", stringDate);
-    date = convertDate(stringDate);
-
-    if(date == NULL) {
-        printf("la fecha ingresada es incorrecta\n");
-        goto stateFecha;
-    }
+    date = now();
+    printf("fecha: %s\n", date->naturalDate);
 
     stateCarnet:;
     printf("carnet del alumno: ");
@@ -153,8 +153,17 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
         goto stateCarnet;
     }
 
-    Alumno *alumno = retornaAlumnoPrestamo(carnet, listaAlumno);
-    if(alumno == NULL) {
+    Alumno *alumno = listaAlumno->primero;
+    Alumno *resultadoAlumno = NULL;
+    while(alumno != NULL) {
+        if(alumno->carnet == carnet) {
+            resultadoAlumno = alumno;
+            break;
+        }
+        alumno = alumno->siguiente;
+    }
+
+    if(resultadoAlumno == NULL) {
         printf("el alumno ingresado no existe\n");
         goto stateCarnet;
     }
@@ -172,15 +181,42 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
     }
 
     Prestamo *prestamo = malloc(sizeof(Prestamo));
-    prestamo->alumno = alumno;
+    prestamo->alumno = resultadoAlumno;
     prestamo->date = date;
     prestamo->libro = nodoLibro->libro;
     prestamo->siguiente = NULL;
+    prestamo->estado = PENDIENTE;
 
-    //arbol binario organizado por fechas de prestamo
-    insertarNodoPrestamo(arbolPrestamo, arbolPrestamo->raiz, prestamo, CAMPO_FECHA);
-    //arbol binario organizado por carnet de alumno
-    insertarNodoPrestamo(arbolPrestamo, arbolPrestamo->raizAlumno, prestamo, CAMPO_ALUMNO);
+    //resto la existencia de la sede del alumno
+    LibroSede *libroSede = nodoLibro->libro->libroSede;
+    Sede *ptrSedeAlumno = NULL;
+	int copiasDisponibles = TRUE;
+
+    while(libroSede != NULL) {
+        if(libroSede->sede->id == alumno->idSede) {
+            //copias disponibles
+            if(libroSede->copias > 0) {
+                libroSede->copias--;
+            } else {
+                //no quedan copias en la sede
+                printf("El libro que necesitas no se encuentra disponible.\n\n");
+                copiasDisponibles = FALSE;
+            }
+            break;
+        }
+        libroSede = libroSede->siguiente;
+    }
+
+    //no se ha registrado en ninguna sede
+    if(!copiasDisponibles) {
+        printf("El libro que necesitas no se encuentra disponible.\n\n");
+    } else {
+        //arbol binario organizado por fechas de prestamo
+        insertarNodoPrestamo(arbolPrestamo, arbolPrestamo->raiz, prestamo, CAMPO_FECHA);
+        //arbol binario organizado por carnet de alumno
+        insertarNodoPrestamo(arbolPrestamo, arbolPrestamo->raizAlumno, prestamo, CAMPO_ALUMNO);
+    }
+    
 
     stateAgregarOtro:;
     printf("\ndeseas agregar otro libro? (s/n) \n");
@@ -281,12 +317,13 @@ void imprimirPrestamo(NodoPrestamo *ptrPrestamo) {
                 );
                 printf(" -------------------------------------------------\n");
 
-                printf("|ISBN\t\t|titulo\n");
+                printf("|Estado\t\t|ISBN\t\t|titulo\n");
                 printf(" -------------------------------------------------\n");
             }
             
             printf(
-                "|%s\t|%s\n",
+                "|%s\t|%s\t|%s\n",
+                prestamo->estado ? "Prestado" : "Devuelto",
                 prestamo->libro->isbn,
                 prestamo->libro->titulo
             );

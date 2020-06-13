@@ -4,6 +4,7 @@ typedef struct prestamo {
     Alumno *alumno;
     CustomDate *date;
     Libro *libro;
+    int estado;
     struct Prestamo *siguiente;
 } Prestamo;
 

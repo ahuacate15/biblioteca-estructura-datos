@@ -141,7 +141,7 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 		while(exitSede==0)
 		{
 			printf("SEDES VALIDAS: 1)Santa Tecla\t2)Santa Ana\t3)San Miguel");
-			printf("\nIngrese Código de Sede: ");
+			printf("\nIngrese Cï¿½digo de Sede: ");
 			scanf("%s",&sedeId);
 
 			if(validarSedeId(sedeId)==0)
@@ -1142,7 +1142,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
 		listaAlumno->ultimo = alumno8;
 	}
 	listaAlumno->total++;
-	
+
 	//Ingreso de Alumno 9
 	Alumno *alumno9 = initAlumno();
     alumno9->carnet=23915;

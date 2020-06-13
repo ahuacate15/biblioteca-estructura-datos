@@ -9,3 +9,4 @@ typedef struct customDate {
 
 CustomDate *convertDate(char *date);
 char *getNaturalDate(CustomDate *customDate);
+CustomDate *now();

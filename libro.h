@@ -5,9 +5,9 @@ typedef struct sede Sede;
 typedef struct listaSede ListaSede;
 
 typedef struct libroSede {
-	Sede *sede;
+	struct sede *sede;
 	int copias;
-	struct Sede *siguiente;
+	struct LibroSede *siguiente;
 } LibroSede;
 
 typedef struct libro {
@@ -18,7 +18,7 @@ typedef struct libro {
 	int year;
 	int copias;
 	char *genero;
-	LibroSede *libroSede;
+	struct libroSede *libroSede;
 	struct Libro *siguiente;
 } Libro;
 

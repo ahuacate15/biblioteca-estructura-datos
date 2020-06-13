@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdio.h>
+#include <time.h>
 
 typedef struct customDate {
     char *date;
@@ -112,4 +114,16 @@ char *getNaturalDate(const CustomDate const *customDate) {
 
 long unsigned int *generataHashOfDate(const CustomDate const *customDate) {
     return (long) (pow(customDate->year / 2.0, 2) + pow(customDate->month + 1, 3) + customDate->day + 1);
+}
+
+CustomDate *now() {
+	time_t t = time(NULL);
+	struct tm *tm;
+	tm = localtime(&t);
+
+    char *date = malloc(sizeof(char) * 10);
+    sprintf(date, "%d-%d-%d",  tm->tm_mday,  tm->tm_mon + 1, tm->tm_year + 1900);
+
+    CustomDate *today = convertDate(date);
+    return today;
 }
