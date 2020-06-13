@@ -32,3 +32,9 @@ void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *
 void buscarPrestamosMENU(ArbolPrestamo *arbol);
 void imprimirPrestamo(NodoPrestamo *ptrPrestamo);
 void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
+
+//---------DEVOLUCIONES-----------
+void realizarDevolucion(ArbolPrestamo *arbol,ListaAlumno *listaAlumno,Arbol *arbolLibro);
+int verificarPrestamo(NodoPrestamo *ptrPrestamo);
+void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo);
+void cambioEstadoLibro(NodoPrestamo *ptrPrestamo);

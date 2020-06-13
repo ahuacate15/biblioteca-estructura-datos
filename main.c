@@ -23,6 +23,9 @@
 #define AGREGAR_PRESTAMO 1
 #define BUSCAR_PRESTAMO 2
 
+//constantes para submenu prestamos
+#define REALIZAR_DEVOLUCION 1
+
 //constantes para submenu libros
 #define AGREGARLIBRO 1
 #define BUSCARLIBRO 2
@@ -46,6 +49,7 @@ int printMainMenu();
 int printMenuLibros();
 int printMenuSedes();
 int printMenuAlumnos();
+int printMenuDevoluciones();
 
 int main() {
 	ListaSede *listSede = initListSede();
@@ -78,6 +82,21 @@ int main() {
 						case 3:
 							buscarRegistrosPrestamos(ptrArbolPrestamo);
 						case 4: //atras
+							goto inicio;
+							break;
+						default:
+							printf("La opcion ingresada es incorrecta\n\n");
+							system("pause");
+					}
+				}
+				break;
+			case DEVOLUCIONES:
+				while(TRUE) {
+					switch(printMenuDevoluciones()) {
+						case 1:
+							realizarDevolucion(ptrArbolPrestamo, listaAlumno, arbolLibros);
+							break;
+						case 3: //atras
 							goto inicio;
 							break;
 						default:
@@ -202,6 +221,25 @@ int printMenuPrestamos() {
 		printf("1)Agregar\t 2)Buscar\t 3)Generar Archivo\t  4)Atras\n\n");
 
 		printf("prestamos >> ");
+		if(scanf("%d", &opcion) == 0) {
+			printf("La opcion ingresada es incorrecta\n\n");
+			fflush(stdin);
+			continue;
+		}
+		return opcion;
+	}
+}
+
+int printMenuDevoluciones() {
+	int opcion = 0;
+	while(TRUE) {
+		system("cls");
+		printf(" ----------------------------------------------------------- \n");
+		printf("|                         DEVOLUCIONES                         |\n");
+		printf(" ----------------------------------------------------------- \n\n");
+		printf("1)Realizar devolucion\t 2)Buscar\t 3)Atras\n\n");
+
+		printf("devolucion >> ");
 		if(scanf("%d", &opcion) == 0) {
 			printf("La opcion ingresada es incorrecta\n\n");
 			fflush(stdin);
