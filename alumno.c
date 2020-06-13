@@ -1416,7 +1416,7 @@ Alumno *retornaAlumnoPrestamo(int carnet, ListaAlumno *listaAlumno)
 	Alumno *primero = listaAlumno->primero;
 	while(primero != NULL) {
 		if(primero->carnet == carnet) {
-			printf("nombre de alumno: %s %s\n", primero->nombreAlumno, primero->apellidoAlumno);
+			//printf("nombre de alumno: %s %s\n", primero->nombreAlumno, primero->apellidoAlumno);
 			return primero;
 		}	
 

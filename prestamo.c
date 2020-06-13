@@ -4,6 +4,8 @@
 #include "sede.h"
 #include "date.h"
 #include "texto.h"
+#include <stdlib.h>
+#include <time.h>
 
 #define CAMPO_FECHA 1
 #define CAMPO_ALUMNO 2
@@ -48,6 +50,8 @@ NodoPrestamo *buscarPrestamo(NodoPrestamo *nodo, int clave);
 void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
 void buscarPrestamosMENU(ArbolPrestamo *arbol);
 void imprimirPrestamo(NodoPrestamo *ptrPrestamo);
+void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
+
 ArbolPrestamo *initArbolPrestamo() {
     ArbolPrestamo *arbol = malloc(sizeof(ArbolPrestamo));
     arbol->raiz = NULL;
@@ -285,6 +289,8 @@ void buscarPrestamosMENU(ArbolPrestamo *arbol) {
             goto stateSolicitudFiltro;
         }
         raiz = arbol->raizAlumno; 
+
+        printf("busqueda por alumno: clave->%d\n", clave);
     }
 
     NodoPrestamo *ptrResultado = buscarPrestamo(raiz, clave);
@@ -330,6 +336,7 @@ void imprimirPrestamo(NodoPrestamo *ptrPrestamo) {
 
             ptrAnterior = prestamo;
             prestamo = prestamo->siguiente;
+
         }
         
         
@@ -426,98 +433,64 @@ void generarArchivo(NodoPrestamo *ptrPrestamo) {
     }
 }
 
-void testPrestamos(ListaAlumno *listaAlumno, Arbol *arbolLibro) {
-    ArbolPrestamo *arbol = initArbolPrestamo();
+void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro) {
 
-    //agregarPrestamoMENU(arbol, listaAlumno, arbolLibro);
-    //buscarPrestamosMENU(arbol);
-    //system("pause");
+    Nodo *libro[15] = {};
+    libro[0] = buscarLibroPorClave(arbolLibro->raizISBN, "9788483835241");
+    libro[1] = buscarLibroPorClave(arbolLibro->raizISBN, "9781365425806");
+    libro[2] = buscarLibroPorClave(arbolLibro->raizISBN, "9780451524935");
+    libro[3] = buscarLibroPorClave(arbolLibro->raizISBN, "9780142437230");
+    libro[4] = buscarLibroPorClave(arbolLibro->raizISBN, "9786073112086");
+    libro[5] = buscarLibroPorClave(arbolLibro->raizISBN, "9789875667334");
+    libro[6] = buscarLibroPorClave(arbolLibro->raizISBN, "9781514339060");
+    libro[7] = buscarLibroPorClave(arbolLibro->raizISBN, "9786073128834");
+    libro[8] = buscarLibroPorClave(arbolLibro->raizISBN, "9780307454737");
+    libro[9] = buscarLibroPorClave(arbolLibro->raizISBN, "9780143035794");
+    libro[10] = buscarLibroPorClave(arbolLibro->raizISBN, "9786074296730");
+    libro[11] = buscarLibroPorClave(arbolLibro->raizISBN, "9786074293258");
+    libro[12] = buscarLibroPorClave(arbolLibro->raizISBN, "9780786181483");
+    libro[13] = buscarLibroPorClave(arbolLibro->raizISBN, "9788494994616");
+    libro[14] = buscarLibroPorClave(arbolLibro->raizISBN, "9788412157772");
+	
+    Alumno *alumno[10] = {};
+    alumno[0] = retornaAlumnoPrestamo(157416, listaAlumno);
+    alumno[1] = retornaAlumnoPrestamo(167819, listaAlumno);
+    alumno[2] = retornaAlumnoPrestamo(58418, listaAlumno);
+    alumno[3] = retornaAlumnoPrestamo(58520, listaAlumno);
+    alumno[4] = retornaAlumnoPrestamo(104720, listaAlumno);
+    alumno[5] = retornaAlumnoPrestamo(105816, listaAlumno);
+    alumno[6] = retornaAlumnoPrestamo(179718, listaAlumno);
+    alumno[7] = retornaAlumnoPrestamo(29620, listaAlumno);
+    alumno[8] = retornaAlumnoPrestamo(98314, listaAlumno);
+    alumno[9] = retornaAlumnoPrestamo(130617, listaAlumno);
 
-    Alumno *alumno = malloc(sizeof(Alumno));
-    alumno->carnet = 53315;
-    strcpy(alumno->nombreAlumno, "carlos eliseo");
-	strcpy(alumno->apellidoAlumno, "menjivar batres");
+    Prestamo *prestamo[300] = {};
+    char *listDate[5] = {"15-1-2020", "10-2-2020", "8-3-2020", "29-4-2020", "2-5-2020", "14-6-2020"};
 
-    Libro *libro = malloc(sizeof(Libro));
-    libro->isbn = "123312032";
-    libro->titulo = "El umbral de la soledad humana";
+    int cont = 0;
+    srand(time(NULL));
 
-    Prestamo *prestamo = malloc(sizeof(prestamo));
-    prestamo->alumno = alumno;
-    prestamo->date = convertDate("03-06-2020");
-    prestamo->libro = libro;
-    prestamo->siguiente = NULL;
-    insertarNodoPrestamo(arbol, arbol->raiz, prestamo, CAMPO_FECHA);
-    
-    Libro  *libro2 = malloc(sizeof(Libro));
-    libro2->isbn = "122320092";
-    libro2->titulo = "La piedra de la locura";
-    
-    Prestamo *prestamo2 = malloc(sizeof(prestamo));
-    prestamo2->alumno = alumno;
-    prestamo2->date = convertDate("03-06-2020");
-    prestamo2->libro = libro2;
-    prestamo2->siguiente = NULL;
-    
-    insertarNodoPrestamo(arbol, arbol->raiz, prestamo2, CAMPO_FECHA);
+    for(int i=0; i<10*2; i++) { //recorro los alumnos
+        for(int j=0; j<15*2; j++) { //recorro el total de libros
+            if(alumno[i] == NULL && libro[j] == NULL)
+                continue;
+ 
+            prestamo[cont] = malloc(sizeof(prestamo));
+            prestamo[cont]->alumno = alumno[i % 10];
+            prestamo[cont]->libro = libro[j % 15]->libro;
+            //guardo las fechas de manera circular, para que los registros sear variados
+            prestamo[cont]->date = convertDate(listDate[i % 5]);
+            prestamo[cont]->estado = PENDIENTE;
+            prestamo[cont]->siguiente = NULL;
+            insertarNodoPrestamo(arbol, arbol->raiz, prestamo[cont], CAMPO_FECHA); 
+            insertarNodoPrestamo(arbol, arbol->raizAlumno, prestamo[cont], CAMPO_ALUMNO);
+            arbol->total++;
+            cont++;      
 
-    //prestamo de alumno 2
-    Alumno *alumno2 = malloc(sizeof(Alumno));
-    alumno2->carnet = 53316;
-    strcpy(alumno2->nombreAlumno, "javier ignacio");
-	strcpy(alumno->apellidoAlumno, "menjivar batres");
-
-    Libro  *libro3 = malloc(sizeof(Libro));
-    libro3->isbn = "122320010";
-    libro3->titulo = "Versos satanicos";
-    
-    Prestamo *prestamo3 = malloc(sizeof(prestamo));
-    prestamo3->alumno = alumno2;
-    prestamo3->date = convertDate("03-06-2020");
-    prestamo3->libro = libro3;
-    prestamo3->siguiente = NULL;
-    
-    insertarNodoPrestamo(arbol, arbol->raiz, prestamo3, CAMPO_FECHA);
-
-
-    imprimirPrestamo(arbol->raiz);
-    
-    system("pause");
-    //insertarNodoPrestamo(arbol, arbol->raizAlumno, prestamo, CAMPO_ALUMNO);
-
-    Prestamo *p2 = malloc(sizeof(prestamo));
-    p2->alumno = alumno;
-    p2->date = convertDate("03-06-2020");
-    p2->libro = libro;
-    p2->siguiente = NULL;
-    insertarNodoPrestamo(arbol, arbol->raiz, p2, CAMPO_FECHA);
-
-    Prestamo *p3 = malloc(sizeof(prestamo));
-    p3->alumno = alumno;
-    p3->date = convertDate("03-06-2020");
-    p3->libro = libro;
-    p3->siguiente = NULL;
-    insertarNodoPrestamo(arbol, arbol->raiz, p3, CAMPO_FECHA);
-
-    Prestamo *p4 = malloc(sizeof(prestamo));
-    p4->alumno = alumno;
-    p4->date = convertDate("03-06-2020");
-    p4->libro = libro;
-    p4->siguiente = NULL;
-    insertarNodoPrestamo(arbol, arbol->raiz, p4, CAMPO_FECHA);
-
-    printf("raiz: %p\n", arbol->raiz);
-    printf("raiz alumno: %p\n", arbol->raizAlumno);
-
-    NodoPrestamo *prestamosHoy = buscarPrestamo(arbol->raiz, convertDate("03-06-2020")->hash);
-    printf("prestamos  de hoy: %p\n", prestamosHoy);
-    printf("detalle prestamos de hoy: %p\n", prestamosHoy->prestamo);
-
-    Prestamo *tmp = prestamosHoy->prestamo;
-    printf("prestamos de la fecha: %d\n", convertDate("03-06-2020")->hash);
-    while(tmp != NULL) {
-        printf("%p\n", tmp);
-        tmp = tmp->siguiente;
+            //cuando el numero aleatoreo es multiplo de 7, detengo la ejecucion del programa
+            if(rand() % 11 == 0) 
+                break;
+        }
     }
-
+ 
 }

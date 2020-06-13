@@ -76,6 +76,7 @@ void addLibroSedeItem(Libro *libro, Sede *sede, int copias);
 * @description : carga 10 libros a la memoria
 */
 Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede);
+Nodo *getLastLibro(Nodo *nodo);
 
 /*-----------prototitpos de funciones para interfaz--------*/
 void printLibro(Libro *libro); //imprime un unico libro
@@ -174,6 +175,7 @@ ListLibro *buscarLibro(Nodo *nodo, ListLibro *list, char *clave, int campo) {
 	int comparacion = searchStartOfString(nodo->clave, clave);
 
 	if(comparacion == 0) {
+		printf("libro agregrado\n");
 		addLibroToList(list, nodo->libro);
 		buscarLibro(nodo->izquierda, list, clave, campo);
 		buscarLibro(nodo->derecha, list, clave, campo);
@@ -306,6 +308,16 @@ void addLibroSedeItem(Libro *libro, Sede *sede, int copias) {
 		aux->siguiente = libroSede;
 		stateEnd:;
 	}
+}
+
+Nodo *getLastLibro(Nodo *nodo) {
+	if(nodo == NULL) 
+		return NULL;
+
+	if(nodo->izquierda == NULL) 
+		return nodo;
+	else 
+		getLastLibro(nodo->izquierda);
 }
 
 Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede) {
@@ -639,6 +651,37 @@ Arbol *cargarRegistrosDefecto(Arbol *arbol, ListaSede *listaSede) {
 		addLibroSedeItem(libro3, tmp, copias[2]++);
 		addLibroSedeItem(libro4, tmp, copias[3]++);
 		addLibroSedeItem(libro5, tmp, copias[4]++);
+
+		addLibroSedeItem(libro6, tmp, copias[0]++);
+		addLibroSedeItem(libro7, tmp, copias[1]++);
+		addLibroSedeItem(libro8, tmp, copias[2]++);
+		addLibroSedeItem(libro9, tmp, copias[3]++);
+		addLibroSedeItem(libro10, tmp, copias[4]++);
+
+		addLibroSedeItem(libro11, tmp, copias[0]++);
+		addLibroSedeItem(libro12, tmp, copias[1]++);
+		addLibroSedeItem(libro13, tmp, copias[2]++);
+		addLibroSedeItem(libro14, tmp, copias[3]++);
+		addLibroSedeItem(libro15, tmp, copias[4]++);
+
+		addLibroSedeItem(libro16, tmp, copias[0]++);
+		addLibroSedeItem(libro17, tmp, copias[1]++);
+		addLibroSedeItem(libro18, tmp, copias[2]++);
+		addLibroSedeItem(libro19, tmp, copias[3]++);
+		addLibroSedeItem(libro20, tmp, copias[4]++);
+
+		addLibroSedeItem(libro21, tmp, copias[0]++);
+		addLibroSedeItem(libro22, tmp, copias[1]++);
+		addLibroSedeItem(libro23, tmp, copias[2]++);
+		addLibroSedeItem(libro24, tmp, copias[3]++);
+		addLibroSedeItem(libro25, tmp, copias[4]++);
+
+		addLibroSedeItem(libro26, tmp, copias[0]++);
+		addLibroSedeItem(libro27, tmp, copias[1]++);
+		addLibroSedeItem(libro28, tmp, copias[2]++);
+		addLibroSedeItem(libro29, tmp, copias[3]++);
+		addLibroSedeItem(libro30, tmp, copias[4]++);
+
 		tmp = tmp->siguiente;
 	}
 
@@ -786,7 +829,11 @@ void findLibrosMENU(Arbol *arbol) {
 		printf("1- titulo\n");
 		printf("2- ISBN\n");
 		printf("\ncampo >> ");
-		scanf("%d", &campo);
+		if(scanf("%d", &campo) == 0) {
+			printf("la opcion ingresada es incorrecta\n\n");
+			fflush(stdin);
+			continue;
+		}
 
 		if(campo >= 1 && campo <= 2) //valido el campo seleccionado
 			break;

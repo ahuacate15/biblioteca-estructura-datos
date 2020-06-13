@@ -58,7 +58,8 @@ int main() {
 	cargaInicialAlumnos(listaAlumno);
 
 	ArbolPrestamo *ptrArbolPrestamo = initArbolPrestamo();
-
+	cargarPrestamosPrueba(ptrArbolPrestamo, listaAlumno, arbolLibros);
+	
 	setlocale(LC_ALL,"spanish");
 
 	inicio:;
