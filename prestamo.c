@@ -48,6 +48,13 @@ NodoPrestamo *buscarPrestamo(NodoPrestamo *nodo, int clave);
 void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
 void buscarPrestamosMENU(ArbolPrestamo *arbol);
 void imprimirPrestamo(NodoPrestamo *ptrPrestamo);
+
+//Prototipos para devoluciones
+void realizarDevolucion(ArbolPrestamo *arbol,ListaAlumno *listaAlumno,Arbol *arbolLibro);
+int verificarPrestamo(NodoPrestamo *ptrPrestamo);
+void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo);
+void cambioEstadoLibro(NodoPrestamo *ptrPrestamo);
+
 ArbolPrestamo *initArbolPrestamo() {
     ArbolPrestamo *arbol = malloc(sizeof(ArbolPrestamo));
     arbol->raiz = NULL;
@@ -412,6 +419,7 @@ void generarArchivo(NodoPrestamo *ptrPrestamo) {
             //Impresion en archivo de ISBN y Titulo de libro prestado
             fprintf(file,"ISBN de libro prestado: %s\n",prestamo->libro->isbn);
             fprintf(file,"Titulo de libro prestado: %s\n",prestamo->libro->titulo);
+            fprintf(file,"Estado de libro prestado: %s\n",prestamo->estado ? "Prestado" : "Devuelto");
             
             contador=contador+1;
             ptrAnterior = prestamo;
@@ -425,6 +433,151 @@ void generarArchivo(NodoPrestamo *ptrPrestamo) {
         printf("ARCHIVO GENERADO\n");
     }
 }
+
+//------------DEVOLUCIONES------------------
+
+void realizarDevolucion(ArbolPrestamo *arbol, ListaAlumno *listaAlumno,Arbol *arbolLibro) {
+    int campoBusqueda = 1,cantidadPrestamo=0;
+    int clave = 0;
+    char *isbn1 = malloc(sizeof(char) * 20);
+    char *fecha = malloc(sizeof(char) * 10);
+    NodoPrestamo *raiz = NULL;
+    CustomDate *customDate = NULL;
+
+    if(arbol == NULL) {
+        printf("no hay prestamos registrado\n");
+        return;
+    }
+    stateSolicitudFiltro:;
+
+    //busqueda por alumno
+   if(campoBusqueda == 1){
+        printf("ingresa el carnet del alumno: ");
+        if(scanf("%d", &clave) == 0) {
+            printf("el carnet no puede contener letras\n");
+            fflush(stdin);
+            goto stateSolicitudFiltro;
+        }
+        raiz = arbol->raizAlumno; 
+    }
+    Alumno *alumno = listaAlumno->primero;
+
+    NodoPrestamo *ptrResultado = buscarPrestamo(raiz, clave);
+    if(ptrResultado == NULL) 
+	{
+        printf("***no se encontraron resultados***\n");
+    } 
+	else 
+	{
+	   cantidadPrestamo=verificarPrestamo(ptrResultado);
+	   if(cantidadPrestamo>0)
+	   {
+		   	printf("El alumno presenta los siguientes prestamos activos: \n");
+		   	imprimirPrestamoDetalle(ptrResultado);
+		   	printf("Ingrese ISBN de libro a devolver: ");
+		   	scanf("%s", isbn1);         	
+		   	Nodo *nodoLibro = buscarLibroPorClave(arbolLibro->raizISBN, isbn1);
+		  	if(nodoLibro == NULL) 
+		  	{
+		  		printf("el libro no existe\n");
+			}
+			else
+			{
+				NodoPrestamo *ptrResultado = buscarPrestamo(raiz, clave);
+			    cambioEstadoLibro(ptrResultado);
+			    printf("Devolucion de libro efectivo\n");
+			    //Sumo la existencia de la sede del alumno
+			    LibroSede *libroSede = nodoLibro->libro->libroSede;
+			    Sede *ptrSedeAlumno = NULL;			
+			    while(libroSede != NULL) 
+				{
+			        if(libroSede->sede->id == alumno->idSede) {
+			            //copias disponibles
+			            libroSede->copias++;
+			            break;
+			        }
+			        libroSede = libroSede->siguiente;
+			    }
+			}	
+		}
+		else
+		{
+			printf("El alumno no presenta prestamos activos\n");
+		}
+	}
+    system("pause");
+}
+
+void cambioEstadoLibro(NodoPrestamo *ptrPrestamo) {
+    if(ptrPrestamo != NULL) {
+    	int encontrado=0;
+        Prestamo *prestamo = ptrPrestamo->prestamo;
+        Prestamo *ptrAnterior = NULL;
+        while(prestamo != NULL) {
+            if(ptrAnterior == NULL || ptrAnterior->alumno->carnet != prestamo->alumno->carnet) 
+			{
+				if(encontrado==0)
+				{
+					prestamo->estado=DEVUELTO;
+					encontrado=1;
+				}
+            }
+            ptrAnterior = prestamo;
+            prestamo = prestamo->siguiente;
+        }
+    }
+}
+
+
+int verificarPrestamo(NodoPrestamo *ptrPrestamo) {
+	int contador=0;
+    if(ptrPrestamo != NULL) {
+
+        Prestamo *prestamo = ptrPrestamo->prestamo;
+        Prestamo *ptrAnterior = NULL;
+        
+        while(prestamo != NULL) {
+            if(ptrAnterior == NULL || ptrAnterior->alumno->carnet != prestamo->alumno->carnet) 
+			{
+				if(prestamo->estado==1)
+				{
+					contador=contador+1;
+				}
+    			
+            }
+            ptrAnterior = prestamo;
+            prestamo = prestamo->siguiente;
+        }
+    }
+    return contador;
+}
+
+//Imprimir 
+void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo) {
+    if(ptrPrestamo != NULL) {
+        //printf("fecha de prestamo: %s\n", ptrPrestamo->prestamo->date->naturalDate);
+
+        Prestamo *prestamo = ptrPrestamo->prestamo;
+        Prestamo *ptrAnterior = NULL;
+        
+        while(prestamo != NULL) {
+            if(ptrAnterior == NULL || ptrAnterior->alumno->carnet != prestamo->alumno->carnet) 
+			{
+				printf("|Estado\t\t|ISBN\t\t|titulo\n");
+				printf(
+	                "|%s\t|%s\t|%s\n",
+	                prestamo->estado ? "Prestado" : "Devuelto",
+	                prestamo->libro->isbn,
+	                prestamo->libro->titulo
+            	);
+            }
+            ptrAnterior = prestamo;
+            prestamo = prestamo->siguiente;
+        }
+    }
+}
+
+
 
 void testPrestamos(ListaAlumno *listaAlumno, Arbol *arbolLibro) {
     ArbolPrestamo *arbol = initArbolPrestamo();
