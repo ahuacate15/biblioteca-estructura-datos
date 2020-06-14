@@ -41,3 +41,4 @@ void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo);
 void cambioEstadoLibro(NodoPrestamo *ptrPrestamo);
 void buscarDevoluciones(ArbolPrestamo *arbol);
 void imprimirDevoluciones(NodoPrestamo *ptrPrestamo);
+void imprimirBoletaPrestamo(NodoPrestamo *ptrPrestamo, int carnetAlumno)

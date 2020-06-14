@@ -51,6 +51,7 @@ NodoPrestamo *buscarPrestamo(const NodoPrestamo const *nodo, int clave);
 void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro, Usuario *usuarioLogueado);
 void buscarPrestamosMENU(ArbolPrestamo *arbol);
 void imprimirPrestamo(NodoPrestamo *ptrPrestamo);
+void imprimirBoletaPrestamo(NodoPrestamo *ptrPrestamo, int carnetAlumno);
 void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
 
 //Prototipos para devoluciones
@@ -136,6 +137,10 @@ NodoPrestamo *insertarNodoPrestamo(ArbolPrestamo *arbol, NodoPrestamo *nodo, Pre
 
 NodoPrestamo *buscarPrestamo(const NodoPrestamo const *nodo, int clave) {
     if(nodo == NULL)
+        return NULL;
+
+    //evito recursion infinita
+    if(nodo == nodo->izquierda || nodo == nodo->derecha)
         return NULL;
 
     if(clave == nodo->clave)
@@ -254,6 +259,15 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
         goto stateAgregarOtro;
     }
 
+    //genero la boleta de prestamos del alumno
+    printf("antes de generar un archivo\n");
+    NodoPrestamo *ptrPrestamosDeHoy = buscarPrestamo(arbolPrestamo->raiz, date->hash);
+    printf("despues de encontrar nodo\n");
+    if(ptrPrestamosDeHoy != NULL) {
+        printf("antes de imprimir\n");
+        imprimirBoletaPrestamo(ptrPrestamosDeHoy, carnet);
+    }
+    
     printf("\n***prestamo registrado***\n");
     system("pause");
 }
@@ -400,6 +414,87 @@ void buscarRegistrosPrestamos(ArbolPrestamo *arbol) {
     system("pause");
 }
 
+void imprimirBoletaPrestamo(NodoPrestamo *ptrPrestamo, int carnetAlumno) {
+    if(ptrPrestamo != NULL) {
+     	//Declaracion de variables para almacenar fecha y sus datos individuales
+    	char fecha[50];
+    	int dia,mes, anio, contador=0;
+    	dia=ptrPrestamo->prestamo->date->day;
+    	mes=ptrPrestamo->prestamo->date->month;
+    	anio=ptrPrestamo->prestamo->date->year;
+    	//Almacenamiento de texto junto con datos de fecha
+    	sprintf(fecha,"boletas/Prestamo_%d_%d-%d-%d.txt", carnetAlumno, dia,mes,anio);
+    	//Declaracion de archivo
+		FILE *file;
+		//Apertura de archivo con nombre
+		file = fopen(fecha, "w");
+		
+		//Titulo de archivo
+        fprintf(file,"Fecha del prestamo: %s\n", ptrPrestamo->prestamo->date->naturalDate);
+        
+        //Apuntando al prestamo siguiente
+        Prestamo *prestamo = ptrPrestamo->prestamo;
+        
+        //Apuntando al prestamo anterior=NULL
+        Prestamo *ptrAnterior = NULL;
+        
+        while(prestamo != NULL) 
+		{
+            //evito la recursion infinita
+            if(prestamo == prestamo->siguiente)
+                break;
+
+            //imprimo los registros del alumno
+            if(prestamo->alumno->carnet != carnetAlumno) {
+                prestamo = prestamo->siguiente;
+                continue;
+            }
+                
+
+            //un alumno realiza muchos prestamos, imprimo sus datos una vez
+            //como un encabezado
+            if(ptrAnterior == NULL || ptrAnterior->alumno->carnet != prestamo->alumno->carnet) {
+            	//Impresion de datos en el archivo(Carnet, Nombres y Apellidos de Alumno)
+                fprintf(file, "\n -------------------------------------------------\n");
+                fprintf(
+                    file,
+                    "|%d - %s %s\n", 
+                    prestamo->alumno->carnet, 
+                    prestamo->alumno->nombreAlumno,
+                    prestamo->alumno->apellidoAlumno
+                );
+                fprintf(file, " -------------------------------------------------\n");
+                fprintf(file, "|Estado\t\t|ISBN\t\t|titulo\n");
+                fprintf(file, " -------------------------------------------------\n");
+
+            }
+
+            
+
+            //Impresion en archivo de ISBN y Titulo de libro prestado
+            fprintf(
+                file,
+                "|%s\t|%s\t|%s\n",
+                prestamo->estado ? "Prestado" : "Devuelto",
+                prestamo->libro->isbn,
+                prestamo->libro->titulo
+            );
+
+            contador=contador+1;
+            ptrAnterior = prestamo;
+            prestamo = prestamo->siguiente;
+        }
+        
+        fprintf(file,"\nTotal de prestamos: %d",contador);
+        
+        //Cierre de archivo
+        fclose(file);
+        
+        //Mensaje de archivo generado
+        printf("ARCHIVO GENERADO\n");       
+    }
+}
+
 //Impresion de archivo txt
 void generarArchivo(NodoPrestamo *ptrPrestamo) {
 	//Si existen prestamos
@@ -411,7 +506,7 @@ void generarArchivo(NodoPrestamo *ptrPrestamo) {
     	mes=ptrPrestamo->prestamo->date->month;
     	anio=ptrPrestamo->prestamo->date->year;
     	//Almacenamiento de texto junto con datos de fecha
-    	sprintf(fecha,"Prestamos %d-%d-%d.txt",dia,mes,anio);
+    	sprintf(fecha,"boletas/Prestamos %d-%d-%d.txt",dia,mes,anio);
     	//Declaracion de archivo
 		FILE *file;
 		//Apertura de archivo con nombre
@@ -425,20 +520,37 @@ void generarArchivo(NodoPrestamo *ptrPrestamo) {
         Prestamo *ptrAnterior = NULL;
         while(prestamo != NULL) 
 		{
+             if(prestamo == prestamo->siguiente)
+                break;
+                
             //un alumno realiza muchos prestamos, imprimo sus datos una vez
             //como un encabezado
             if(ptrAnterior == NULL || ptrAnterior->alumno->carnet != prestamo->alumno->carnet) {
             	//Impresion de datos en el archivo(Carnet, Nombres y Apellidos de Alumno)
-                fprintf(file,"\n -------------------------------------------------\n");
-                fprintf(file,"Carnet de Alumno: %d\n",prestamo->alumno->carnet);
-                fprintf(file,"Nombres de Alumno: %s\n",prestamo->alumno->nombreAlumno);
-                fprintf(file,"Apellidos de Alumno: %s\n",prestamo->alumno->apellidoAlumno);
+
+                fprintf(file, "\n -------------------------------------------------\n");
+                fprintf(
+                    file,
+                    "|%d - %s %s\n", 
+                    prestamo->alumno->carnet, 
+                    prestamo->alumno->nombreAlumno,
+                    prestamo->alumno->apellidoAlumno
+                );
+
+                fprintf(file, " -------------------------------------------------\n");
+                fprintf(file, "|Estado\t\t|ISBN\t\t|titulo\n");
+                fprintf(file, " -------------------------------------------------\n");
+
             }
             //Impresion en archivo de ISBN y Titulo de libro prestado
-            fprintf(file,"ISBN de libro prestado: %s\n",prestamo->libro->isbn);
-            fprintf(file,"Titulo de libro prestado: %s\n",prestamo->libro->titulo);
-            fprintf(file,"Estado de libro prestado: %s\n",prestamo->estado ? "Prestado" : "Devuelto");
-            
+            fprintf(
+                file,
+                "|%s\t|%s\t|%s\n",
+                prestamo->estado ? "Prestado" : "Devuelto",
+                prestamo->libro->isbn,
+                prestamo->libro->titulo
+            );
+
             contador=contador+1;
             ptrAnterior = prestamo;
             prestamo = prestamo->siguiente;
