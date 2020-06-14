@@ -188,6 +188,8 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
     if(resultadoAlumno == NULL) {
         printf("el alumno ingresado no existe\n");
         goto stateCarnet;
+    } else {
+        printf("nombre del alumno: %s %s\n", resultadoAlumno->nombreAlumno, resultadoAlumno->apellidoAlumno);
     }
     printf("\n");
 
@@ -208,7 +210,6 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
     prestamo->libro = nodoLibro->libro;
     prestamo->siguiente = NULL;
     prestamo->estado = PENDIENTE;
-    printf("**direccion de prestamo: %p\n", prestamo);
 
     //resto la existencia de la sede del alumno
     LibroSede *libroSede = nodoLibro->libro->libroSede;

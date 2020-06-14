@@ -273,11 +273,23 @@ char printMenuLibros() {
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                          LIBROS                           |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("a)agregar\t b)buscar\t i)Buscar por id\n");
-		printf("e)editar\t m)mostrar\t r)retroceder\n\n");
+
+		if(usuarioLogueado->role == ALUMNO) {
+			printf("b)buscar\t i)Buscar por id\t m)mostrar\t r)retroceder\n\n");
+		} else {
+			printf("a)agregar\t b)buscar\t i)Buscar por id\n");
+			printf("e)editar\t m)mostrar\t r)retroceder\n\n");
+		}
+		
 
 		printf("libros >> ");
 		scanf("%c", &opcion);
+
+		//seguridad en las opciones
+		if(usuarioLogueado->role == ALUMNO && (opcion == 'a' || opcion == 'e')) {
+			printf("Acceso restringido\n\n");
+			continue;
+		}
 		return opcion;
 	}
 }
