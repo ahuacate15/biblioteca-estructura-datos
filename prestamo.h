@@ -38,3 +38,5 @@ void realizarDevolucion(ArbolPrestamo *arbol,ListaAlumno *listaAlumno,Arbol *arb
 int verificarPrestamo(NodoPrestamo *ptrPrestamo);
 void imprimirPrestamoDetalle(NodoPrestamo *ptrPrestamo);
 void cambioEstadoLibro(NodoPrestamo *ptrPrestamo);
+void buscarDevoluciones(ArbolPrestamo *arbol);
+void imprimirDevoluciones(NodoPrestamo *ptrPrestamo);
