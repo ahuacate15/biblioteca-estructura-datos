@@ -175,7 +175,6 @@ ListLibro *buscarLibro(Nodo *nodo, ListLibro *list, char *clave, int campo) {
 	int comparacion = searchStartOfString(nodo->clave, clave);
 
 	if(comparacion == 0) {
-		printf("libro agregrado\n");
 		addLibroToList(list, nodo->libro);
 		buscarLibro(nodo->izquierda, list, clave, campo);
 		buscarLibro(nodo->derecha, list, clave, campo);

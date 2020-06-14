@@ -111,7 +111,7 @@ NodoPrestamo *insertarNodoPrestamo(ArbolPrestamo *arbol, NodoPrestamo *nodo, Pre
         else if(campo == CAMPO_ALUMNO && arbol->raizAlumno == NULL)
             arbol->raizAlumno = nodo;
 
-        arbol->total;
+        arbol->total; 
         return nodo;
     } else {
     	//cuando la clave del nodo ya existe, se envia al fondo de la lista
@@ -297,8 +297,6 @@ void buscarPrestamosMENU(ArbolPrestamo *arbol) {
             goto stateSolicitudFiltro;
         }
         raiz = arbol->raizAlumno; 
-
-        printf("busqueda por alumno: clave->%d\n", clave);
     }
 
     NodoPrestamo *ptrResultado = buscarPrestamo(raiz, clave);
@@ -576,7 +574,7 @@ void realizarDevolucion(ArbolPrestamo *arbol, ListaAlumno *listaAlumno,Arbol *ar
 				{
 			        if(libroSede->sede->id == alumno->idSede) 
 					{
-			            //Añadiendo a copias
+			            //Aï¿½adiendo a copias
 			            libroSede->copias++;
 			            break;
 			        }

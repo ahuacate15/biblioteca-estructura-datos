@@ -9,14 +9,6 @@
 #include "usuario.h"
 
 //contantes para menu principal
-#define PRESTAMOS 1
-#define DEVOLUCIONES 2
-#define TRASLADOS 3
-#define LIBROS 4
-#define ALUMNOS 5
-#define SEDES 6
-#define ERROR -1
-#define FINALIZAR 7
 #define TRUE 1
 #define RETROCEDER 0
 
@@ -45,12 +37,13 @@
 #define MOSTRAR 1
 #define EDITAR 2
 
-int printMenuPrestamos();
-int printMainMenu();
-int printMenuLibros();
-int printMenuSedes();
-int printMenuAlumnos();
-int printMenuDevoluciones();
+char printMainMenu();
+char printMenuPrestamos();
+char printMenuDevoluciones();
+char printMenuLibros();
+char printMenuSedes();
+char printMenuAlumnos();
+
 
 //variables globales
 int usuarioLogueado = 0;
@@ -90,19 +83,21 @@ int main() {
 			}
 		}
 
+
+
 		switch(printMainMenu()) {
-			case PRESTAMOS:
+			case 'p': //prestamos
 				while(TRUE) {
 					switch(printMenuPrestamos()) {
-						case AGREGAR_PRESTAMO:
+						case 'a': //agregar
 							agregarPrestamoMENU(ptrArbolPrestamo, listaAlumno, arbolLibros);
 							break;
-						case BUSCAR_PRESTAMO:
+						case 'b': //buscar
 							buscarPrestamosMENU(ptrArbolPrestamo);
 							break;
-						case 3:
+						case 'g': //generar archivo
 							buscarRegistrosPrestamos(ptrArbolPrestamo);
-						case 4: //atras
+						case 'r': //retroceder
 							goto inicio;
 							break;
 						default:
@@ -111,15 +106,15 @@ int main() {
 					}
 				}
 				break;
-			case DEVOLUCIONES:
+			case 'd': //devoluciones
 				while(TRUE) {
 					switch(printMenuDevoluciones()) {
-						case 1:
+						case 'd': //hacer devolucion
 							realizarDevolucion(ptrArbolPrestamo, listaAlumno, arbolLibros);
 							break;
-						case 2:
+						case 'b': //buscar
 							buscarDevoluciones(ptrArbolPrestamo);
-						case 3: //atras
+						case 'r': //retroceder
 							goto inicio;
 							break;
 						default:
@@ -128,28 +123,28 @@ int main() {
 					}
 				}
 				break;
-			case TRASLADOS:
+			case 't': //traslados
 				realizarTrastadoMenu(arbolLibros, listSede);
 				break;
-			case LIBROS:
+			case 'l': //libros
 				while(TRUE) {
 					switch(printMenuLibros()) {
-						case AGREGARLIBRO:
+						case 'a': //agregar
 							addLibroMenu(arbolLibros, listSede);
 							break;
-						case BUSCARLIBRO:
+						case 'b': //buscar
 							findLibrosMENU(arbolLibros);
 							break;
-						case BUSCARLIBROPORID:
+						case 'i': //buscar por ID
 							findLibroByClaveMenu(arbolLibros);
 							break;
-						case MODIFICARLIBRO:
+						case 'e': //editar
 							editLibroMenu(arbolLibros);
 							break;
-						case MOSTRARLIBROS:
+						case 'm': //mostrar
 							printLibrosMenu(arbolLibros);
 							break;
-						case 6: //atras
+						case 'r': //retroceder
 							goto inicio;
 							break;
 						default:
@@ -158,16 +153,16 @@ int main() {
 					}
 				}
 				break;
-			case SEDES:
+			case 's': //sedes
 				while(TRUE) {
 					switch (printMenuSedes()) {
-						case MOSTRAR:
+						case 'm': //mostrar
 							printListSedes(listSede);
 							break;
-						case EDITAR:
+						case 'e': //editar
 							editSedeMenu(listSede);
 							break;
-						case 3:
+						case 'r': //retroceder
 							goto inicio;
 							break;
 						default:
@@ -175,32 +170,32 @@ int main() {
 							system("pause");
 					}
 				}
-			case ALUMNOS:
+			case 'a': //alumnos
 				while(TRUE) {
 					switch(printMenuAlumnos()) {
-						case AGREGAR_ALUMNO:
+						case 'a': //agregar
 							insertarAlumno(listaAlumno, ptrArbolUsuario);
 							break;
-						case BUSCAR_ALUMNO:
+						case 'b': //buscar
 							BusquedaAlumno(listaAlumno);
 							break;
-						case MODIFICAR_ALUMNO:
+						case 'm': //modificar
 							modificarAlumno(listaAlumno);
 							break;
-						case ELIMINAR_ALUMNO:
+						case 'e': //eliminar
 							eliminarAlumno(listaAlumno);
 							break;
-						case MOSTRAR_ALUMNOS:
+						case 't': //mostrar todos
 							mostrarAlumnos(listaAlumno);
 							break;
-						case 6:
+						case 'r': //retroceder
 							goto inicio;
 						default:
 							printf("La opcion ingresada es incorrecta\n");
 							system("pause");
 					}
 				}
-			case FINALIZAR:
+			case 'c': //cerrar sesion
 				usuarioLogueado = 0;
 				goto stateLogin;
 				return;
@@ -212,123 +207,105 @@ int main() {
 	return 0;
 }
 
-int printMainMenu() {
-	int opcion = NULL;
+char printMainMenu() {
+	char opcion = 'c';
 
 	while(TRUE) {
+		fflush(stdin);
 		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                  SISTEMA BIBLIOTECARIO                    |\n");
 		printf(" ----------------------------------------------------------- \n\n");
 
-		printf("1)prestamos\t 2)devoluciones\t 3)traslados\t 4)libros\n");
-		printf("5)alumnos\t 6)sedes\t 7)cerrar sesion\n\n");
+		printf("p)prestamos\t d)devoluciones\t t)traslados\t l)libros\n");
+		printf("a)alumnos\t s)sedes\t c)cerrar sesion\n\n");
 
 		printf(">> ");
-
-		if(scanf("%d", &opcion) == 0) {
-			printf("La opcion ingresada es incorrecta\n\n");
-			fflush(stdin);
-			continue;
-		}
+		scanf("%c", &opcion);
 		return opcion;
 	}
 
 }
 
-int printMenuPrestamos() {
-	int opcion = 0;
+char printMenuPrestamos() {
+	char opcion = 'r';
 	while(TRUE) {
+		fflush(stdin);
 		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                         PRESTAMOS                         |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("1)Agregar\t 2)Buscar\t 3)Generar Archivo\t  4)Atras\n\n");
+		printf("a)agregar\t b)buscar\t g)generar archivo\t  r)retroceder\n\n");
 
 		printf("prestamos >> ");
-		if(scanf("%d", &opcion) == 0) {
-			printf("La opcion ingresada es incorrecta\n\n");
-			fflush(stdin);
-			continue;
-		}
+		scanf("%c", &opcion);
+
 		return opcion;
 	}
 }
 
-int printMenuDevoluciones() {
-	int opcion = 0;
+char printMenuDevoluciones() {
+	char opcion = 'r';
 	while(TRUE) {
+		fflush(stdin);
 		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                         DEVOLUCIONES                         |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("1)Realizar devolucion\t 2)Buscar\t 3)Atras\n\n");
+		printf("d)devolucion\t b)buscar\t r)retroceder\n\n");
 
 		printf("devolucion >> ");
-		if(scanf("%d", &opcion) == 0) {
-			printf("La opcion ingresada es incorrecta\n\n");
-			fflush(stdin);
-			continue;
-		}
+		scanf("%c", &opcion);
 		return opcion;
 	}
 }
 
-int printMenuLibros() {
-	int opcion = 0;
+char printMenuLibros() {
+	char opcion = 'r';
 	while(TRUE) {
+		fflush(stdin);
 		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                          LIBROS                           |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("1)Agregar\t 2)Buscar\t 3)Buscar por id\n");
-		printf("4)Modificar\t 5)Mostrar\t 6)Atras\n\n");
+		printf("a)agregar\t b)buscar\t i)Buscar por id\n");
+		printf("e)editar\t m)mostrar\t r)retroceder\n\n");
 
 		printf("libros >> ");
-		if(scanf("%d", &opcion) == 0) {
-			printf("La opcion ingresada es incorrecta\n\n");
-			fflush(stdin);
-			continue;
-		}
+		scanf("%c", &opcion);
 		return opcion;
 	}
 }
 
-int printMenuSedes() {
-	int opcion = 0;
+char printMenuSedes() {
+	char opcion = 'r';
 	while(TRUE) {
+		fflush(stdin);
 		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                          SEDES                            |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("1)Mostrar\t 2)Editar \t3)Atras\n\n");
+		printf("m)mostrar\t e)editar \tr)retroceder\n\n");
 
 		printf("sedes >> ");
-		if(scanf("%d", &opcion) == 0) {
-			printf("La opcion ingresada es incorrecta\n\n");
-			fflush(stdin);
-			continue;
-		}
+		scanf("%c", &opcion);
 		return opcion;
 	}
 }
 
-int printMenuAlumnos() {
-	int opcion = 0;
+char printMenuAlumnos() {
+	char opcion = 'r';
 	while(TRUE) {
+		fflush(stdin);
 		system("cls");
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                         ALUMNOS                           |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("1)Agregar\t 2)Buscar\t 3)Modificar\n");
-		printf("4)Eliminar\t 5)Mostrar\t 6)Atras\n\n");
+		printf("a)agregar\t b)buscar\t m)modificar\n");
+		printf("e)eliminar\t t)mostrar todos\t r)retroceder\n\n");
 
 		printf("alumnos >> ");
-		if(scanf("%d", &opcion) == 0) {
-			printf("La opcion ingresada es incorrecta\n\n");
-			fflush(stdin);
-			continue;
-		}
+		scanf("%c", &opcion);
 		return opcion;
 	}
 }
