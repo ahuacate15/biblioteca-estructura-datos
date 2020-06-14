@@ -78,8 +78,8 @@ void insertarAlumno(ListaAlumno *listaAlumno, ArbolUsuario *ptrArbolUsuario){
 	Alumno *alumno = malloc(sizeof(Alumno));
 	//Declaracion de variable
 
-	int numCarnet=0,exit=0, exitTelefono = 0,exitSede=0,idSede=0;
-	char verificarCorreo[25], email[60], verificarTelefono[25],sedeId[15];
+	int numCarnet=0,exit=0, exitTelefono = 0,exitSede=0,idSede=0,respuesta=0;
+	char verificarCorreo[25], email[60], verificarTelefono[25],sedeId[15],verificarCarnet[10];
 
 	//Limpieza de pantalla	
 	system("cls");
@@ -89,97 +89,100 @@ void insertarAlumno(ListaAlumno *listaAlumno, ArbolUsuario *ptrArbolUsuario){
 	fflush(stdin);
 	
 	//Peticion y almacenamiento de datos
-	for(h=0;h<1;h++)
+	printf("\nIngrese carnet: ");			
+	scanf("%s",&verificarCarnet);
+	//Verificando si es carnet valido a ingresar
+	respuesta=validarCarnet(verificarCarnet);
+	if(respuesta==0)
 	{
-		//Peticion de nuevo elemento y validacion de entero
-		printf("carnet: ");
-		if(scanf("%d",&numCarnet)==0)
+		//Convirtiendo
+		numCarnet=atoi(verificarCarnet);
+		if(existeAlumno(listaAlumno, numCarnet)==0 && numCarnet>=0 && numCarnet<=99999999)
 		{
-			printf("error: el carnet acepta unicamente numeros***\n\n");
 			fflush(stdin);
-			h--;
-		}
-	}
-
-	if(existeAlumno(listaAlumno, numCarnet)==0 && numCarnet>=0 && numCarnet<=99999999)
-
-	{
-		fflush(stdin);
-		alumno->carnet=numCarnet;
-		
-		printf("nombres: ");
-		alumno->nombreAlumno = getLine(30);
-
-		printf("apellidos: ");
-		alumno->apellidoAlumno = getLine(30);
-
-		printf("carrera: ");
-		alumno->carrera = getLine(50);
-
-		printf("telefono: ");
-		alumno->telefono = getLine(10);
-
-        //Validar estructura de correo
-		while(exit==0)
-		{
-			printf("correo institucional: ");
-			alumno->correo = getLine(30);
-
-			if(strchr(alumno->correo, '@') != NULL && strchr(alumno->correo, '.') != NULL)
+			alumno->carnet=numCarnet;
+			
+			printf("nombres: ");
+			alumno->nombreAlumno = getLine(30);
+	
+			printf("apellidos: ");
+			alumno->apellidoAlumno = getLine(30);
+	
+			printf("carrera: ");
+			alumno->carrera = getLine(50);
+	
+			printf("telefono: ");
+			alumno->telefono = getLine(10);
+	
+	        //Validar estructura de correo
+			while(exit==0)
 			{
-			    exit = 1;
-			} else {
-				printf("error: el correo ingresado es invalido***\n\n");
-			}
-
-		}
-		
-		//Validar Sede
-		while(exitSede==0)
-		{
-			printf("SEDES VALIDAS: 1)Santa Tecla\t2)Santa Ana\t3)San Miguel");
-			printf("\nIngrese C�digo de Sede: ");
-			scanf("%s",&sedeId);
-
-			if(validarSedeId(sedeId)==0)
-			{
-				idSede=atoi(sedeId);
-				if(idSede==1 || idSede==2 || idSede==3)
+				printf("correo institucional: ");
+				alumno->correo = getLine(30);
+	
+				if(strchr(alumno->correo, '@') != NULL && strchr(alumno->correo, '.') != NULL)
 				{
-					alumno->idSede=idSede;
-					exitSede = 1;
+				    exit = 1;
+				} else {
+					printf("error: el correo ingresado es invalido***\n\n");
 				}
-			    
-			} else {
-				printf("error: La sede que ha ingresado es invalida***\n\n");
+	
 			}
-
-		}
-
-		//agrego el usuario
-		char *carnetUsuario = malloc(sizeof(char) * 20);
-		sprintf(carnetUsuario, "%d", alumno->carnet);
-		alumno->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, carnetUsuario, "12345", ALUMNO, idSede);
-		alumno->siguiente = NULL;
-
-		listaAlumno->total++;
-		//Verificacion si la lista est? vacia o no
-		if(listaAlumno->primero == NULL)
-		{
-			listaAlumno->primero = alumno;
-			listaAlumno->ultimo = alumno;
+			
+			//Validar Sede
+			while(exitSede==0)
+			{
+				printf("SEDES VALIDAS: 1)Santa Tecla\t2)Santa Ana\t3)San Miguel");
+				printf("\nIngrese C�digo de Sede: ");
+				scanf("%s",&sedeId);
+	
+				if(validarSedeId(sedeId)==0)
+				{
+					idSede=atoi(sedeId);
+					if(idSede==1 || idSede==2 || idSede==3)
+					{
+						alumno->idSede=idSede;
+						exitSede = 1;
+					}
+				    
+				} else {
+					printf("error: La sede que ha ingresado es invalida***\n\n");
+				}
+	
+			}
+	
+			//agrego el usuario
+			char *carnetUsuario = malloc(sizeof(char) * 20);
+			sprintf(carnetUsuario, "%d", alumno->carnet);
+			alumno->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, carnetUsuario, "12345", ALUMNO, idSede);
+			alumno->siguiente = NULL;
+	
+			listaAlumno->total++;
+			//Verificacion si la lista est? vacia o no
+			if(listaAlumno->primero == NULL)
+			{
+				listaAlumno->primero = alumno;
+				listaAlumno->ultimo = alumno;
+			}
+			else
+			{
+				listaAlumno->ultimo->siguiente = alumno;
+				listaAlumno->ultimo = alumno;
+			}
+			
+			printf("\n***alumno registrado***\n\n");
 		}
 		else
 		{
-			listaAlumno->ultimo->siguiente = alumno;
-			listaAlumno->ultimo = alumno;
+			printf("El alumno existe o no es valido\n");
 		}
+		
 	}
 	else
 	{
-		printf("El alumno existe o no es valido\n");
+		printf("Numero de carnet no valido\n");
 	}
-	printf("\n***alumno registrado***\n\n");
+	
 	system("pause");
 }
 
