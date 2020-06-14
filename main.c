@@ -6,6 +6,7 @@
 #include "traslado.h"
 #include "alumno.h"
 #include "prestamo.h"
+#include "usuario.h"
 
 //contantes para menu principal
 #define PRESTAMOS 1
@@ -51,24 +52,44 @@ int printMenuSedes();
 int printMenuAlumnos();
 int printMenuDevoluciones();
 
+//variables globales
+int usuarioLogueado = 0;
+
 int main() {
+	setlocale(LC_ALL,"spanish");
 	ListaSede *listSede = initListSede();
 	listSede = cargarSedesDefecto(listSede);
 
 	Arbol *arbolLibros = initializeArbol();
 	arbolLibros = cargarRegistrosDefecto(arbolLibros, listSede);
 
+	ArbolUsuario *ptrArbolUsuario = initArbolUsuario();
+	cargarUsuariosPrueba(ptrArbolUsuario);
+
 	ListaAlumno *listaAlumno = initListaAlumno();
-	cargaInicialAlumnos(listaAlumno);
+	cargaInicialAlumnos(listaAlumno, ptrArbolUsuario);
 
 	ArbolPrestamo *ptrArbolPrestamo = initArbolPrestamo();
 	cargarPrestamosPrueba(ptrArbolPrestamo, listaAlumno, arbolLibros);
 	
-	setlocale(LC_ALL,"spanish");
 
 	inicio:;
 	while(TRUE) {
+		
+		stateLogin:;
 		system("cls");
+
+		if(!usuarioLogueado) {
+
+			if(!iniciarSesionMENU(ptrArbolUsuario->raiz)) {
+				printf("las credenciales ingresadas son incorrectas\n\n");
+				system("pause");
+				goto stateLogin;
+			} else {
+				usuarioLogueado = TRUE;
+			}
+		}
+
 		switch(printMainMenu()) {
 			case PRESTAMOS:
 				while(TRUE) {
@@ -156,7 +177,7 @@ int main() {
 				while(TRUE) {
 					switch(printMenuAlumnos()) {
 						case AGREGAR_ALUMNO:
-							insertarAlumno(listaAlumno);
+							insertarAlumno(listaAlumno, ptrArbolUsuario);
 							break;
 						case BUSCAR_ALUMNO:
 							BusquedaAlumno(listaAlumno);
@@ -178,6 +199,8 @@ int main() {
 					}
 				}
 			case FINALIZAR:
+				usuarioLogueado = 0;
+				goto stateLogin;
 				return;
 			default:
 				printf("La opcion ingresada en incorrecta\n\n");
@@ -197,7 +220,7 @@ int printMainMenu() {
 		printf(" ----------------------------------------------------------- \n\n");
 
 		printf("1)prestamos\t 2)devoluciones\t 3)traslados\t 4)libros\n");
-		printf("5)alumnos\t 6)sedes\t 7)finalizar\n\n");
+		printf("5)alumnos\t 6)sedes\t 7)cerrar sesion\n\n");
 
 		printf(">> ");
 

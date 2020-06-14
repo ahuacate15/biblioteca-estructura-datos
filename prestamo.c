@@ -28,7 +28,7 @@ typedef struct nodoPrestamo {
     Prestamo *prestamo;
     Prestamo *ultimoPrestamo;
     struct nodoPrestamo *izquierda;
-    struct nodo *derecha;
+    struct nodoPrestamo *derecha;
 } NodoPrestamo;
 
 

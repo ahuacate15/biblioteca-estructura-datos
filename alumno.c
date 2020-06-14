@@ -3,7 +3,8 @@
 #include <assert.h>
 #include <string.h>
 #include "texto.h"
-#include "sede.h";
+#include "sede.h"
+#include "usuario.h"
 
 //Definiendo estructura Alumno
 typedef struct {
@@ -15,6 +16,7 @@ typedef struct {
     char *telefono;
     char *correo;
     int idSede;
+	Usuario *usuario;
     struct Alumno *siguiente;
 } Alumno;
 
@@ -24,16 +26,11 @@ typedef struct listaAlumno {
     Alumno *ultimo;
 } ListaAlumno;
 
-
-//Crear punteros para el primero y ultimo elemento de la lista
-/*Alumno *primero = NULL;
-Alumno *ultimo = NULL;*/
-
 //prototipos de funciones
 Alumno *initAlumno();
 ListaAlumno *initListaAlumno();
 ListaAlumno *cargarAlumnoDefecto(ListaAlumno *lista);
-void insertarAlumno(ListaAlumno *listaAlumno);
+void insertarAlumno(ListaAlumno *listaAlumno, ArbolUsuario *ptrArbol);
 int existeAlumno(ListaAlumno *listaAlumno, int carnet);
 void mostrarAlumnos(ListaAlumno *listaAlumno);
 void BusquedaAlumno(ListaAlumno *listaAlumno);
@@ -46,7 +43,7 @@ void busquedaCarnet(ListaAlumno *listaAlumno);
 void eliminarAlumno(ListaAlumno *listaAlumno);
 void modificarAlumno(ListaAlumno *listaAlumno);
 int validadCorreo(char mail[]);
-void cargaInicialAlumnos(ListaAlumno *listaAlumno);
+void cargaInicialAlumnos(ListaAlumno *listaAlumno, ArbolUsuario *ptrArbol);
 Alumno *retornaAlumnoPrestamo(int carnet, ListaAlumno *listaAlumno);
 
 //Declaracion de variables globales
@@ -75,7 +72,7 @@ Alumno *initAlumno() {
 int h;
 
 //Funcion para agregar elementos a la lista
-void insertarAlumno(ListaAlumno *listaAlumno){
+void insertarAlumno(ListaAlumno *listaAlumno, ArbolUsuario *ptrArbolUsuario){
 	
 	//Reservar en memoria el nuevo nodo
 	Alumno *alumno = malloc(sizeof(Alumno));
@@ -159,7 +156,12 @@ void insertarAlumno(ListaAlumno *listaAlumno){
 
 		}
 
+		//agrego el usuario
+		char *carnetUsuario = malloc(sizeof(char) * 20);
+		sprintf(carnetUsuario, "%d", alumno->carnet);
+		alumno->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, carnetUsuario, "12345", ALUMNO, idSede);
 		alumno->siguiente = NULL;
+
 		listaAlumno->total++;
 		//Verificacion si la lista est? vacia o no
 		if(listaAlumno->primero == NULL)
@@ -965,8 +967,9 @@ int validadCorreo(char mail[])
 }
 
 //Carga inicial de registros de Alumnos
-void cargaInicialAlumnos(ListaAlumno *listaAlumno)
+void cargaInicialAlumnos(ListaAlumno *listaAlumno, ArbolUsuario *ptrArbolUsuario)
 {
+	char *defaultPassword = "12345";
 	//Ingreso de Alumno 1
 	Alumno *alumno1 = initAlumno();
     alumno1->carnet=157416;
@@ -976,7 +979,8 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno1->telefono,"77984632");
     strcpy(alumno1->correo,"cquintanilla@gmail.com");
     alumno1->idSede=1;
-    alumno1->siguiente=NULL;
+	alumno1->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "157416", defaultPassword, ALUMNO, alumno1->idSede);
+	alumno1->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
 		listaAlumno->primero = alumno1;
@@ -998,6 +1002,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno2->telefono,"78493651");
     strcpy(alumno2->correo,"fnavas@gmail.com");
     alumno2->idSede=2;
+	alumno2->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "167819", defaultPassword, ALUMNO, alumno2->idSede);
     alumno2->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1020,6 +1025,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno3->telefono,"68475832");
     strcpy(alumno3->correo,"lespinosa@gmail.com");
     alumno3->idSede=1;
+	alumno3->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "58418", defaultPassword, ALUMNO, alumno3->idSede);
     alumno3->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1042,6 +1048,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno4->telefono,"74927521");
     strcpy(alumno4->correo,"rllorente@gmail.com");
     alumno4->idSede=2;
+	alumno4->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "58520", defaultPassword, ALUMNO, alumno4->idSede);
     alumno4->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1064,6 +1071,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno5->telefono,"71953235");
     strcpy(alumno5->correo,"jlatorre@gmail.com");
     alumno5->idSede=1;
+	alumno5->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "194315", defaultPassword, ALUMNO, alumno5->idSede);
     alumno5->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1086,6 +1094,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno6->telefono,"69471533");
     strcpy(alumno6->correo,"mconcepcion@gmail.com");
     alumno6->idSede=2;
+	alumno6->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "48219", defaultPassword, ALUMNO, alumno6->idSede);
     alumno6->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1108,6 +1117,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno7->telefono,"70913464");
     strcpy(alumno7->correo,"lbenito@gmail.com");
     alumno7->idSede=1;
+	alumno7->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "195720", defaultPassword, ALUMNO, alumno7->idSede);
     alumno7->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1130,6 +1140,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno8->telefono,"75038134");
     strcpy(alumno8->correo,"amayor@gmail.com");
     alumno8->idSede=2;
+	alumno8->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "139015", defaultPassword, ALUMNO, alumno8->idSede);
     alumno8->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1152,6 +1163,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno9->telefono,"76500234");
     strcpy(alumno9->correo,"motero@gmail.com");
     alumno9->idSede=1;
+	alumno9->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "23915", defaultPassword, ALUMNO, alumno9->idSede);
     alumno9->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1174,6 +1186,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno10->telefono,"79125639");
     strcpy(alumno10->correo,"jgallego@gmail.com");
     alumno10->idSede=2;
+	alumno10->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "123018", defaultPassword, ALUMNO, alumno10->idSede);
     alumno10->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1196,6 +1209,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno11->telefono,"79475581");
     strcpy(alumno11->correo,"nmoreno@gmail.com");
     alumno11->idSede=1;
+	alumno11->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "144019", defaultPassword, ALUMNO, alumno11->idSede);
     alumno11->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1218,6 +1232,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno12->telefono,"65893954");
     strcpy(alumno12->correo,"rmatos@gmail.com");
     alumno12->idSede=2;
+	alumno12->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "170516", defaultPassword, ALUMNO, alumno12->idSede);
     alumno12->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1240,6 +1255,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno13->telefono,"74119430");
     strcpy(alumno13->correo,"magullo@gmail.com");
     alumno13->idSede=1;
+	alumno13->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "130617", defaultPassword, ALUMNO, alumno13->idSede);
     alumno13->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1262,6 +1278,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno14->telefono,"66847284");
     strcpy(alumno14->correo,"azamora@gmail.com");
     alumno14->idSede=2;
+	alumno14->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "98314", defaultPassword, ALUMNO, alumno14->idSede);
     alumno14->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1284,6 +1301,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno15->telefono,"66847284");
     strcpy(alumno15->correo,"rquiles@gmail.com");
     alumno15->idSede=1;
+	alumno15->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "29620", defaultPassword, ALUMNO, alumno15->idSede);
     alumno15->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1306,6 +1324,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno16->telefono,"76849321");
     strcpy(alumno16->correo,"vbastida@gmail.com");
     alumno16->idSede=2;
+	alumno16->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "139415", defaultPassword, ALUMNO, alumno16->idSede);
     alumno16->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1328,6 +1347,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno17->telefono,"76300134");
     strcpy(alumno17->correo,"ccabezas@gmail.com");
     alumno17->idSede=1;
+	alumno17->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "179718", defaultPassword, ALUMNO, alumno17->idSede);
     alumno17->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1350,6 +1370,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno18->telefono,"79375611");
     strcpy(alumno18->correo,"jgarca@gmail.com");
     alumno18->idSede=2;
+	alumno18->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "193519", defaultPassword, ALUMNO, alumno18->idSede);
     alumno18->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1372,6 +1393,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno19->telefono,"71133579");
     strcpy(alumno19->correo,"fbravo@gmail.com");
     alumno19->idSede=1;
+	alumno19->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "105816", defaultPassword, ALUMNO, alumno19->idSede);
     alumno19->siguiente=NULL;
     if(listaAlumno->primero == NULL)
 	{
@@ -1395,6 +1417,7 @@ void cargaInicialAlumnos(ListaAlumno *listaAlumno)
     strcpy(alumno20->correo,"mguevara@gmail.com");
     alumno20->siguiente=NULL;
     alumno20->idSede=2;
+	alumno20->usuario = insertarUsuario(ptrArbolUsuario, ptrArbolUsuario->raiz, "104720", defaultPassword, ALUMNO, alumno20->idSede);
     if(listaAlumno->primero == NULL)
 	{
 		listaAlumno->primero = alumno20;
