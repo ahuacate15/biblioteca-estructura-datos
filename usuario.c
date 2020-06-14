@@ -28,7 +28,9 @@ Usuario *iniciarSesion(ArbolUsuario *ptrArbol, char *usuario, char *password);
 
 void cargarUsuariosPrueba(ArbolUsuario *ptrArbol);
 void printUsuarios(Usuario *ptrUsuario, int contador);
-int iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz);
+
+//retornal el usuario encontrado, NULL si las credenciales son incorrectas
+Usuario *iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz);
 
 Usuario *initUsuario() {
     Usuario *ptrUsuario = malloc(sizeof(Usuario));
@@ -132,7 +134,7 @@ void printUsuarios(Usuario *ptrUsuario, int contador) {
     }
 }
 
-int iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz) {
+Usuario *iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz) {
     char *usuario = malloc(sizeof(char) * 30);
     char *password = malloc(sizeof(char) * 40), c = ' ';
     int cont = 0;
@@ -161,14 +163,13 @@ int iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz) {
     password[cont] = '\0';
 
     Usuario *ptrUsuarioEncontrado = buscarUsuario(ptrUsuarioRaiz, usuario);
-    if(ptrUsuarioEncontrado == NULL) {
-        return 0;
-    }
+    if(ptrUsuarioEncontrado == NULL) 
+        return NULL;
     
     if(strcmp(password, ptrUsuarioEncontrado->password) == 0) {
-        return 1;
+        return ptrUsuarioEncontrado;
     } else {
-        return 0;
+        return NULL;
     }
 
 }

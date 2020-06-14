@@ -10,32 +10,6 @@
 
 //contantes para menu principal
 #define TRUE 1
-#define RETROCEDER 0
-
-//constantes para submenu prestamos
-#define AGREGAR_PRESTAMO 1
-#define BUSCAR_PRESTAMO 2
-
-//constantes para submenu prestamos
-#define REALIZAR_DEVOLUCION 1
-
-//constantes para submenu libros
-#define AGREGARLIBRO 1
-#define BUSCARLIBRO 2
-#define BUSCARLIBROPORID 3
-#define MODIFICARLIBRO 4
-#define MOSTRARLIBROS 5
-
-//constantes para submenu alumnos
-#define AGREGAR_ALUMNO 1
-#define BUSCAR_ALUMNO 2
-#define MODIFICAR_ALUMNO 3
-#define ELIMINAR_ALUMNO 4
-#define MOSTRAR_ALUMNOS 5
-
-//constantes para acciones del menu
-#define MOSTRAR 1
-#define EDITAR 2
 
 char printMainMenu();
 char printMenuPrestamos();
@@ -46,7 +20,7 @@ char printMenuAlumnos();
 
 
 //variables globales
-int usuarioLogueado = 0;
+Usuario *usuarioLogueado = NULL;
 
 int main() {
 	setlocale(LC_ALL,"spanish");
@@ -63,34 +37,34 @@ int main() {
 	cargaInicialAlumnos(listaAlumno, ptrArbolUsuario);
 
 	ArbolPrestamo *ptrArbolPrestamo = initArbolPrestamo();
-	cargarPrestamosPrueba(ptrArbolPrestamo, listaAlumno, arbolLibros);
+	//cargarPrestamosPrueba(ptrArbolPrestamo, listaAlumno, arbolLibros);
 	
 
 	inicio:;
 	while(TRUE) {
-		
+
 		stateLogin:;
 		system("cls");
+		if(usuarioLogueado == NULL) {
+			//capturo el rol del usuario (-1 si las credenciales son incorrectas)
+			usuarioLogueado = iniciarSesionMENU(ptrArbolUsuario->raiz);
 
-		if(!usuarioLogueado) {
-
-			if(!iniciarSesionMENU(ptrArbolUsuario->raiz)) {
+			if(usuarioLogueado == NULL) {
 				printf("las credenciales ingresadas son incorrectas\n\n");
 				system("pause");
 				goto stateLogin;
-			} else {
-				usuarioLogueado = TRUE;
-			}
+			} 
+			
 		}
 
-
+		
 
 		switch(printMainMenu()) {
 			case 'p': //prestamos
 				while(TRUE) {
 					switch(printMenuPrestamos()) {
 						case 'a': //agregar
-							agregarPrestamoMENU(ptrArbolPrestamo, listaAlumno, arbolLibros);
+							agregarPrestamoMENU(ptrArbolPrestamo, listaAlumno, arbolLibros, usuarioLogueado);
 							break;
 						case 'b': //buscar
 							buscarPrestamosMENU(ptrArbolPrestamo);
@@ -196,7 +170,7 @@ int main() {
 					}
 				}
 			case 'c': //cerrar sesion
-				usuarioLogueado = 0;
+				usuarioLogueado = NULL;
 				goto stateLogin;
 				return;
 			default:
@@ -209,7 +183,6 @@ int main() {
 
 char printMainMenu() {
 	char opcion = 'c';
-
 	while(TRUE) {
 		fflush(stdin);
 		system("cls");
@@ -217,11 +190,33 @@ char printMainMenu() {
 		printf("|                  SISTEMA BIBLIOTECARIO                    |\n");
 		printf(" ----------------------------------------------------------- \n\n");
 
-		printf("p)prestamos\t d)devoluciones\t t)traslados\t l)libros\n");
-		printf("a)alumnos\t s)sedes\t c)cerrar sesion\n\n");
+		if(usuarioLogueado->role == ADMINISTRADOR) {
+			printf("p)prestamos\t d)devoluciones\t t)traslados\t l)libros\n");
+			printf("a)alumnos\t s)sedes\t c)cerrar sesion\n\n");
+		} else if(usuarioLogueado->role == BIBLIOTECARIO) {
+			printf("p)prestamos\t d)devoluciones\t t)traslados\t l)libros\n");
+			printf("a)alumnos\t c)cerrar sesion\n\n");
+		} else { //para alumnos
+			printf("p)prestamos\t l)libros\t c)cerrar sesion\n\n");
+		}
+		
 
 		printf(">> ");
 		scanf("%c", &opcion);
+
+		//validacion de segunridad
+		if(usuarioLogueado->role == BIBLIOTECARIO && opcion == 's') {
+			printf("Acceso restringido\n");
+			system("pause");
+			continue;
+		}
+
+		if(usuarioLogueado->role == ALUMNO && (opcion == 'd' || opcion == 't' || opcion == 'a' || opcion == 's')) {
+			printf("Acceso restringido\n");
+			system("pause");
+			continue;
+		} 
+
 		return opcion;
 	}
 
@@ -235,11 +230,21 @@ char printMenuPrestamos() {
 		printf(" ----------------------------------------------------------- \n");
 		printf("|                         PRESTAMOS                         |\n");
 		printf(" ----------------------------------------------------------- \n\n");
-		printf("a)agregar\t b)buscar\t g)generar archivo\t  r)retroceder\n\n");
+
+		if(usuarioLogueado->role == ALUMNO) {
+			printf("a)agregar\t r)retroceder\n\n");
+		} else {
+			printf("a)agregar\t b)buscar\t g)generar archivo\t  r)retroceder\n\n");
+		}
+		
 
 		printf("prestamos >> ");
 		scanf("%c", &opcion);
 
+		if(usuarioLogueado->role == ALUMNO && (opcion == 'b' || opcion == 'g')) {
+			printf("Acceso restringido\n\n");
+			continue;
+		}
 		return opcion;
 	}
 }

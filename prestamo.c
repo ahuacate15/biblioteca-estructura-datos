@@ -4,6 +4,7 @@
 #include "sede.h"
 #include "date.h"
 #include "texto.h"
+#include "usuario.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -44,10 +45,10 @@ ArbolPrestamo *initArbolPrestamo();
 Prestamo *initPrestamo();
 NodoPrestamo *initNodoPrestamo();
 NodoPrestamo *insertarNodoPrestamo(ArbolPrestamo *arbol, NodoPrestamo *nodo, Prestamo *prestamo, int campo);
-NodoPrestamo *buscarPrestamo(NodoPrestamo *nodo, int clave);
+NodoPrestamo *buscarPrestamo(const NodoPrestamo const *nodo, int clave);
 
 /*-------------prototipo de funciones para interfaces----------*/
-void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
+void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro, Usuario *usuarioLogueado);
 void buscarPrestamosMENU(ArbolPrestamo *arbol);
 void imprimirPrestamo(NodoPrestamo *ptrPrestamo);
 void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
@@ -86,32 +87,36 @@ NodoPrestamo *initNodoPrestamo() {
     return nodo;
 }
 
+//aca
 NodoPrestamo *insertarNodoPrestamo(ArbolPrestamo *arbol, NodoPrestamo *nodo, Prestamo *ptrPrestamo, int campo) {
     int clave = NULL;
 	clave = 10;
-	
 	CustomDate *customDate = ptrPrestamo->date;
 	Alumno *alumno = ptrPrestamo->alumno;
     if(campo == CAMPO_FECHA) {
         clave = ptrPrestamo->date->hash;
     } else {
-        clave  =ptrPrestamo->alumno->carnet;
+        clave = ptrPrestamo->alumno->carnet;
     }
         
     //arbol vacio
     if(nodo == NULL) {
-        nodo = initNodoPrestamo();
+        nodo = malloc(sizeof(NodoPrestamo));
 		nodo->clave = clave;
         ptrPrestamo->siguiente = NULL;
         nodo->prestamo = ptrPrestamo;
+        nodo->prestamo->siguiente = NULL;
         nodo->ultimoPrestamo = ptrPrestamo;
+        nodo->izquierda = NULL;
+        nodo->derecha = NULL;
 
-        if(campo == CAMPO_FECHA && arbol->raiz == NULL)
+        if(campo == CAMPO_FECHA && arbol->raiz == NULL) {
             arbol->raiz = nodo;
-        else if(campo == CAMPO_ALUMNO && arbol->raizAlumno == NULL)
-            arbol->raizAlumno = nodo;
-
-        arbol->total; 
+        }
+            
+        else if(campo == CAMPO_ALUMNO && arbol->raizAlumno == NULL) {
+    	    arbol->raizAlumno = nodo;
+        }
         return nodo;
     } else {
     	//cuando la clave del nodo ya existe, se envia al fondo de la lista
@@ -129,7 +134,7 @@ NodoPrestamo *insertarNodoPrestamo(ArbolPrestamo *arbol, NodoPrestamo *nodo, Pre
     }
 }
 
-NodoPrestamo *buscarPrestamo(NodoPrestamo *nodo, int clave) {
+NodoPrestamo *buscarPrestamo(const NodoPrestamo const *nodo, int clave) {
     if(nodo == NULL)
         return NULL;
 
@@ -141,7 +146,7 @@ NodoPrestamo *buscarPrestamo(NodoPrestamo *nodo, int clave) {
         buscarPrestamo(nodo->derecha, clave);
 }
 
-void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno, Arbol *arbolLibro) {
+void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno, Arbol *arbolLibro, Usuario *usuarioLogueado) {
     CustomDate *date = NULL;
     char *stringDate = malloc(sizeof(char) * 10);
     char *isbn = malloc(sizeof(char) * 20);
@@ -158,11 +163,16 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
     printf("fecha: %s\n", date->naturalDate);
 
     stateCarnet:;
-    printf("carnet del alumno: ");
-    if(scanf("%d", &carnet) == 0) {
-        printf("el valor ingresado no puede llevar letras\n");
-        fflush(stdin);
-        goto stateCarnet;
+    if(usuarioLogueado->role == ALUMNO) {
+        carnet = atoi(usuarioLogueado->usuario);
+        printf("carnet del alumno: %d\n", carnet);
+    } else {
+        printf("carnet del alumno: ");
+        if(scanf("%d", &carnet) == 0) {
+            printf("el valor ingresado no puede llevar letras\n");
+            fflush(stdin);
+            goto stateCarnet;
+        }
     }
 
     Alumno *alumno = listaAlumno->primero;
@@ -198,6 +208,7 @@ void agregarPrestamoMENU(ArbolPrestamo *arbolPrestamo, ListaAlumno *listaAlumno,
     prestamo->libro = nodoLibro->libro;
     prestamo->siguiente = NULL;
     prestamo->estado = PENDIENTE;
+    printf("**direccion de prestamo: %p\n", prestamo);
 
     //resto la existencia de la sede del alumno
     LibroSede *libroSede = nodoLibro->libro->libroSede;
@@ -442,7 +453,7 @@ void generarArchivo(NodoPrestamo *ptrPrestamo) {
 
 void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro) {
 
-    Nodo *libro[15] = {};
+    Nodo *libro[7] = {};
     libro[0] = buscarLibroPorClave(arbolLibro->raizISBN, "9788483835241");
     libro[1] = buscarLibroPorClave(arbolLibro->raizISBN, "9781365425806");
     libro[2] = buscarLibroPorClave(arbolLibro->raizISBN, "9780451524935");
@@ -450,14 +461,7 @@ void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol
     libro[4] = buscarLibroPorClave(arbolLibro->raizISBN, "9786073112086");
     libro[5] = buscarLibroPorClave(arbolLibro->raizISBN, "9789875667334");
     libro[6] = buscarLibroPorClave(arbolLibro->raizISBN, "9781514339060");
-    libro[7] = buscarLibroPorClave(arbolLibro->raizISBN, "9786073128834");
-    libro[8] = buscarLibroPorClave(arbolLibro->raizISBN, "9780307454737");
-    libro[9] = buscarLibroPorClave(arbolLibro->raizISBN, "9780143035794");
-    libro[10] = buscarLibroPorClave(arbolLibro->raizISBN, "9786074296730");
-    libro[11] = buscarLibroPorClave(arbolLibro->raizISBN, "9786074293258");
-    libro[12] = buscarLibroPorClave(arbolLibro->raizISBN, "9780786181483");
-    libro[13] = buscarLibroPorClave(arbolLibro->raizISBN, "9788494994616");
-    libro[14] = buscarLibroPorClave(arbolLibro->raizISBN, "9788412157772");
+
 	
     Alumno *alumno[10] = {};
     alumno[0] = retornaAlumnoPrestamo(157416, listaAlumno);
@@ -478,13 +482,13 @@ void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol
     srand(time(NULL));
 
     for(int i=0; i<10; i++) { //recorro los alumnos
-        for(int j=0; j<15; j++) { //recorro el total de libros
+        for(int j=0; j<7; j++) { //recorro el total de libros
             if(alumno[i] == NULL && libro[j] == NULL)
                 continue;
  
             prestamo[cont] = malloc(sizeof(prestamo));
             prestamo[cont]->alumno = alumno[i % 10];
-            prestamo[cont]->libro = libro[j % 15]->libro;
+            prestamo[cont]->libro = libro[j]->libro;
             //guardo las fechas de manera circular, para que los registros sear variados
             prestamo[cont]->date = convertDate(listDate[i % 5]);
             prestamo[cont]->estado = PENDIENTE;
@@ -494,9 +498,6 @@ void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol
             arbol->total++;
             cont++;      
 
-            //cuando el numero aleatoreo es multiplo de 7, detengo la ejecucion del programa
-            if(rand() % 11 == 0) 
-                break;
         }
     }
 }

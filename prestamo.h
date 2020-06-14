@@ -1,4 +1,5 @@
 typedef struct customDate CustomDate;
+typedef struct usuario Usuario;
 
 typedef struct prestamo {
     Alumno *alumno;
@@ -25,10 +26,10 @@ typedef struct arbolPrestamo {
 } ArbolPrestamo;
 
 ArbolPrestamo *initArbolPrestamo();
-NodoPrestamo *buscarPrestamo(NodoPrestamo *nodo, int clave);
+NodoPrestamo *buscarPrestamo(const NodoPrestamo const *nodo, int clave);
 
 /*-------------prototipo de funciones para interfaces----------*/
-void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);
+void agregarPrestamoMENU(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro, Usuario *usuarioLogueado);
 void buscarPrestamosMENU(ArbolPrestamo *arbol);
 void imprimirPrestamo(NodoPrestamo *ptrPrestamo);
 void cargarPrestamosPrueba(ArbolPrestamo *arbol, ListaAlumno *listaAlumno, Arbol *arbolLibro);

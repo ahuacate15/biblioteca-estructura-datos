@@ -23,4 +23,6 @@ Usuario *buscarUsuario(Usuario *ptrUsuario, char *usuario);
 Usuario *iniciarSesion(ArbolUsuario *ptrArbol, char *usuario, char *password);
 void cargarUsuariosPrueba(ArbolUsuario *ptrArbol);
 void printUsuarios(Usuario *usuario, int contador);
-int iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz);
+
+//retornal el usuario encontrado, NULL si las credenciales son incorrectas
+Usuario *iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz);
