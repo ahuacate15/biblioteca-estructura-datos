@@ -133,7 +133,7 @@ void insertarAlumno(ListaAlumno *listaAlumno, ArbolUsuario *ptrArbolUsuario){
 			while(exitSede==0)
 			{
 				printf("SEDES VALIDAS: 1)Santa Tecla\t2)Santa Ana\t3)San Miguel");
-				printf("\nIngrese Cï¿½digo de Sede: ");
+				printf("\nIngrese código de Sede: ");
 				scanf("%s",&sedeId);
 	
 				if(validarSedeId(sedeId)==0)

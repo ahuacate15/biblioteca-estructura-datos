@@ -147,7 +147,7 @@ Usuario *iniciarSesionMENU(const Usuario const *ptrUsuarioRaiz) {
     printf("usuario >> ");
     scanf("%s", usuario);
 
-    printf("contrasena >> ");
+    printf("contraseña >> ");
     while(cont < 40) {
         password[cont] = getch();
         c = password[cont];
